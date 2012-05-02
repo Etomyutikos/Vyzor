@@ -1,0 +1,104 @@
+Format: 1.52
+
+
+Title: Vyzor
+SubTitle: UI Manager for Mudlet
+
+Footer: Copyright (C) 2012 Erik Pettis
+Timestamp: Last Updated the day of month, year
+#   m     - One or two digit month.  January is "1"
+#   mm    - Always two digit month.  January is "01"
+#   mon   - Short month word.  January is "Jan"
+#   month - Long month word.  January is "January"
+#   d     - One or two digit day.  1 is "1"
+#   dd    - Always two digit day.  1 is "01"
+#   day   - Day with letter extension.  1 is "1st"
+#   yy    - Two digit year.  2006 is "06"
+#   yyyy  - Four digit year.  2006 is "2006"
+#   year  - Four digit year.  2006 is "2006"
+
+
+# --------------------------------------------------------------------------
+# 
+# Cut and paste the lines below to change the order in which your files
+# appear on the menu.  Don't worry about adding or removing files, Natural
+# Docs will take care of that.
+# 
+# You can further organize the menu by grouping the entries.  Add a
+# "Group: [name] {" line to start a group, and add a "}" to end it.
+# 
+# You can add text and web links to the menu by adding "Text: [text]" and
+# "Link: [name] ([URL])" lines, respectively.
+# 
+# The formatting and comments are auto-generated, so don't worry about
+# neatness when editing the file.  Natural Docs will clean it up the next
+# time it is run.  When working with groups, just deal with the braces and
+# forget about the indentation and comments.
+# 
+# --------------------------------------------------------------------------
+
+
+File: Vyzor  (init.lua)
+
+Group: Base  {
+
+   File: Base  (base\init.lua)
+   File: Frame  (base\frame.lua)
+   File: HUD  (base\hud.lua)
+   File: Options  (base\options.lua)
+   }  # Group: Base
+
+Group: Component  {
+
+   File: Background  (component\background.lua)
+   File: Border  (component\border.lua)
+   File: BorderSide  (component\border_side.lua)
+   File: Brush  (component\brush.lua)
+   File: Color  (component\color.lua)
+   File: Font  (component\font.lua)
+   File: Gradient  (component\gradient.lua)
+   File: Hover  (component\hover.lua)
+   File: Image  (component\image.lua)
+   File: Map  (component\map.lua)
+   File: Margin  (component\margin.lua)
+   File: MiniConsole  (component\mini_console.lua)
+   File: Padding  (component\padding.lua)
+   File: Position  (component\position.lua)
+   File: Size  (component\size.lua)
+   }  # Group: Component
+
+Group: Enum  {
+
+   File: Alignment  (enum\alignment.lua)
+   File: BorderStyle  (enum\border_style.lua)
+   File: BoundingMode  (enum\bounding_mode.lua)
+   File: BoxMode  (enum\box_mode.lua)
+   File: ColorMode  (enum\color_mode.lua)
+   File: Enum  (enum\init.lua)
+   File: FontDecoration  (enum\font_decoration.lua)
+   File: FontStyle  (enum\font_style.lua)
+   File: FontWeight  (enum\font_weight.lua)
+   File: GaugeFill  (enum\gauge_fill.lua)
+   File: GradientMode  (enum\gradient_mode.lua)
+   File: Repeat  (enum\repeat.lua)
+   }  # Group: Enum
+
+Group: Compound  {
+
+   File: Box  (compound\box.lua)
+   File: Gauge  (compound\gauge.lua)
+   }  # Group: Compound
+
+File: Lib  (lib\init.lua)
+File: License  (license.txt)
+
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   Event Index: Events
+   Function Index: Functions
+   Property Index: Properties
+   Variable Index: Variables
+   }  # Group: Index
+
