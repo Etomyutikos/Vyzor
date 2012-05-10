@@ -29,7 +29,12 @@ local console_height = Options.ConsoleHeight
 -- Array: borders
 -- Contains Vyzor's Border information. Used to manage
 -- Mudlet's Borders.
-local borders = {}
+local borders = {
+	Top = 0,
+	Right = 0,
+	Bottom = 0,
+	Left = 0
+}
 
 --[[
 	Function: updateBorders
@@ -108,17 +113,23 @@ local function updateBorders ()
 	end
 
 	-- Here we actually tell Mudlet what size our Borders should be.
-	setBorderTop( new_borders.Top )
-	setBorderBottom( new_borders.Bottom )
-	setBorderRight( new_borders.Right )
-	setBorderLeft( new_borders.Left )
+
+	for _, b in ipairs( {"Top", "Bottom", "Right", "Left"} ) do
+		if new_borders[b] > 0 then
+			_G["setBorder" .. b]( new_borders[b] )
+		else
+			_G["setBorder" .. b]( 0 )
+		end
+	end
 
 	-- And update it to use later.
 	borders = new_borders
 end
 
--- Initialize Border sizes.
-updateBorders()
+if Options.HandleBorders == true then
+	-- Initialize Border sizes.
+	updateBorders()
+end
 
 -- Here we define the Border Frames. For the most part, these use the values
 -- we generated in updateBorders. However, because of the way Frames handle
@@ -151,7 +162,7 @@ local bottom = Frame( "VyzorBottom",
 		((((Options.Borders["Bottom"] > 0 and Options.Borders["Bottom"] <= 1.0) and 1.0) or
 			window_height) - Options.Borders["Bottom"]),
 	1.0,
-	Options.Borders["Bottom"]
+	(Options.Borders["Bottom"] == "dynamic" and borders["Bottom"]) or Options.Borders["Bottom"]
 )
 
 -- Object: VyzorRight
@@ -198,31 +209,42 @@ function VyzorResize ()
 	-- efficiently. Or at all. =p
 	if not resizing then
 		resizing = true
-		window_width, window_height = getMainWindowSize()
-		updateBorders()
 
-		HUD.Size.Dimensions = {window_width, window_height}
+		if Options.HandleBorders == true or Options.HandleBorders == "auto" then
+			window_width, window_height = getMainWindowSize()
+			updateBorders()
+		end
+
+		local hud_size = HUD.Size
+		hud_size.Dimensions = {window_width, window_height}
+
+		local hud_frames = HUD.Frames
 		if Options.Borders["Top"] == "dynamic" then
-			HUD.Frames["VyzorTop"].Size.Height = (borders.Top <= 1 and 0) or borders.Top
+			hud_frames["VyzorTop"].Size.Height = (borders.Top <= 1 and 0) or borders.Top
 		end
 		if Options.Borders["Bottom"] == "dynamic" then
-			HUD.Frames["VyzorBottom"].Size.Height = (borders.Bottom <= 1 and 0) or borders.Bottom
-			HUD.Frames["VyzorBottom"].Position.Y = window_height - borders.Bottom
+			local vyzor_bottom = hud_frames["VyzorBottom"]
+			vyzor_bottom.Size.Height = (borders.Bottom <= 1 and 0) or borders.Bottom
+			vyzor_bottom.Position.Y = window_height - borders.Bottom
 		end
 		if Options.Borders["Right"] == "dynamic" then
-			HUD.Frames["VyzorRight"].Size.Width = (borders.Right <= 1 and 0) or borders.Right
-			HUD.Frames["VyzorRight"].Position.X = window_width - borders.Right
+			local vyzor_right = hud_frames["VyzorRight"]
+			vyzor_right.Size.Width = (borders.Right <= 1 and 0) or borders.Right
+			vyzor_right.Position.X = window_width - borders.Right
 		end
 		if Options.Borders["Left"] == "dynamic" then
-			HUD.Frames["VyzorLeft"].Size.Width = (borders.Left <= 1 and 0) or borders.Left
+			hud_frames["VyzorLeft"].Size.Width = (borders.Left <= 1 and 0) or borders.Left
 		end
 
-		HUD:Resize( HUD.Size.ContentWidth, HUD.Size.ContentHeight )
+		HUD:Resize( hud_size.ContentWidth, hud_size.ContentHeight )
 		HUD:Move( 0, 0 )
 		resizing = false
+
+		raiseEvent( "VyzorResizedEvent" )
 	end
 end
 
-registerAnonymousEventHandler( "sysWindowResizeEvent", "VyzorResize")
+
+--registerAnonymousEventHandler( "sysWindowResizeEvent", "VyzorResize")
 
 return HUD

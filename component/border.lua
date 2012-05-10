@@ -21,7 +21,7 @@ local Border = Base( "Component", "Border" )
 							May be a number or a table of numbers.
 		init_style 		- The Border Component's initial <BorderStyle>.
 							Defaults to None.
-		init_brush 		- The Border Component's initial content.
+		init_content 		- The Border Component's initial content.
 							Can be an <Image>, <Brush>, or table of <Brushes>.
 		init_radius 	- The Border Component's initial radius, for rounded corners.
 							Can be a number or a table of numbers.
@@ -31,7 +31,7 @@ local Border = Base( "Component", "Border" )
 	Returns:
 		A new Border Component.
 ]]
-local function new (_, init_width, init_style, init_brush, init_radius, init_borders)
+local function new (_, init_width, init_style, init_content, init_radius, init_borders)
 	--[[
 		Structure: New Border
 			A Component that defines a <Frame's> Border.
@@ -46,24 +46,9 @@ local function new (_, init_width, init_style, init_brush, init_radius, init_bor
 	-- The Border's <BorderStyle>. Defaults to None.
 	local style = init_style or BorderStyle.None
 
-	-- Object: brush
-	-- The Border's Brush Component.
-	local brush
-
-	-- Object: Image
-	-- The Border's Image Component.
-	local image
-	if init_brush then
-		if init_brush.Subtype == "Brush" then
-			brush = init_brush
-		elseif init_brush.Subtype == "Image" then
-			image = init_brush
-		elseif type( init_brush ) == "table" and init_brush[1].Subtype == "Brush" then
-			brush = init_brush
-		else
-			error( "Vyzor: Invalid Brush or Image passed to Border Component.", 2 )
-		end
-	end
+	-- Object: content
+	-- The Border's Brush or Image Component.
+	local content = init_content
 
 	-- Double: radius
 	-- The Border's radius. Makes rounded corners. Defaults to 0.
@@ -95,15 +80,15 @@ local function new (_, init_width, init_style, init_brush, init_radius, init_bor
 			string.format( "border-style: %s", style ),
 			string.format( "border-radius: %s", radius ),
 		}
-		if brush or image then
+		if content then
 			style_table[#style_table+1] = string.format( "border-%s",
-				(brush and brush.Stylesheet) or
-				(image and string.format( "image: %s", image.Url))
+				(content.Subtype == "Brush" and content.Stylesheet) or
+				(content.Subtype == "Image" and string.format( "image: %s", content.Url))
 				)
 		end
-		if image then
+		if content.Subtype == "Image" then
 			style_table[#style_table+1] = string.format( "border-image-position: %s",
-				image.Alignment )
+				content.Alignment )
 		end
 
 		if borders then
@@ -121,10 +106,7 @@ local function new (_, init_width, init_style, init_brush, init_radius, init_bor
 		Properties: Border Properties
 			Style 		- Gets and sets the <BorderStyle> Component.
 			Width 		- Gets and sets the Border Component's width.
-			Brush 		- Gets and sets the Border Component's Brush Component.
-							Will remove an Image Component if set.
-			Image 		- Gets and sets the Border Component's Image Component.
-							Will remove a Brush Component if set.
+			Content		- Gets and sets the Border Component's Brush or Image Component.
 			Top 		- Gets and sets an individual <BorderSide> Subcomponent.
 			Right 		- Gets and sets an individual <BorderSide> Subcomponent.
 			Bottom 		- Gets and sets an individual <BorderSide> Subcomponent.
@@ -157,36 +139,20 @@ local function new (_, init_width, init_style, init_brush, init_radius, init_bor
 				width = value
 			end,
 		},
-		Brush = {
+		Content = {
 			get = function ()
-				if type( brush ) ~= "table" then
-					return brush
+				if type( content ) ~= "table" then
+					return content
 				else
 					local copy = {}
-					for i in ipairs( brush ) do
-						copy[i] = brush[i]
+					for i in ipairs( content ) do
+						copy[i] = content[i]
 					end
 					return copy
 				end
 			end,
 			set = function (value)
-				assert( value.Subtype == "Brush", "Vyzor: Invalid Brush passed to Border.")
-				brush = value
-				if image then
-					image = nil
-				end
-			end,
-		},
-		Image = {
-			get = function ()
-				return image
-			end,
-			set = function (value)
-				assert( value.Subtype == "Image", "Vyzor: Invalid Image passed to Border.")
-				image = value
-				if brush then
-					brush = nil
-				end
+				content = value
 			end,
 		},
 		Top = {

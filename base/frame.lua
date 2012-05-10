@@ -22,6 +22,11 @@ local Frame = Base("Frame")
 -- Used for very specific handling of the master Vyzor HUD.
 local first_frame = true
 
+-- Boolean: resize_registered
+-- Determines whether or not the resize function has been registered
+-- as an event handler.
+local resize_registered = false
+
 -- Array: master_list
 -- Holds all Frames for reference.
 local master_list = {}
@@ -53,7 +58,7 @@ local function new (_, name, x, y, width, height)
 
 	-- Boolean: is_drawn
 	-- Has this Frame been drawn?
-	local is_drawn = is_first
+	local is_drawn = false
 
 	-- Boolean: is_bounding
 	-- Does this object obey bounding rules?
@@ -118,9 +123,10 @@ local function new (_, name, x, y, width, height)
 		if component_count > 0 then
 			local style_table = {}
 			for i,v in pairs( components ) do
+				local v_stype = v.Subtype
 				-- Hover is a special case. It must be last, and it will
 				-- contain its own components. So we save it for last.
-				if v.Subtype ~= "Hover" or v.Subtype ~= "MiniConsole" or v.Subtype ~= "Map" then
+				if v_stype ~= "Hover" or v_stype ~= "MiniConsole" or v_stype ~= "Map" then
 					style_table[#style_table+1] = v.Stylesheet
 				end
 			end
@@ -168,6 +174,9 @@ local function new (_, name, x, y, width, height)
 			end,
 			set = function (value)
 				container = value
+				if not value then
+					hideWindow( name )
+				end
 			end,
 		},
 		Components = {
@@ -292,31 +301,41 @@ local function new (_, name, x, y, width, height)
 					object, name ), 2 )
 			end
 		elseif type( object ) == "table" then
-			if object.Type then
-				if object.Type == "Frame" then
-					master_list[object.Name].Container = master_list[name]
-					frames[object.Name] = master_list[object.Name]
+			local o_type = object.Type
+
+			if o_type then
+				local o_stype = object.Subtype
+				local o_name = object.Name
+
+				if o_type == "Frame" then
+					master_list[o_name].Container = master_list[name]
+					frames[o_name] = master_list[o_name]
 					frame_count = frame_count + 1
-				elseif object.Type == "Component" then
-					if not components[object.Subtype] then
-						if object.Subtype == "MiniConsole" then
-							mini_consoles[object.Name] = object
+				elseif o_type == "Component" then
+					if not components[o_stype] then
+						if o_stype == "MiniConsole" then
+							mini_consoles[o_name] = object
 							mini_console_count = mini_console_count + 1
 						else
-							components[object.Subtype] = object
+							components[o_stype] = object
 							component_count = component_count + 1
 						end
 
-						if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
+						if o_stype == "MiniConsole" or o_stype == "Map" then
 							object.Container = master_list[name]
+						end
+
+						if is_drawn then
+							updateStylesheet()
+							setLabelStyleSheet( name, stylesheet )
 						end
 					else
 						error( string.format(
 							"Vyzor: %s (Frame) already contains Component (%s).",
-							name, object.Subtype ), 2 )
+							name, o_stype ), 2 )
 					end
-				elseif object.Type == "Compound" then
-					compounds[object.Name] = object
+				elseif o_type == "Compound" then
+					compounds[o_name] = object
 					compound_count = compound_count + 1
 					object.Container = master_list[name]
 
@@ -324,10 +343,15 @@ local function new (_, name, x, y, width, height)
 						frames[object.Frame.Name] = master_list[object.Frame.Name]
 						frame_count = frame_count + 1
 					end
+
+					if is_drawn then
+						updateStylesheet()
+						setLabelStyleSheet( name, stylesheet )
+					end
 				else
 					error( string.format(
 						"Vyzor: Invalid Type (%s) passed to %s:Add.",
-						object.Type, name ), 2 )
+						o_type, name ), 2 )
 				end
 			else
 				error( string.format(
@@ -369,10 +393,11 @@ local function new (_, name, x, y, width, height)
 					components[object] = nil
 					component_count = component_count - 1
 				end
---~ 			elseif compounds[object] then
---~ 				compounds[object].Container = nil
---~ 				compounds[object] = nil
---~ 				compound_count = compound_count - 1
+
+				if is_drawn then
+					updateStylesheet()
+					setLabelStyleSheet( name, stylesheet )
+				end
 			else
 				error( string.format(
 					"Vyzor: Invalid string '%s' passed to %s:Remove.",
@@ -405,6 +430,11 @@ local function new (_, name, x, y, width, height)
 							"Vyzor: %s (Frame) does not contain Component (%s).",
 							name, object.Subtype ), 2 )
 					end
+
+					if is_drawn then
+						updateStylesheet()
+						setLabelStyleSheet( name, stylesheet )
+					end
 				elseif object.Type == "Compound" then
 					if compounds[object.Name] then
 						compounds[object.Name] = nil
@@ -415,6 +445,11 @@ local function new (_, name, x, y, width, height)
 							frames[object.Frame.Name] = nil
 							frame_count = frame_count - 1
 						end
+					end
+
+					if is_drawn then
+						updateStylesheet()
+						setLabelStyleSheet( name, stylesheet )
 					end
 				else
 					error( string.format(
@@ -469,34 +504,42 @@ local function new (_, name, x, y, width, height)
 			end
 
 			is_drawn = true
-		end
 
-		local draw_order = Options.DrawOrder
-		if is_first then
+			if frame_count > 0 then
+				for _, _, frame in frames() do
+					frame:Draw()
+				end
+			end
+		elseif is_first then
+			local draw_order = Options.DrawOrder
+
 			local function title (text)
 				local first = text:sub( 1, 1 ):upper()
 				local rest = text:sub( 2 ):lower()
 				return first .. rest
 			end
 
+			local hud_frames = Vyzor.HUD.Frames
 			for _,v in ipairs( draw_order ) do
 				local side = "Vyzor" .. title( v )
-				if Vyzor.HUD.Frames[side] then
-					Vyzor.HUD.Frames[side]:Draw()
+				if hud_frames[side] then
+					hud_frames[side]:Draw()
 				else
 					error("Vyzor: Invalid entry in Options.DrawOrder. Must be top, bottom, left, or right.", 2)
 				end
 			end
-		else
-			if frame_count > 0 then
-				for _, _, frame in frames() do
-					frame:Draw()
+
+			is_drawn = true
+			VyzorResize()
+
+			if not resize_registered then
+				if Options.HandleBorders == true or Options.HandleBorders == "auto" then
+					registerAnonymousEventHandler( "sysWindowResizeEvent", "VyzorResize" )
+					resize_registered = true
 				end
 			end
-		end
 
-		if is_first then
-			VyzorResize()
+			raiseEvent( "VyzorDrawnEvent" )
 		end
 	end
 
@@ -623,88 +666,6 @@ local function new (_, name, x, y, width, height)
 	]]
 	function new_frame:Echo (text)
 		echo( name, text )
-	end
-
-	--[[
-		Function: HEcho
-			Displays text on a Frame with Hex color formatting.
-
-		Paramaters:
-			text - The text to be displayed.
-	]]
-	function new_frame:HEcho (text)
-		hecho( name, text )
-	end
-
-	--[[
-		Function: CEcho
-			Displays text on a Frame with colour tags.
-
-		Paramaters:
-			text - The text to be displayed.
-	]]
-	function new_frame:CEcho (text)
-		cecho( name, text )
-	end
-
-	--[[
-		Function: DEcho
-			Displays text on a frame with some crazy-ass formatting.
-
-		Paramaters:
-			text 	- The text to be displayed.
-			fore 	- The foreground color of the text.
-			back 	- The background color of the text.
-			insert 	- If true, uses InsertText() instead of echo().
-	]]
-	function new_frame:DEcho (text, fore, back, insert)
-		decho( text, fore, back, insert, name )
-	end
-
-	--[[
-		Function: EchoLink
-			Displays a clickable line of text in a Frame.
-
-		Parameters:
-			text 		- The text to be displayed.
-			command 	- Script to be executed when clicked.
-			hint 		- Tooltip text.
-			keep_format - If true, uses Frame text formatting.
-			insert		- If true, uses InsertText() instead of Echo()
-	]]
-	function new_frame:EchoLink (text, command, hint, keep_format, insert)
-		if not insert then
-			echoLink( name, text, command, hint, keep_format)
-		else
-			insertLink( name, text, command, hint, keep_format)
-		end
-	end
-
-	--[[
-		Function: EchoPopup
-			Clickable text that expands out to a menu.
-
-		Parameters:
-			text 		- The text to be displayed.
-			commands 	- A table of scripts to be executed.
-			hints 		- A table of tooltips.
-			keep_format - If true, uses Frame text formatting.
-			insert		- If true, uses InsertText() insead of Echo().
-	]]
-	function new_frame:EchoPopup (text, commands, hints, keep_format, insert)
-		if not insert then
-			echoPopup( name, text, commands, hints, keep_format )
-		else
-			insertPopup( name, text, commands, hints, keep_format )
-		end
-	end
-
-	--[[
-		Function: Paste
-			Copies text to the Frame from the clipboard (via copy()).
-	]]
-	function new_frame:Paste ()
-		paste( name )
 	end
 
 	--[[

@@ -30,6 +30,15 @@ local default_borders = {
 -- Determines Border Frame size.
 local borders = default_borders
 
+-- Boolean: default_handle_borders
+-- Default setting for determing whether or not Vyzor handles
+-- Mudlet's borders.
+local default_handle_borders = "auto"
+
+-- Boolean: handle_borders
+-- Determines whether or not Vyzor handles Mudlet's borders.
+local handle_borders = default_handle_borders
+
 -- Double: default_console_height
 -- Default height of main console is window height.
 local _,default_console_height = getMainWindowSize()
@@ -44,6 +53,10 @@ local console_height = default_console_height
 		Borders 		- Returns a table containing options.
 							Sets Border options via a table.
 		ConsoleHeight 	- Sets and gets a user-defined main console height.
+		HandleBorders	- Gets and sets a value that determines whether or not Vyzor
+							handles Mudlet's borders. If true, then Vyzor will always
+							resize Mudlet's borders. If auto, it will only assume control
+							after the Vyzor.HUD:Draw() has been called.
 ]]
 local properties = {
 	DrawOrder = {
@@ -115,6 +128,20 @@ local properties = {
 			raiseEvent( "sysWindowResizeEvent" )
 		end,
 	},
+	HandleBorders = {
+		get = function ()
+			return handle_borders
+		end,
+		set = function (value)
+			if type( value ) == "boolean" then
+				handle_borders = value
+			elseif type( value ) == "string" and value == "auto" then
+				handle_borders = value
+			else
+				error( 'Vyzor: HandleBorders must be a boolean or "auto".', 2 )
+			end
+		end
+	},
 }
 
 --[[
@@ -122,9 +149,11 @@ local properties = {
 		Resets all Options to default values.
 ]]
 function Options:Reset ()
-	draw_order = default_draw_order
-	borders = default_borders
-	console_height = default_console_height
+	draw_order 		= default_draw_order
+	borders 		= default_borders
+	console_height 	= default_console_height
+	handle_borders 	= default_handle_borders
+
 	raiseEvent( "sysWindowResizeEvent" )
 end
 

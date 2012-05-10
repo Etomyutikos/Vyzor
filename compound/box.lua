@@ -20,14 +20,11 @@ local Box = Base( "Compound", "Box" )
 	Parameters:
 		name 		- The name of the Box and the automatically
 						generated container Frame.
-		init_x 		- Initial X coordinate of this Box.
-		init_y 		- Initial Y coordinate of this Box.
-		init_width 	- Initial Width of this Box.
-		init_height - Initial Height of this Box.
 		init_mode 	- Alignment of Frames. Defaults to Horizontal.
+		init_back	- The background Frame for this Box.
 		init_frames	- A numerically indexed table holding the Frames this Box contains.
 ]]
-local function new (_, name, init_x, init_y, init_width, init_height, init_mode, init_frames)
+local function new (_, name, init_mode, init_back, init_frames)
 	assert(name, "Vyzor: New Box must be supplied with a name")
 
 	--[[
@@ -52,12 +49,12 @@ local function new (_, name, init_x, init_y, init_width, init_height, init_mode,
 		end
 	end
 
-	-- Object: box_frame
-	-- The generated Frame containing all other Frames.
-	local box_frame = Vyzor.Frame(name, init_x, init_y, init_width, init_height)
+	-- Object: background_frame
+	-- The Frame containing all other Frames.
+	local background_frame = init_back
 	if frame_count > 0 then
 		for _, name, frame in frames() do
-			box_frame:Add( frame )
+			background_frame:Add( frame )
 		end
 	end
 
@@ -104,7 +101,7 @@ local function new (_, name, init_x, init_y, init_width, init_height, init_mode,
 	--[[
 		Properties: Box Properties
 			Name 		- Returns the Box's name.
-			Frame 		- Exposes the Box's base Frame.
+			Background 	- Exposes the Box's background Frame.
 			Frames 		- Returns a copy of the Box's Frames.
 			Container 	- Gets and sets the parent Frame of this Box.
 			Mode 		- Gets and sets the Box's BoxMode.
@@ -117,7 +114,7 @@ local function new (_, name, init_x, init_y, init_width, init_height, init_mode,
 		},
 		Frame = {
 			get = function ()
-				return box_frame
+				return background_frame
 			end,
 		},
 		Frames = {
@@ -135,10 +132,10 @@ local function new (_, name, init_x, init_y, init_width, init_height, init_mode,
 		},
 		Container = {
 			get = function ()
-				return box_frame.Container
+				return background_frame.Container
 			end,
 			set = function (value)
-				box_frame.Container = value
+				background_frame.Container = value
 			end,
 		},
 		Mode = {

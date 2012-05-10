@@ -96,13 +96,13 @@ local function new (_, init_components )
 	}
 
 	--[[
-		Function: AddComponent
+		Function: Add
 			Adds a new Component to the Hover Component.
 
 		Parameters:
 			component - The Component to be added.
 	]]
-	function new_hover:AddComponent (component)
+	function new_hover:Add (component)
 		if not components[component.Subtype] then
 			components[component.Subtype] = component
 			component_count = component_count + 1
@@ -110,13 +110,13 @@ local function new (_, init_components )
 	end
 
 	--[[
-		Function: RemoveComponent
+		Function: Remove
 			Removes a Component from the Hover Component.
 
 		Paramaters:
 			subtype - The Subtype of the Component to be removed.
 	]]
-	function new_hover:RemoveComponent (subtype)
+	function new_hover:Remove (subtype)
 		if components[subtype] then
 			components[subtype] = nil
 			component_count = component_count - 1
@@ -124,13 +124,13 @@ local function new (_, init_components )
 	end
 
 	--[[
-		Function: ReplaceComponent
+		Function: Replace
 			Replaces a Component in the Hover Component.
 
 		Parameters:
 			component - The Component to be added.
 	]]
-	function new_hover:ReplaceComponent (component)
+	function new_hover:Replace (component)
 		components[component.Subtype] = component
 	end
 

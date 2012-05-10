@@ -63,9 +63,10 @@ local function new (_, frame, init_x, init_y, is_first)
 			return
 		end
 
-		assert( frame.Container, "Vyzor: Frame must have container before Position can be determined." )
-		local container_pos = frame.Container.Position.Content
-		local container_size = frame.Container.Size.Content
+		local frame_container = frame.Container
+		assert( frame_container, "Vyzor: Frame must have container before Position can be determined." )
+		local container_pos 	= frame_container.Position.Content
+		local container_size 	= frame_container.Size.Content
 		-- We convert the size table from width/height to X/Y so we can
 		-- use it in our loop below.
 		local size_table = {
@@ -87,7 +88,7 @@ local function new (_, frame, init_x, init_y, is_first)
 
 		-- We follow Bounding rules, which determine how to manipulate
 		-- child Frames as the parent Frame is resized.
-		if frame.Container.IsBounding then
+		if frame_container.IsBounding then
 			if frame.BoundingMode == BoundingMode.Position then
 				local frame_width = frame.Size.AbsoluteWidth
 				local cont_edge_x = container_pos.X + container_size.Width
@@ -114,8 +115,12 @@ local function new (_, frame, init_x, init_y, is_first)
 		-- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
 			local blank_x = 0
 			local blank_y = 0
-			if frame.Components["Border"] then
-				local border = frame.Components["Border"]
+
+			local frame_comps = frame.Components
+
+			local frame_border = frame_comps["Border"]
+			if frame_border then
+				local border = frame_border
 				if border.Top then
 					blank_x = blank_x + border.Left.Width
 					blank_y = blank_y + border.Top.Width
@@ -129,13 +134,17 @@ local function new (_, frame, init_x, init_y, is_first)
 					end
 				end
 			end
-			if frame.Components["Margin"] then
-				local margin = frame.Components["Margin"]
+
+			local frame_margin = frame_comps["Margin"]
+			if frame_margin then
+				local margin = frame_margin
 				blank_x = blank_x + margin.Left
 				blank_y = blank_y + margin.Top
 			end
-			if frame.Components["Padding"] then
-				local padding = frame.Components["Padding"]
+
+			local frame_padding = frame_comps["Padding"]
+			if frame_padding then
+				local padding = frame_padding
 				blank_x = blank_x + padding.Left
 				blank_y = blank_y + padding.Top
 			end

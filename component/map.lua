@@ -155,10 +155,13 @@ local function new (_, init_x, init_y, init_width, init_height)
 	]]
 	local function updateAbsolutes ()
 		if container then
-			local frame_x 		= container.Position.ContentX
-			local frame_y 		= container.Position.ContentY
-			local frame_width 	= container.Size.ContentWidth
-			local frame_height 	= container.Size.ContentHeight
+			local frame_pos		= container.Position
+			local frame_x 		= frame_pos.ContentX
+			local frame_y 		= frame_pos.ContentY
+
+			local frame_siz		= container.Size
+			local frame_width 	= frame_siz.ContentWidth
+			local frame_height 	= frame_siz.ContentHeight
 
 			if x >= 0.0 and x <= 1.0 then
 				absolute_x = frame_x + (x * frame_width)

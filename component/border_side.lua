@@ -17,15 +17,16 @@ local BorderSide = Base( "Subcomponent", "BorderSide" )
 		Should only be used as an argument to a <Border> Component.
 
 	Parameters:
-		init_width 	- The BorderSide's initial width.
-		init_style 	- The BorderSide's initial <BorderStyle>. Defaults to None.
-		init_brush 	- The BorderSide's initial Brush or Image.
-		init_radius -
+		init_width 		- The BorderSide's initial width.
+		init_style 		- The BorderSide's initial <BorderStyle>. Defaults to None.
+		init_content 	- The BorderSide's initial Brush or Image.
+		init_radius 	- The radius of the BorderSide's corners. Only relevant
+							for top and bottom BorderSides.
 
 	Returns:
 		A new BorderSide Subcomponent.
 ]]
-local function new (_, init_width, init_style, init_brush, init_radius)
+local function new (_, init_width, init_style, init_content, init_radius)
 	--[[
 		Structure: New BorderSide
 			A Subcomponent that defines individual sides of a <Border>
@@ -47,16 +48,7 @@ local function new (_, init_width, init_style, init_brush, init_radius)
 
 	-- Object: brush
 	-- BorderSide's Brush Component.
-	local brush
-
-	-- Object: image
-	-- BorderSide's Image Component.
-	local image
-	if init_brush.Subtype == "Brush" then
-		brush = init_brush
-	elseif init_brush.Subtype == "Image" then
-		image = init_brush
-	end
+	local content = init_content
 
 	-- Double: radius
 	-- BorderSide's radius. Defaults to 0.
@@ -76,9 +68,10 @@ local function new (_, init_width, init_style, init_brush, init_radius)
 			string.format( "width: %s", width ),
 			string.format( "style: %s", style ),
 			string.format( "%s: %s",
-				(brush and brush.Stylesheet) or (image and string.format( "image: %s", image.Url))
+				(content.Subtype == "Brush" and content.Stylesheet) or
+				(content.Subtype == "Image" and string.format( "image: %s", content.Url))
 			),
-			(image and string.format( "image-position: %s", image.Alignment )),
+			(content.Subtype == "Image" and string.format( "image-position: %s", content.Alignment )),
 		}
 
 		if not is_side then
@@ -95,10 +88,7 @@ local function new (_, init_width, init_style, init_brush, init_radius)
 		Properties: BorderSide Properties
 			Width 		- Gets and sets the BorderSide Subcomponent's width.
 			Style 		- Gets and sets the BorderSide's <BorderStyle>.
-			Brush 		- Gets and sets the BorderSide's Brush Component.
-							Removes an Image Component if set.
-			Image 		- Gets and sets the BorderSide's Image Component.
-							Removes a Brush Component if set.
+			Content		- Gets and sets the BorderSide's Brush or Image Component.
 			Radius 		- Gets and sets the BorderSide's radius.
 			IsSide 		- Gets and sets the BorderSide's <is_side> value. Must be boolean.
 			Styletable 	- Updates and returns the BorderSide's stylesheet table.
@@ -121,24 +111,12 @@ local function new (_, init_width, init_style, init_brush, init_radius)
 				style = value
 			end,
 		},
-		Brush = {
+		Content = {
 			get = function ()
-				return brush
+				return content
 			end,
 			set = function (value)
-				assert( value.Subtype == "Brush", "Vyzor: Invalid Brush passed to BorderSide." )
-				brush = value
-				image = image and nil
-			end,
-		},
-		Image = {
-			get = function ()
-				return image
-			end,
-			set = function (value)
-				assert( value.Subtype == "Image", "Vyzor: Invalid Image passed to BorderSide." )
-				image = value
-				brush = brush and nil
+				content = value
 			end,
 		},
 		Radius = {

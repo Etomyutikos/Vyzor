@@ -17,27 +17,23 @@ local Background = Base( "Component", "Background" )
 	Constructor: new
 
 	Parameters:
-		content 		- Either a <Brush> or <Image> Component.
+		init_content 	- Either a <Brush> or <Image> Component.
 		init_alignment 	- Initial <Alignment> of the Background content. Default is top-left.
 		init_repeat 	- Initial <Repeat> rules for the Background content. Default is repeat-xy.
 
 	Returns:
 		A new Background Component.
 ]]
-local function new (_, content, init_alignment, init_repeat)
+local function new (_, init_content, init_alignment, init_repeat)
 	--[[
 		Structure: New Background
 			A Component defining a <Frame's> background.
 	]]
 	local new_background = {}
 
-	-- Object: image
-	-- An <Image> Component.
-	local image
-
-	-- Object: brush
-	-- A <Brush> Component.
-	local brush
+	-- Object: content
+	-- Either an Image Component or a Brush Component.
+	local content = init_content
 
 	-- Object: alignment
 	-- An Alignment Enum. Defaults to TopLeft.
@@ -47,13 +43,6 @@ local function new (_, content, init_alignment, init_repeat)
 	-- A Repeat Enum. Defaults to RepeatXY.
 	local repetition = (init_repeat or Repeat.RepeatXY)
 
-	if content.Subtype == "Image" then
-		image = content
-	elseif content.Subtype == "Brush" then
-		brush = content
-	else
-		error( "Vyzor: Invalid Component passed to Background. Must be Brush or Image.", 2 )
-	end
 
 	-- String: stylesheet
 	-- This Component's Stylesheet. Generated via <updateStylesheet>.
@@ -70,18 +59,18 @@ local function new (_, content, init_alignment, init_repeat)
 			string.format( "background-repeat: %s", repetition ),
 		}
 
-		if brush or image then
-			if brush then
-				if brush.Content.Subtype == "Gradient" then
+		if content then
+			if content.Subtype == "Brush" then
+				if content.Content.Subtype == "Gradient" then
 					style_table[#style_table+1] = string.format( "background: %s",
-						brush.Stylesheet )
+						content.Stylesheet )
 				else
 					style_table[#style_table+1] = string.format( "background-%s",
-						brush.Stylesheet )
+						content.Stylesheet )
 				end
 			else
 				style_table[#style_table+1] = string.format( "background-image: %s",
-					image.Url )
+					content.Url )
 			end
 		end
 
@@ -99,16 +88,10 @@ local function new (_, content, init_alignment, init_repeat)
 	local properties = {
 		Content = {
 			get = function ()
-				return image or brush
+				return content
 			end,
 			set = function (value)
-				if value.Subtype == "Image" then
-					image = value
-				elseif value.Subtype == "Brush" then
-					brush = value
-				else
-					assert( false, "Vyzor: Invalid Component passed to Background. Must be Brush or Image." )
-				end
+				content = value
 			end,
 		},
 		Alignment = {

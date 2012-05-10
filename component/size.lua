@@ -62,9 +62,10 @@ local function new (_, frame, init_width, init_height, is_first)
 			return
 		end
 
-		assert( frame.Container, "Vyzor: Frame must have container before Size can be determined." )
-		local container_pos = frame.Container.Position.Content
-		local container_size = frame.Container.Size.Content
+		local frame_container = frame.Container
+		assert( frame_container, "Vyzor: Frame must have container before Size can be determined." )
+		local container_pos 	= frame_container.Position.Content
+		local container_size 	= frame_container.Size.Content
 
 		for dim, value in pairs(dims) do
 			if value <= 1 and value > 0 then
@@ -79,7 +80,7 @@ local function new (_, frame, init_width, init_height, is_first)
 
 		-- Bounding rules. Determines Frame manipulation when parent
 		-- Frame is resized.
-		if frame.Container.IsBounding then
+		if frame_container.IsBounding then
 			if frame.BoundingMode == BoundingMode.Size then
 				local frame_x = frame.Position.AbsoluteX
 				local frame_edge_x = frame_x + abs_dims.Width
@@ -109,8 +110,12 @@ local function new (_, frame, init_width, init_height, is_first)
 			local right_width = 0
 			local bottom_height = 0
 			local left_width = 0
-			if frame.Components["Border"] then
-				local border = frame.Components["Border"]
+
+			local frame_comps = frame.Components
+
+			local frame_border = frame_comps["Border"]
+			if frame_border then
+				local border = frame_border
 				if border.Top then
 					right_width = right_width + border.Right.Width
 					left_width = left_width + border.Left.Width
@@ -133,16 +138,20 @@ local function new (_, frame, init_width, init_height, is_first)
 					end
 				end
 			end
-			if frame.Components["Margin"] then
-				local margin = frame.Components["Margin"]
+
+			local frame_margin = frame_comps["Margin"]
+			if frame_margin then
+				local margin = frame_margin
 				right_width = right_width + margin.Right
 				left_width = left_width + margin.Left
 
 				top_height = top_height + margin.Top
 				bottom_height = bottom_height + margin.Bottom
 			end
-			if frame.Components["Padding"] then
-				local padding = frame.Components["Padding"]
+
+			local frame_padding = frame_comps["Padding"]
+			if frame_padding then
+				local padding = frame_padding
 				right_width = right_width + padding.Right
 				left_width = left_width + padding.Left
 

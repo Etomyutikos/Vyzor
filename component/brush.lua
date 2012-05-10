@@ -3,6 +3,11 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
+local assert 		= assert
+local getmetatable 	= getmetatable
+local require 		= require
+local setmetatable	= setmetatable
+
 local Base 			= require( "vyzor.base" )
 local ColorMode 	= require( "vyzor.enum.color_mode" )
 local GradientMode 	= require( "vyzor.enum.gradient_mode" )

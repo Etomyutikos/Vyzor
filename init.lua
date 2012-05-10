@@ -90,7 +90,15 @@ if exists( "vyzor", "alias" ) == 0 then
 end
 
 if exists( "Vyzor Help", "alias" ) == 0 then
-	permAlias( "Vyzor Help", "vyzor", [[^vy(?:zor)?\s?h(?:elp)?$]], [[openUrl(getMudletHomeDir().."/vyzor/doc/index.html")]] )
+	permAlias( "Vyzor Help", "vyzor", [[^vy(?:zor)?\s?h(?:elp)?$]],
+		[[
+		if openWebPage then
+			openWebPage( getMudletHomeDir() .. "vyzor/doc/index.html" )
+		else
+			openUrl( getMudletHomeDir() .. "/vyzor/doc/index.html" )
+		end
+		]]
+	)
 end
 
 setmetatable( Vyzor, {

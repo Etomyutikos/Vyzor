@@ -85,27 +85,10 @@ local function new (_, mode, ...)
 			index = 4
 		end
 
-		-- Had to find a generic way to iterate through arguments to grab
-		-- any number of stop, color pairs. I was pretty proud of this
-		-- solution.
 		local stop_num = 1
 		for i=index, #arg do
-			gradient_data.stops[stop_num] = gradient_data.stops[stop_num] or {}
-			if (index % 2 == 0) then
-				if (i % 2 == 0) then
-					gradient_data.stops[stop_num].n = arg[i]
-				else
-					gradient_data.stops[stop_num].color = arg[i]
-					stop_num = stop_num + 1
-				end
-			else
-				if (i % 2 == 0) then
-					gradient_data.stops[stop_num].color = arg[i]
-					stop_num = stop_num + 1
-				else
-					gradient_data.stops[stop_num].n = arg[i]
-				end
-			end
+			gradient_data.stops[stop_num] = arg[i]
+			stop_num = stop_num + 1
 		end
 	end
 
@@ -122,8 +105,8 @@ local function new (_, mode, ...)
 		local style_stops = {}
 		for _,stop in ipairs( gradient_data.stops ) do
 			style_stops[#style_stops+1] = string.format( "stop:%s %s",
-				stop.n,
-				stop.color.Stylesheet:sub(8) or stop.color )
+				stop[1],
+				stop[2].Stylesheet:sub(8) or stop.color )
 		end
 
 		if mode:match( GradientMode.Linear ) then

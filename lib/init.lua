@@ -22,7 +22,8 @@ local Lib = {}
 function Lib.OrderedTable ()
 	local list = {}
 	local dict = {}
-	return setmetatable( {}, {
+	local proxy = {}
+	setmetatable( proxy, {
 		__index = function (_, key)
 			if type(key) == "number" then
 				return dict[list[key]]
@@ -68,6 +69,8 @@ function Lib.OrderedTable ()
 			return iter, nil, 0
 		end,
 	} )
+
+	return proxy
 end
 
 setmetatable( Lib, {
