@@ -353,6 +353,20 @@ local function new (_, name, current, maximum, init_back, init_fore, fill_enum, 
 		end
 	end
 
+	--[[
+		Function: VyzorInitializeGauges
+			Calls update on each Gauge after Vyzor has been drawn.
+	]]
+	function VyzorInitializeGauges ()
+		if #master_list > 0 then
+			for _, gauge in ipairs( master_list ) do
+				gauge:Update()
+			end
+		end
+	end
+
+	registerAnonymousEventHandler( "VyzorDrawnEvent", "VyzorInitializeGauges" )
+
 	setmetatable( new_gauge, {
 		__index = function (_, key)
 			return (properties[key] and properties[key].get()) or Gauge[key]

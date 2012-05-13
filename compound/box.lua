@@ -74,8 +74,8 @@ local function new (_, name, init_mode, init_back, init_frames)
 			for index, name, frame in frames() do
 				frame.Position.X 		= 0
 				frame.Position.Y 		= (1 / frame_count) * (index - 1)
-				frame.Size.Width 	= 1
-				frame.Size.Height 	= (1 / frame_count)
+				frame.Size.Width 		= 1
+				frame.Size.Height 		= (1 / frame_count)
 			end
 		elseif mode == BoxMode.Grid then
 			local sqr = math.floor(math.sqrt(frame_count))
@@ -136,7 +136,7 @@ local function new (_, name, init_mode, init_back, init_frames)
 			end,
 			set = function (value)
 				background_frame.Container = value
-			end,
+			end
 		},
 		Mode = {
 			get = function ()

@@ -81,11 +81,13 @@ Group: Enum  {
    File: GaugeFill  (enum\gauge_fill.lua)
    File: GradientMode  (enum\gradient_mode.lua)
    File: Repeat  (enum\repeat.lua)
+   File: TabLocation  (enum\tab_location.lua)
    }  # Group: Enum
 
 Group: Compound  {
 
    File: Box  (compound\box.lua)
+   File: Chat  (compound\chat.lua)
    File: Gauge  (compound\gauge.lua)
    }  # Group: Compound
 

@@ -49,7 +49,7 @@ function Lib.OrderedTable ()
 					table.remove(list, index)
 					dict[key] = nil
 				else
-					error(string.format("No such value (%s) in OrderedTable.", key),2)
+					error(string.format("No such value (%s) in OrderedTable.", tostring(key)),3)
 				end
 			end
 		end,

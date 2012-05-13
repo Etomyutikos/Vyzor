@@ -256,7 +256,11 @@ local function new (_, name, x, y, width, height)
 			set = function (value)
 				callback = value
 				if callback_args then
-					setLabelClickCallback( name, callback, unpack(callback_args) )
+					if type( callback_args ) == "table" then
+						setLabelClickCallback( name, callback, unpack(callback_args) )
+					else
+						setLabelClickCallback( name, callback, callback_args )
+					end
 				else
 					setLabelClickCallback( name, callback )
 				end
@@ -269,7 +273,11 @@ local function new (_, name, x, y, width, height)
 			set = function (value)
 				callback_args = value
 				if callback then
-					setLabelClickCallback( name, callback, unpack(value) )
+					if type( callback_args ) == "table" then
+						setLabelClickCallback( name, callback, unpack(callback_args) )
+					else
+						setLabelClickCallback( name, callback, callback_args )
+					end
 				end
 			end,
 		},
@@ -339,7 +347,7 @@ local function new (_, name, x, y, width, height)
 					compound_count = compound_count + 1
 					object.Container = master_list[name]
 
-					if object.Subtype == "Box" then
+					if object.Subtype == "Box" or object.Subtype == "Chat" then
 						frames[object.Frame.Name] = master_list[object.Frame.Name]
 						frame_count = frame_count + 1
 					end
@@ -441,7 +449,7 @@ local function new (_, name, x, y, width, height)
 						compound_count = compound_count -1
 						object.Container = nil
 
-						if object.Subtype == "Box" then
+						if object.Subtype == "Box" or object.Subtype == "Chat" then
 							frames[object.Frame.Name] = nil
 							frame_count = frame_count - 1
 						end
@@ -497,7 +505,11 @@ local function new (_, name, x, y, width, height)
 
 			if callback then
 				if callback_args then
-					setLabelClickCallback( name, callback, unpack(callback_args) )
+					if type( callback_args ) == "table" then
+						setLabelClickCallback( name, callback, unpack(callback_args) )
+					else
+						setLabelClickCallback( name, callback, callback_args )
+					end
 				else
 					setLabelClickCallback( name, callback )
 				end

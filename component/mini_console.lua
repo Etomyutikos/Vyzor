@@ -351,7 +351,8 @@ local function new (_, name, init_x, init_y, init_width, init_height, word_wrap,
 
 	--[[
 		Function: Echo
-			Displays text on a MiniConsole.
+			Displays text on a MiniConsole. Starts where the last
+			line left off.
 
 		Parameters:
 			text - The text to be displayed.
@@ -437,19 +438,23 @@ local function new (_, name, init_x, init_y, init_width, init_height, word_wrap,
 	--[[
 		Function: Paste
 			Copies text to the MiniConsole from the clipboard (via copy()).
+			Clears the window first.
 	]]
 	function new_console:Paste ()
+		selectCurrentLine()
+		copy()
 		paste( name )
 	end
 
 	--[[
-		Function: AppendBuffer
+		Function: Append
 			Copies text to the MiniConsole from a buffer or
 			the clipboard (via copy()).
-
-			Identical to <Paste>?
+			Adds the text beginning at a new line.
 	]]
-	function new_console:AppendBuffer ()
+	function new_console:Append ()
+		selectCurrentLine()
+		copy()
 		appendBuffer( name )
 	end
 

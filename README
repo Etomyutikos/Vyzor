@@ -1,1 +1,1 @@
-I'll get to it.
+Vyzor is a GUI framework that provides an object-oriented interface for Mudlet's Labels and Qt's Stylesheets. It provides Frames (Vyzor's container object) mapped to Mudlet's borders, which update dynamically or maintain a size specified by the user. Users creates Frames, and can define them using values relative to parent Frames; in this way, you can have widgets that properly map to, say, the right side of the main console. All Frames can be filled with Components, which map directly to Stylesheet Properties.

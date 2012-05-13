@@ -55,6 +55,7 @@ local Vyzor = {
 			GaugeFill		- See GaugeFill.
 			GradientMode 	- See GradientMode.
 			Repeat 			- See Repeat.
+			TabLocation 	- See TabLocation.
 	]]
 	Alignment 		= require( "vyzor.enum.alignment" ),
 	BorderStyle 	= require( "vyzor.enum.border_style" ),
@@ -67,13 +68,16 @@ local Vyzor = {
 	GaugeFill		= require( "vyzor.enum.gauge_fill" ),
 	GradientMode 	= require( "vyzor.enum.gradient_mode" ),
 	Repeat 			= require( "vyzor.enum.repeat" ),
+	TabLocation 	= require( "vyzor.enum.tab_location" ),
 
 	--[[
 		Objects: Compounds
 			Box		- See Box.
+			Chat 	- See Chat.
 			Gauge 	- See Gauge.
 	]]
 	Box				= require( "vyzor.compound.box" ),
+	Chat 			= require( "vyzor.compound.chat" ),
 	Gauge 			= require( "vyzor.compound.gauge" ),
 
 	-- Object: Options
