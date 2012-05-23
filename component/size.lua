@@ -113,52 +113,53 @@ local function new (_, frame, init_width, init_height, is_first)
 
 			local frame_comps = frame.Components
 
-			local frame_border = frame_comps["Border"]
-			if frame_border then
-				local border = frame_border
-				if border.Top then
-					right_width = right_width + border.Right.Width
-					left_width = left_width + border.Left.Width
+			if frame_comps then
+				local frame_border = frame_comps["Border"]
+				if frame_border then
+					local border = frame_border
+					if border.Top then
+						right_width = right_width + border.Right.Width
+						left_width = left_width + border.Left.Width
 
-					top_height = top_height + border.Top.Width
-					bottom_height = bottom_height + border.Bottom.Width
-				else
-					if type( border.Width ) == "table" then
-						right_width = right_width + border.Width[2]
-						left_width = left_width + border.Width[4]
-
-						top_height = top_height + borders.Width[1]
-						bottom_height = bottom_height + borders.Width[3]
+						top_height = top_height + border.Top.Width
+						bottom_height = bottom_height + border.Bottom.Width
 					else
-						right_width = right_width + border.Width
-						left_width = left_width + border.Width
+						if type( border.Width ) == "table" then
+							right_width = right_width + border.Width[2]
+							left_width = left_width + border.Width[4]
 
-						top_height = top_height + border.Width
-						bottom_height = bottom_height + border.Width
+							top_height = top_height + borders.Width[1]
+							bottom_height = bottom_height + borders.Width[3]
+						else
+							right_width = right_width + border.Width
+							left_width = left_width + border.Width
+
+							top_height = top_height + border.Width
+							bottom_height = bottom_height + border.Width
+						end
 					end
 				end
+
+				local frame_margin = frame_comps["Margin"]
+				if frame_margin then
+					local margin = frame_margin
+					right_width = right_width + margin.Right
+					left_width = left_width + margin.Left
+
+					top_height = top_height + margin.Top
+					bottom_height = bottom_height + margin.Bottom
+				end
+
+				local frame_padding = frame_comps["Padding"]
+				if frame_padding then
+					local padding = frame_padding
+					right_width = right_width + padding.Right
+					left_width = left_width + padding.Left
+
+					top_height = top_height + padding.Top
+					bottom_height = bottom_height + padding.Bottom
+				end
 			end
-
-			local frame_margin = frame_comps["Margin"]
-			if frame_margin then
-				local margin = frame_margin
-				right_width = right_width + margin.Right
-				left_width = left_width + margin.Left
-
-				top_height = top_height + margin.Top
-				bottom_height = bottom_height + margin.Bottom
-			end
-
-			local frame_padding = frame_comps["Padding"]
-			if frame_padding then
-				local padding = frame_padding
-				right_width = right_width + padding.Right
-				left_width = left_width + padding.Left
-
-				top_height = top_height + padding.Top
-				bottom_height = bottom_height + padding.Bottom
-			end
-
 			content_dims = {
 				Width = abs_dims.Width - (right_width + left_width),
 				Height = abs_dims.Height - (top_height + bottom_height)

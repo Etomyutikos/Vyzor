@@ -3,6 +3,8 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
+local Lib = require( "vyzor.lib" )
+
 --[[
 	Structure: Options
 		This object maintains option state for Vyzor.
@@ -133,12 +135,10 @@ local properties = {
 			return handle_borders
 		end,
 		set = function (value)
-			if type( value ) == "boolean" then
-				handle_borders = value
-			elseif type( value ) == "string" and value == "auto" then
-				handle_borders = value
-			else
-				error( 'Vyzor: HandleBorders must be a boolean or "auto".', 2 )
+			handle_borders = value
+
+			if value == true then
+				raiseEvent( "sysWindowResizeEvent" )
 			end
 		end
 	},

@@ -96,16 +96,19 @@ end
 if exists( "Vyzor Help", "alias" ) == 0 then
 	permAlias( "Vyzor Help", "vyzor", [[^vy(?:zor)?\s?h(?:elp)?$]],
 		[[
-		if openWebPage then
-			openWebPage( getMudletHomeDir() .. "vyzor/doc/index.html" )
-		else
-			openUrl( getMudletHomeDir() .. "/vyzor/doc/index.html" )
-		end
+if openWebPage then
+	openWebPage( getMudletHomeDir():gsub("\\", "/") .. "/vyzor/doc/index.html" )
+else
+	openUrl( getMudletHomeDir():gsub("\\", "/") .. "/vyzor/doc/index.html" )
+end
 		]]
 	)
 end
 
 setmetatable( Vyzor, {
+	__index = function (_, key)
+		return Vyzor.HUD.Frames["Vyzor" .. key]
+	end,
 	__newindex = function (_, key, value)
 		error( "Vyzor: May not write directly to Vyzor table.", 2 )
 	end,

@@ -30,7 +30,6 @@ local Color = Base( "Component", "Color" )
 		A new Color Component.
 ]]
 local function new (_, mode, ...)
-	assert( ColorMode:IsValid( mode ), "Vyzor: Invalid mode passed to Color." )
 	--[[
 		Structure: New Color
 			A Component that defines color information. Used
@@ -43,7 +42,6 @@ local function new (_, mode, ...)
 	-- Variable: color_data
 	-- Holds the Component's color data.
 	local color_data
-
 	if mode:find( ColorMode.RGB ) then
 		color_data = {
 			red = arg[1],

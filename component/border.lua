@@ -5,6 +5,7 @@
 
 local Base 			= require("vyzor.base")
 local Brush 		= require("vyzor.component.brush")
+local BorderSide 	= require("vyzor.component.border_side")
 local BorderStyle 	= require("vyzor.enum.border_style")
 
 --[[
@@ -21,7 +22,7 @@ local Border = Base( "Component", "Border" )
 							May be a number or a table of numbers.
 		init_style 		- The Border Component's initial <BorderStyle>.
 							Defaults to None.
-		init_content 		- The Border Component's initial content.
+		init_content 	- The Border Component's initial content.
 							Can be an <Image>, <Brush>, or table of <Brushes>.
 		init_radius 	- The Border Component's initial radius, for rounded corners.
 							Can be a number or a table of numbers.
@@ -59,11 +60,12 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 	local borders
 
 	if init_borders and type( init_borders ) == "table" then
+		local default_side = BorderSide( width, style, content, radius )
 		borders = {}
-		borders["top"] = init_borders[1]
-		borders["right"] = init_borders[2] or top
-		borders["bottom"] = init_borders[3] or top
-		borders["left"] = init_borders[4] or right
+		borders["top"] = init_borders["top"] or init_borders[1] or default_side
+		borders["right"] = init_borders["right"] or init_borders[2] or default_side
+		borders["bottom"] = init_borders["bottom"] or init_borders[3] or default_side
+		borders["left"] = init_borders["left"] or init_borders[4] or default_side
 	end
 
 	-- String: stylesheet
@@ -84,11 +86,11 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 			style_table[#style_table+1] = string.format( "border-%s",
 				(content.Subtype == "Brush" and content.Stylesheet) or
 				(content.Subtype == "Image" and string.format( "image: %s", content.Url))
-				)
-		end
-		if content.Subtype == "Image" then
-			style_table[#style_table+1] = string.format( "border-image-position: %s",
-				content.Alignment )
+			)
+			if content.Subtype == "Image" then
+				style_table[#style_table+1] = string.format( "border-image-position: %s",
+					content.Alignment )
+			end
 		end
 
 		if borders then
@@ -160,7 +162,6 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 				return (borders and borders["top"]) or nil
 			end,
 			set = function (value)
-				assert( value.Subtype == "BorderSide", "Vyzor: Invalid Border Subcomponent passed to Border.Top")
 				borders["top"] = value
 			end
 		},
@@ -169,7 +170,6 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 				return (borders and borders["right"]) or nil
 			end,
 			set = function (value)
-				assert( value.Subtype == "BorderSide", "Vyzor: Invalid Border Subcomponent passed to Border.Right.")
 				borders["right"] = value
 			end
 		},
@@ -178,7 +178,6 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 				return (borders and borders["bottom"]) or nil
 			end,
 			set = function (value)
-				assert( value.Subtype == "BorderSide", "Vyzor: Invalid Border Subcomponent passed to Border.Bottom.")
 				borders["bottom"] = value
 			end
 		},
@@ -187,7 +186,6 @@ local function new (_, init_width, init_style, init_content, init_radius, init_b
 				return (borders and borders["left"]) or nil
 			end,
 			set = function (value)
-				assert( value.Subtype == "BorderSide", "Vyzor: Invalid Border Subcomponent passed to Border.Left.")
 				borders["left"] = value
 			end
 		},

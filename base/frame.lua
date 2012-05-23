@@ -45,9 +45,6 @@ local master_list = {}
 		A new Frame.
 ]]
 local function new (_, name, x, y, width, height)
-	assert( name, "Vyzor: Must define a name for new Frame." )
-	assert( type( name ) == "string", "Vyzor: New Frame's name must be a string." )
-
 	-- Structure: New Frame
 	-- A new Frame object.
 	local new_frame = {}
@@ -173,9 +170,16 @@ local function new (_, name, x, y, width, height)
 				return container
 			end,
 			set = function (value)
-				container = value
+				if type( value ) == "string" then
+					container = master_list[value]
+				else
+					container = value
+				end
 				if not value then
 					hideWindow( name )
+				end
+				if is_drawn then
+					raiseEvent( "sysWindowResizeEvent" )
 				end
 			end,
 		},
@@ -187,8 +191,6 @@ local function new (_, name, x, y, width, height)
 						copy[i] = components[i]
 					end
 					return copy
-				else
-					return {}
 				end
 			end,
 		},
@@ -200,8 +202,6 @@ local function new (_, name, x, y, width, height)
 						copy[i] = mini_consoles[i]
 					end
 					return copy
-				else
-					return {}
 				end
 			end,
 		},
@@ -213,8 +213,6 @@ local function new (_, name, x, y, width, height)
 						copy[i] = compounds[i]
 					end
 					return copy
-				else
-					return {}
 				end
 			end
 		},
@@ -226,8 +224,6 @@ local function new (_, name, x, y, width, height)
 						copy[k] = v
 					end
 					return copy
-				else
-					return {}
 				end
 			end
 		},
@@ -255,7 +251,7 @@ local function new (_, name, x, y, width, height)
 			end,
 			set = function (value)
 				callback = value
-				if callback_args then
+				if callback and callback_args then
 					if type( callback_args ) == "table" then
 						setLabelClickCallback( name, callback, unpack(callback_args) )
 					else
@@ -272,7 +268,7 @@ local function new (_, name, x, y, width, height)
 			end,
 			set = function (value)
 				callback_args = value
-				if callback then
+				if callback and callback_args then
 					if type( callback_args ) == "table" then
 						setLabelClickCallback( name, callback, unpack(callback_args) )
 					else
@@ -335,7 +331,9 @@ local function new (_, name, x, y, width, height)
 
 						if is_drawn then
 							updateStylesheet()
-							setLabelStyleSheet( name, stylesheet )
+							if stylesheet then
+								setLabelStyleSheet( name, stylesheet )
+							end
 						end
 					else
 						error( string.format(
@@ -347,14 +345,15 @@ local function new (_, name, x, y, width, height)
 					compound_count = compound_count + 1
 					object.Container = master_list[name]
 
-					if object.Subtype == "Box" or object.Subtype == "Chat" then
-						frames[object.Frame.Name] = master_list[object.Frame.Name]
-						frame_count = frame_count + 1
-					end
+					local ob_name = object.Background.Name
+					frames[ob_name] = master_list[ob_name]
+					frame_count = frame_count + 1
 
 					if is_drawn then
 						updateStylesheet()
-						setLabelStyleSheet( name, stylesheet )
+						if stylesheet then
+							setLabelStyleSheet( name, stylesheet )
+						end
 					end
 				else
 					error( string.format(
@@ -404,7 +403,9 @@ local function new (_, name, x, y, width, height)
 
 				if is_drawn then
 					updateStylesheet()
-					setLabelStyleSheet( name, stylesheet )
+					if stylesheet then
+						setLabelStyleSheet( name, stylesheet )
+					end
 				end
 			else
 				error( string.format(
@@ -441,7 +442,6 @@ local function new (_, name, x, y, width, height)
 
 					if is_drawn then
 						updateStylesheet()
-						setLabelStyleSheet( name, stylesheet )
 					end
 				elseif object.Type == "Compound" then
 					if compounds[object.Name] then
@@ -449,15 +449,16 @@ local function new (_, name, x, y, width, height)
 						compound_count = compound_count -1
 						object.Container = nil
 
-						if object.Subtype == "Box" or object.Subtype == "Chat" then
-							frames[object.Frame.Name] = nil
-							frame_count = frame_count - 1
-						end
+						local ob_name = object.Background.Name
+						frames[ob_name] = nil
+						frame_count = frame_count - 1
 					end
 
 					if is_drawn then
 						updateStylesheet()
-						setLabelStyleSheet( name, stylesheet )
+						if stylesheet then
+							setLabelStyleSheet( name, stylesheet )
+						end
 					end
 				else
 					error( string.format(
@@ -489,6 +490,7 @@ local function new (_, name, x, y, width, height)
 				position.AbsoluteX, position.AbsoluteY,
 				size.AbsoluteWidth, size.AbsoluteHeight, 1
 			)
+
 			updateStylesheet()
 			if stylesheet then
 				setLabelStyleSheet( name, stylesheet )
@@ -542,7 +544,6 @@ local function new (_, name, x, y, width, height)
 			end
 
 			is_drawn = true
-			VyzorResize()
 
 			if not resize_registered then
 				if Options.HandleBorders == true or Options.HandleBorders == "auto" then
@@ -550,6 +551,7 @@ local function new (_, name, x, y, width, height)
 					resize_registered = true
 				end
 			end
+			raiseEvent( "sysWindowResizeEvent" )
 
 			raiseEvent( "VyzorDrawnEvent" )
 		end

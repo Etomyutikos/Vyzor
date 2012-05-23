@@ -118,35 +118,37 @@ local function new (_, frame, init_x, init_y, is_first)
 
 			local frame_comps = frame.Components
 
-			local frame_border = frame_comps["Border"]
-			if frame_border then
-				local border = frame_border
-				if border.Top then
-					blank_x = blank_x + border.Left.Width
-					blank_y = blank_y + border.Top.Width
-				else
-					if type( border.Width ) == "table" then
-						blank_x = blank_x + border.Width[4]
-						blank_y = blank_y + border.Width[1]
+			if frame_comps then
+				local frame_border = frame_comps["Border"]
+				if frame_border then
+					local border = frame_border
+					if border.Top then
+						blank_x = blank_x + border.Left.Width
+						blank_y = blank_y + border.Top.Width
 					else
-						blank_x = blank_x + border.Width
-						blank_y = blank_y + border.Width
+						if type( border.Width ) == "table" then
+							blank_x = blank_x + border.Width[4]
+							blank_y = blank_y + border.Width[1]
+						else
+							blank_x = blank_x + border.Width
+							blank_y = blank_y + border.Width
+						end
 					end
 				end
-			end
 
-			local frame_margin = frame_comps["Margin"]
-			if frame_margin then
-				local margin = frame_margin
-				blank_x = blank_x + margin.Left
-				blank_y = blank_y + margin.Top
-			end
+				local frame_margin = frame_comps["Margin"]
+				if frame_margin then
+					local margin = frame_margin
+					blank_x = blank_x + margin.Left
+					blank_y = blank_y + margin.Top
+				end
 
-			local frame_padding = frame_comps["Padding"]
-			if frame_padding then
-				local padding = frame_padding
-				blank_x = blank_x + padding.Left
-				blank_y = blank_y + padding.Top
+				local frame_padding = frame_comps["Padding"]
+				if frame_padding then
+					local padding = frame_padding
+					blank_x = blank_x + padding.Left
+					blank_y = blank_y + padding.Top
+				end
 			end
 			content_coords = {
 				X = abs_coords.X + blank_x,

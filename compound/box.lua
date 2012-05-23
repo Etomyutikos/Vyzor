@@ -112,7 +112,7 @@ local function new (_, name, init_mode, init_back, init_frames)
 				return name
 			end,
 		},
-		Frame = {
+		Background = {
 			get = function ()
 				return background_frame
 			end,

@@ -29,15 +29,6 @@ local Font = Base( "Component", "Font" )
 		A new Font Component.
 ]]
 local function new (_, init_size, init_style, init_decoration)
-	assert( init_size, "Vyzor: Must supply Size for new Font.")
-	if init_style then
-		assert( FontStyle:IsValid( init_style ) or FontWeight:IsValid( init_style ),
-			"Vyzor: Invalid FontStyle or FontWeight passed to new Font.")
-	end
-	if init_decoration then
-		assert( FontDecoration:IsValid( init_decoration ), "Vyzor: Invalid FontDecoration passed to new Font.")
-	end
-
 	--[[
 		Structure: New Font
 			A Component defining certain text manipulations.
@@ -51,18 +42,6 @@ local function new (_, init_size, init_style, init_decoration)
 	-- Object: style
 	-- The Font's initial <FontStyle>.
 	local style
-
-	-- Object: weight
-	-- The Font's initial <FontWeight>.
-	local weight
-
-	if init_style then
-		if FontStyle:IsValid( init_style ) then
-			style = init_style
-		elseif FontWeight:IsValid( init_style ) then
-			weight = init_style
-		end
-	end
 
 	-- Object: decoration
 	-- The Font's initial <FontDecoration>.
@@ -79,8 +58,9 @@ local function new (_, init_size, init_style, init_decoration)
 	local function updateStylesheet ()
 		stylesheet = string.format( "font-size: %s; %s: %s; text-decoration: %s",
 			size,
-			(style and "font-style") or (weight and "font-weight"),
-			style or weight or FontStyle.Normal,
+			((style and FontStyle:IsValid( style )) and "font-style")
+				or ((style and FontWeight:IsValid( style )) and "font-weight"),
+			style or FontStyle.Normal,
 			decoration or FontDecoration.Normal )
 	end
 
@@ -108,23 +88,7 @@ local function new (_, init_size, init_style, init_decoration)
 				return style
 			end,
 			set = function (value)
-				assert( FontStyle:IsValid( value ), "Vyzor: Invalid FontStyle passed to Font.")
 				style = value
-				if weight then
-					weight = nil
-				end
-			end,
-			},
-		Weight = {
-			get = function ()
-				return weight
-			end,
-			set = function (value)
-				assert( FontWeight:IsValid( value ), "Vyzor: Invalid FontWeight passed to Font.")
-				weight = value
-				if style then
-					style = nil
-				end
 			end,
 			},
 		Decoration = {
@@ -132,7 +96,6 @@ local function new (_, init_size, init_style, init_decoration)
 				return decoration
 			end,
 			set = function (value)
-				assert( FontDecoration:IsValid( value ), "Vyzor: Invalid FontDecoration passed to Font.")
 				decoration = value
 			end,
 			},

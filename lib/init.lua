@@ -73,6 +73,106 @@ function Lib.OrderedTable ()
 	return proxy
 end
 
+--[[
+	Function: do_error
+		A local function to output uniform error messages.
+
+	Parameters:
+		kind 	- The types that failed to match.
+		depth 	- The depth of the CheckInput call.
+		obj 	- The object or property that received the bad input.
+		pos 	- If this was an argument to a constructor, this is
+					the argument's position.
+]]
+local function do_error (kind, depth, obj, pos)
+	local kind_str
+	if type( kind ) == "table" then
+		if #kind == 2 then
+			kind_str = kind[1] .. " or " .. kind[2]
+		else
+			kind_str = string.format( "%s, or %s",
+				table.concat( kind, ", ", 1, #kind - 1 ),
+				kind[#kind]
+			)
+		end
+	end
+
+	local msg = string.format(
+		"Vyzor: Invalid %s argument to %s. Must be %s.",
+		(pos or ""),
+		obj,
+		kind_str
+	)
+
+	error( msg, depth + 1 )
+end
+
+--[[
+	Function: CheckInput
+		Does some input checking for sanity's sake.
+
+	Parameters:
+		check 	- The type of check to be done.
+		value 	- The thing to check.
+		kind 	- What said thing needs to be.
+		depth 	- Where in the stack the error is being called.
+		obj 	- The object or function name receiving the input.
+		pos 	- If this is a multiple argument call, this is the position
+					of the argument.
+]]
+function Lib.CheckInput (check, value, kind, depth, obj, pos)
+	local depth = depth + 1
+
+	if check == "lua" then
+		if not value then
+			do_error( kind, depth, obj, pos )
+		else
+			if type( kind ) == "table" then
+				local ok = false
+				for _, t in ipairs( kind ) do
+					if type( value ) == t then
+						ok = true
+						break
+					end
+				end
+				if not ok then
+					do_error( kind, depth, obj, pos )
+				end
+			else
+				if type( value ) ~= kind then
+					do_error( kind, depth, obj, pos )
+				end
+			end
+		end
+
+	elseif check == "vyzor" then
+		if not value then
+			do_error( kind, depth, obj, pos )
+		else
+			if not value.Type then
+				do_error( kind, depth, obj, pos )
+			else
+				if type( kind ) == "table" then
+					local ok = false
+					for _, st in ipairs( kind ) do
+						if value.Subtype == st then
+							ok = true
+							break
+						end
+					end
+					if not ok then
+						do_error( kind, depth, obj, pos )
+					end
+				else
+					if value.Subtype ~= kind then
+						do_error( kind, depth, obj, pos )
+					end
+				end
+			end
+		end
+	end
+end
+
 setmetatable( Lib, {
 	__newindex = function (_, key, value)
 		error( "Vyzor: May not write directly to Lib table.", 2 )

@@ -3,12 +3,8 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local assert 		= assert
-local getmetatable 	= getmetatable
-local require 		= require
-local setmetatable	= setmetatable
-
 local Base 			= require( "vyzor.base" )
+local Lib 			= require( "vyzor.lib" )
 local ColorMode 	= require( "vyzor.enum.color_mode" )
 local GradientMode 	= require( "vyzor.enum.gradient_mode" )
 
@@ -29,9 +25,6 @@ local Brush = Base( "Component", "Brush" )
 		A new Brush Component.
 ]]
 local function new ( _, init_content )
-	assert( (ColorMode:IsValid( init_content.Mode ) or GradientMode:IsValid( init_content.Mode )),
-		"Vyzor: Must pass a ColorMode or GradientMode Enum option to new Brush." )
-
 	-- Structure: New Brush
 	-- A Component container that holds either a <Color> Component
 	-- or a <Gradient> Component.
@@ -53,13 +46,7 @@ local function new ( _, init_content )
 				return content
 			end,
 			set = function (value)
-				if ColorMode:IsValid( value.Mode ) then
-					content = value
-				elseif GradientMode:IsValid( value.Mode ) then
-					content = value
-				else
-					assert( false, "Vyzor: Content passed to Brush must be Color or Gradient." )
-				end
+				content = value
 			end
 		},
 		Stylesheet = {

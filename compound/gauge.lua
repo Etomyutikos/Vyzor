@@ -55,10 +55,6 @@ local function new (_, name, current, maximum, init_back, init_fore, fill_enum, 
 	]]
 	local new_gauge = {}
 
-	-- Object: container
-	-- Parent Frame of this Gauge.
-	local container
-
 	-- String: current_address
 	-- Index of current variable.
 	local current_address = current
@@ -150,17 +146,10 @@ local function new (_, name, current, maximum, init_back, init_fore, fill_enum, 
 		},
 		Container = {
 			get = function ()
-				return container
+				return background_frame.Container
 			end,
 			set = function (value)
-				local old_container = container
-				container = value
-				if old_container then
-					old_container:Remove(background_frame.Name)
-				end
-				if container then
-					container:Add(background_frame)
-				end
+				background_frame.Container = value
 			end
 		},
 		CurrentAddress = {

@@ -5,6 +5,7 @@
 
 local Base 		= require( "vyzor.base" )
 local Alignment = require( "vyzor.enum.alignment" )
+local Lib 		= require( "vyzor.lib" )
 local Repeat 	= require( "vyzor.enum.repeat" )
 
 --[[
@@ -100,7 +101,7 @@ local function new (_, init_content, init_alignment, init_repeat)
 			end,
 			set = function (value)
 				if Alignment:IsValid( value ) then
-					alignment = new_alignment
+					alignment = value
 				end
 			end
 		},

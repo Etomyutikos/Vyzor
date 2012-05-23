@@ -5,6 +5,7 @@
 
 local Base 			= require("vyzor.base")
 local BorderStyle 	= require("vyzor.enum.border_style")
+local Lib 			= require("vyzor.lib")
 
 --[[
 	Class: BorderSide
@@ -40,7 +41,7 @@ local function new (_, init_width, init_style, init_content, init_radius)
 
 	-- Double: width
 	-- BorderSide's width.
-	local width = init_width
+	local width = init_width or 0
 
 	-- Object: style
 	-- BorderSide's <BorderStyle>. Defaults to None.
@@ -67,12 +68,17 @@ local function new (_, init_width, init_style, init_content, init_radius)
 		styletable = {
 			string.format( "width: %s", width ),
 			string.format( "style: %s", style ),
-			string.format( "%s: %s",
+		}
+		if content then
+			styletable[#styletable+1] = string.format( "%s: %s",
 				(content.Subtype == "Brush" and content.Stylesheet) or
 				(content.Subtype == "Image" and string.format( "image: %s", content.Url))
-			),
-			(content.Subtype == "Image" and string.format( "image-position: %s", content.Alignment )),
-		}
+			)
+			if content.Subtype == "Image" then
+				styletable[#styletable+1] = string.format( "image-position: %s",
+					content.Alignment )
+			end
+		end
 
 		if not is_side then
 			if type( radius == "table" ) then
@@ -107,8 +113,9 @@ local function new (_, init_width, init_style, init_content, init_radius)
 				return style
 			end,
 			set = function (value)
-				assert( BorderStyle:IsValid( value ), "Vyzor: Invalid BorderStyle passed to BorderSide." )
-				style = value
+				if BorderStyle:IsValid( value ) then
+					style = value
+				end
 			end,
 		},
 		Content = {
@@ -132,9 +139,7 @@ local function new (_, init_width, init_style, init_content, init_radius)
 				return is_side
 			end,
 			set = function (value)
-				if type( value ) == "boolean" then
-					is_side = value
-				end
+				is_side = value
 			end,
 		},
 		Styletable = {

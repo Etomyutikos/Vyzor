@@ -209,7 +209,7 @@ local function new (_, name, init_back, init_channels, init_tabloc, init_size,
 	--[[
 		Properties: Chat Properties
 			Name 				- Returns the Chat Compound's name.
-			Frame 				- Returns the background Frame of the Chat Compound.
+			Background 			- Returns the background Frame of the Chat Compound.
 			Container 			- Gets and sets the Chat Compound's parent Frame.
 			Channels 			- Returns a copied list of the channels this Compound covers.
 			TabSize 			- Gets and sets the size of the un-managed dimension
@@ -237,7 +237,7 @@ local function new (_, name, init_back, init_channels, init_tabloc, init_size,
 				return name
 			end,
 		},
-		Frame = {
+		Background = {
 			get = function ()
 				return background
 			end,
