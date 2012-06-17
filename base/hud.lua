@@ -58,7 +58,6 @@ local function updateBorders ()
 			if border == "Top" or border == "Bottom" then
 				space = window_height
 			else
---				space = window_width - ((border == "Right" and 15) or 0)
 				space = window_width
 			end
 		end
@@ -88,7 +87,7 @@ local function updateBorders ()
 				opposite = (border == "Top" and "Bottom") or "Top"
 			else
 				box = window_width
-				space = window_width - console_width
+				space = (window_width - console_width) - 10
 				opposite = (border == "Left" and "Right") or "Left"
 			end
 
@@ -212,6 +211,7 @@ function VyzorResize ()
 
 		if Options.HandleBorders == true or Options.HandleBorders == "auto" then
 			window_width, window_height = getMainWindowSize()
+			console_width = getMainConsoleWidth()
 			updateBorders()
 		end
 
