@@ -566,6 +566,11 @@ local function new (_, name, x, y, width, height)
 			new_height 	- The Frame's new height.
 	]]
 	function new_frame:Resize (new_width, new_height)
+		-- A kludge to solve an issue in which the last couple of pixels
+		-- of the main console could be cut off.
+		if name == "VyzorRight" then
+			new_width = new_width and new_width - 5
+		end
 		size.Dimensions = {new_width or size.Width, new_height or size.Height}
 		if not is_first then
 			resizeWindow( name, size.AbsoluteWidth, size.AbsoluteHeight )
@@ -596,6 +601,9 @@ local function new (_, name, x, y, width, height)
 			new_y - The Frame's new Y position.
 	]]
 	function new_frame:Move (new_x, new_y)
+		if name == "VyzorRight" then
+			new_x = new_x and new_x + 5
+		end
 		position.Coordinates = {new_x or position.X, new_y or position.Y}
 		if not is_first then
 			moveWindow( name, position.AbsoluteX, position.AbsoluteY )
