@@ -78,20 +78,21 @@ local function new (_, name, init_mode, init_back, init_frames)
 				frame.Size.Height 		= (1 / frame_count)
 			end
 		elseif mode == BoxMode.Grid then
-			local sqr = math.floor(math.sqrt(frame_count))
+			local rows 		= math.floor(math.sqrt(frame_count))
+			local columns 	= math.ceil(frame_count / rows)
 
 			local cur_hori = 1
 			local cur_vert = 1
 			for index, name, frame in frames() do
-				if cur_hori > sqr then
+				if cur_hori > rows then
 					cur_hori = 1
 					cur_vert = cur_vert + 1
 				end
 
-				frame.Position.X 	= (1 / sqr) * (cur_hori - 1)
-				frame.Position.Y 	= (1 / (sqr + (frame_count % 2))) * (cur_vert - 1)
-				frame.Size.Width 	= (1 / sqr)
-				frame.Size.Height 	= (1 / (sqr + (frame_count % 2)))
+				frame.Position.X 	= (1 / rows) * (cur_hori - 1)
+				frame.Position.Y 	= (1 / columns) * (cur_vert - 1)
+				frame.Size.Width 	= (1 / rows)
+				frame.Size.Height 	= (1 / columns)
 
 				cur_hori = cur_hori + 1
 			end

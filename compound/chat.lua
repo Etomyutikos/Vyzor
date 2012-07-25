@@ -167,6 +167,8 @@ local function new (_, name, init_back, init_channels, init_tabloc, init_size,
 						end
 					end
 				end
+			else
+				tabs[channel]:Add( inactive_background )
 			end
 		end
 
@@ -346,8 +348,10 @@ local function new (_, name, init_back, init_channels, init_tabloc, init_size,
 		MiniConsoles = {
 			get = function ()
 				local copy = {}
-				for i, m in ipairs( mini_consoles ) do
-					copy[i] = m
+				local index = 1
+				for k, m in pairs( mini_consoles ) do
+					copy[index] = m
+					index = index + 1
 				end
 				return copy
 			end
