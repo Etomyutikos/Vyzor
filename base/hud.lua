@@ -222,16 +222,27 @@ function VyzorResize ()
 		if Options.Borders["Top"] == "dynamic" then
 			hud_frames["VyzorTop"].Size.Height = (borders.Top <= 1 and 0) or borders.Top
 		end
-		if Options.Borders["Bottom"] == "dynamic" then
+
+		do
 			local vyzor_bottom = hud_frames["VyzorBottom"]
-			vyzor_bottom.Size.Height = (borders.Bottom <= 1 and 0) or borders.Bottom
-			vyzor_bottom.Position.Y = window_height - borders.Bottom
+			if Options.Borders["Bottom"] == "dynamic" then
+				vyzor_bottom.Size.Height = (borders.Bottom <= 1 and 0) or borders.Bottom
+				vyzor_bottom.Position.Y = window_height - borders.Bottom
+			else
+				vyzor_bottom.Position.Y = window_height - vyzor_bottom.Size.AbsoluteHeight
+			end
 		end
-		if Options.Borders["Right"] == "dynamic" then
+
+		do
 			local vyzor_right = hud_frames["VyzorRight"]
-			vyzor_right.Size.Width = (borders.Right <= 1 and 0) or borders.Right
-			vyzor_right.Position.X = window_width - borders.Right
+			if Options.Borders["Right"] == "dynamic" then
+				vyzor_right.Size.Width = (borders.Right <= 1 and 0) or borders.Right
+				vyzor_right.Position.X = window_width - borders.Right
+			else
+				vyzor_right.Position.X = window_width - vyzor_right.Size.AbsoluteWidth
+			end
 		end
+
 		if Options.Borders["Left"] == "dynamic" then
 			hud_frames["VyzorLeft"].Size.Width = (borders.Left <= 1 and 0) or borders.Left
 		end

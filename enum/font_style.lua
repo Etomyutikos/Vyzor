@@ -18,7 +18,7 @@ local Enum = require("vyzor.enum")
 local enum_table = {
 	Normal = "normal",
 	Italic = "italic",
-	Oblique = "olique",
+	Oblique = "oblique",
 }
 
 --[[

@@ -442,6 +442,9 @@ local function new (_, name, x, y, width, height)
 
 					if is_drawn then
 						updateStylesheet()
+						if stylesheet then
+							setLabelStyleSheet( name, stylesheet )
+						end
 					end
 				elseif object.Type == "Compound" then
 					if compounds[object.Name] then

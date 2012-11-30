@@ -41,7 +41,7 @@ local function new (_, init_size, init_style, init_decoration)
 
 	-- Object: style
 	-- The Font's initial <FontStyle>.
-	local style
+	local style = init_style
 
 	-- Object: decoration
 	-- The Font's initial <FontDecoration>.

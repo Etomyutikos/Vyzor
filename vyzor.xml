@@ -342,149 +342,94 @@ test:Echo(&quot;This is only a test.\n&quot;)</script>
         </Alias>
         <Alias isActive="yes" isFolder="no">
             <name>TestBox</name>
-            <script>local grid_red 		= Vyzor.Frame(&quot;grid_red&quot;)
-grid_red:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, 0, 0 )
+            <script>local ROWS = 5
+local COLS = 3
+local CELLS = 2
+
+local MODE = Vyzor.BoxMode.Grid
+
+local id = 0
+
+--echo(&quot;Starting box test...\n&quot;)
+for i = 1, ROWS do
+--	echo(&quot;  row: &quot; .. i .. &quot;\n&quot;)
+
+	for j = 1, COLS do
+--		echo(&quot;    column: &quot; .. j .. &quot;\n&quot;)
+		local container_name 	= &quot;test_container_&quot; .. i .. &quot;:&quot; .. j
+		local box_name 			= &quot;test_box_&quot; .. i .. &quot;:&quot; .. j
+
+		local cell_num = CELLS
+
+		local cells = {}
+		for k = 1, cell_num do
+--			echo(&quot;      cell: &quot; .. k .. &quot;\n&quot;)
+			local cell_name = &quot;test_cell_&quot; .. i .. &quot;:&quot; .. j .. &quot;.&quot; .. k
+--			echo(&quot;        name: &quot; .. cell_name .. &quot;\n&quot;)
+
+			local cell = Vyzor.Frame( cell_name )
+			cell:Add(
+				Vyzor.Background(
+					Vyzor.Brush(
+						Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
+					)
+				)
+			)
+
+			cells[#cells+1] = cell
+			id = id + 1
+		end
+		CELLS = CELLS + 1
+
+--		echo(&quot;      container: &quot; .. container_name .. &quot;\n&quot;)
+		local x = (((j - 1) * COLS) * .1)
+--		echo(&quot;        x: &quot; .. x .. &quot;\n&quot;)
+		local y = (1 / ROWS * (i - 1))
+--		echo(&quot;        y: &quot; .. y .. &quot;\n&quot;)
+		local w = (1/COLS) - .1
+--		echo(&quot;        w: &quot; .. w .. &quot;\n&quot;)
+		local h = (1/ROWS) - .1
+--		echo(&quot;        h: &quot; .. h .. &quot;\n&quot;)
+
+		local container = Vyzor.Frame( container_name, x, y, w, h )
+		container:Add(
+			Vyzor.Border( 5, Vyzor.BorderStyle.Groove, 
+				Vyzor.Brush( 
+					Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
+				)
+			)
+		)
+--		echo(&quot;      box: &quot; .. box_name .. &quot;\n&quot;)
+		local box = Vyzor.Box( box_name, MODE, container, cells )
+
+		Vyzor.Left:Add( box )
+	end
+end
+
+local control_container = Vyzor.Frame( &quot;control_container&quot;, .3, .3, .3, .3 )
+control_container:Add(
+	Vyzor.Border( 5, Vyzor.BorderStyle.Groove, 
+		Vyzor.Brush( 
+			Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
 		)
 	)
 )
-local grid_blue 	= Vyzor.Frame(&quot;grid_blue&quot;)
-grid_blue:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, 0, &quot;100%&quot; )
-		)
-	)
-)
-local grid_green 	= Vyzor.Frame(&quot;grid_green&quot;)
-grid_green:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, &quot;100%&quot;, 0 )
-		)
-	)
-)
-local grid_white 	= Vyzor.Frame(&quot;grid_white&quot;)
-grid_white:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, &quot;100%&quot;, &quot;100%&quot; )
-		)
-	)
-)
-local grid_what 	= Vyzor.Frame(&quot;grid_what&quot;)
-grid_what:Add(
+
+local control_cell = Vyzor.Frame( &quot;control_cell&quot; )
+control_cell:Add(
 	Vyzor.Background(
 		Vyzor.Brush(
 			Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
 		)
 	)
 )
-
-local hori_red 		= Vyzor.Frame(&quot;hori_red&quot;)
-hori_red:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, 0, 0 )
-		)
-	)
-)
-local hori_blue 	= Vyzor.Frame(&quot;hori_blue&quot;)
-hori_blue:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, 0, &quot;100%&quot; )
-		)
-	)
-)
-local hori_green 	= Vyzor.Frame(&quot;hori_green&quot;)
-hori_green:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, &quot;100%&quot;, 0 )
-		)
-	)
-)
-local hori_white 	= Vyzor.Frame(&quot;hori_white&quot;)
-hori_white:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, &quot;100%&quot;, &quot;100%&quot; )
-		)
-	)
-)
-local hori_what 	= Vyzor.Frame(&quot;test_what&quot;)
-hori_what:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
-		)
-	)
+Vyzor.Right:Add(
+	Vyzor.Box( &quot;control_box&quot;, MODE, control_container, { control_cell } )
 )
 
-local vert_red 		= Vyzor.Frame(&quot;vert_red&quot;)
-vert_red:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, 0, 0 )
-		)
-	)
-)
-local vert_blue 	= Vyzor.Frame(&quot;vert_blue&quot;)
-vert_blue:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, 0, &quot;100%&quot; )
-		)
-	)
-)
-local vert_green 	= Vyzor.Frame(&quot;vert_green&quot;)
-vert_green:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, 0, &quot;100%&quot;, 0 )
-		)
-	)
-)
-local vert_white 	= Vyzor.Frame(&quot;vert_white&quot;)
-vert_white:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, &quot;100%&quot;, &quot;100%&quot; )
-		)
-	)
-)
-local vert_what 	= Vyzor.Frame(&quot;vert_what&quot;)
-vert_what:Add(
-	Vyzor.Background(
-		Vyzor.Brush(
-			Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
-		)
-	)
-)
-
-local grid_back = Vyzor.Frame(&quot;grid_back&quot;, .3, .1, .2, .2)
-local grid_box = Vyzor.Box(&quot;grid_box&quot;, Vyzor.BoxMode.Grid, grid_back,
-	{grid_red, grid_blue, grid_green, grid_white, grid_what}
-)
-
-local hori_back = Vyzor.Frame(&quot;hori_back&quot;, .3, .4, .2, .2)
-local hori_box = Vyzor.Box(&quot;hori_box&quot;, Vyzor.BoxMode.Horizontal, hori_back,
-	{hori_red, hori_blue, hori_green, hori_white, hori_what}
-)
-
-local vert_back = Vyzor.Frame(&quot;vert_back&quot;, .3, .7, .2, .2)
-local vert_box = Vyzor.Box(&quot;vert_box&quot;, Vyzor.BoxMode.Vertical, vert_back,
-	{vert_red, vert_blue, vert_green, vert_white, vert_what}
-)
-
-Vyzor.HUD.Frames[&quot;VyzorRight&quot;]:Add(grid_box)
-Vyzor.HUD.Frames[&quot;VyzorRight&quot;]:Add(hori_box)
-Vyzor.HUD.Frames[&quot;VyzorRight&quot;]:Add(vert_box)
-
-Vyzor.HUD:Draw()</script>
+--echo(&quot;\nDrawing box test...\n&quot;)
+Vyzor.HUD:Draw()
+--echo(&quot;\nBox test complete.\n&quot;)</script>
             <command></command>
             <packageName></packageName>
             <regex>^tb$</regex>
