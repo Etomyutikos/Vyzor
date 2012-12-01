@@ -138,6 +138,7 @@ local function new (_, name, x, y, width, height)
 		Properties: Frame Properties
 			Name 				- Return the Frame's name.
 			IsBounding 			- Gets and sets a boolean value.
+			BoundingMode		- Gets and sets the BoundingMode for this Frame.
 			Container 			- Gets and sets the parent Frame for this Frame.
 			Components 			- Returns a copy of the Frame's Components.
 			MiniConsoles 		- Returns a copy of the Frame's MiniConsoles.
@@ -163,6 +164,14 @@ local function new (_, name, x, y, width, height)
 			end,
 			set = function (value)
 				is_bounding = value
+			end
+		},
+		BoundingMode = {
+			get = function ()
+				return bounding_type
+			end,
+			set = function (value)
+				bounding_type = value
 			end
 		},
 		Container = {
@@ -442,9 +451,6 @@ local function new (_, name, x, y, width, height)
 
 					if is_drawn then
 						updateStylesheet()
-						if stylesheet then
-							setLabelStyleSheet( name, stylesheet )
-						end
 					end
 				elseif object.Type == "Compound" then
 					if compounds[object.Name] then
@@ -685,6 +691,16 @@ local function new (_, name, x, y, width, height)
 		echo( name, text )
 	end
 
+	--[[
+		Function: Echo
+			Displays text on a Frame.
+
+		Parameters:
+			text - The text to be displayed.
+	]]
+	function new_frame:CEcho (text)
+		cecho( name, text )
+	end
 	--[[
 		Function: Clear
 			Clears all text from the Frame.
