@@ -21,6 +21,7 @@ local Font = Base( "Component", "Font" )
 		init_size 		- The Font Component's initial size.
 							Valid sizes are defined by QT, but I can only seem
 							to get numbers to work.
+		init_family		- The font family for this Font Component.
 		init_style 		- The Font Component's initial style. Optional.
 							Must be a FontStyle or FontWeight Component.
 		init_decoration - The Font Component's initial FontDecoration. Optional.
@@ -28,7 +29,7 @@ local Font = Base( "Component", "Font" )
 	Returns:
 		A new Font Component.
 ]]
-local function new (_, init_size, init_style, init_decoration)
+local function new (_, init_size, init_family, init_style, init_decoration)
 	--[[
 		Structure: New Font
 			A Component defining certain text manipulations.
@@ -39,9 +40,13 @@ local function new (_, init_size, init_style, init_decoration)
 	-- The Font's initial size.
 	local size = init_size
 
+	-- String: family
+	-- The font family for this Font Component.
+	local family = init_family or "Bitsteam Vera Sans Mono"
+
 	-- Object: style
 	-- The Font's initial <FontStyle>.
-	local style = init_style
+	local style = init_style or FontStyle.Normal
 
 	-- Object: decoration
 	-- The Font's initial <FontDecoration>.
@@ -56,17 +61,20 @@ local function new (_, init_size, init_style, init_decoration)
 			Updates the Font Component's <stylesheet>.
 	]]
 	local function updateStylesheet ()
-		stylesheet = string.format( "font-size: %s; %s: %s; text-decoration: %s",
-			size,
+		stylesheet = string.format( "font-size: %s; font-family: %s; %s: %s; text-decoration: %s",
+			(type(size) == "number" and tostring(size) .. "px") or size,
+			family,
 			((style and FontStyle:IsValid( style )) and "font-style")
 				or ((style and FontWeight:IsValid( style )) and "font-weight"),
 			style or FontStyle.Normal,
-			decoration or FontDecoration.Normal )
+			decoration or FontDecoration.None )
 	end
 
 	--[[
 		Properties: Font Properties
-			Size 		- Gets and sets the Font's size. Should probably be a number.
+			Size 		- Gets and sets the Font's size. Can be a number, or a number string
+							ending in "px" or "pt".
+			Family		- Gets and sets the Font's family. Must be a string.
 			Style 		- Gets and sets the Font's <FontStyle>.
 							Removes the Font's <FontWeight> if set.
 			Weight 		- Gets and sets the Font's <FontWeight>.
@@ -83,6 +91,14 @@ local function new (_, init_size, init_style, init_decoration)
 				size = value
 			end,
 			},
+		Family = {
+			get = function ()
+				return family
+			end,
+			set = function (value)
+				family = value
+			end,
+		},
 		Style = {
 			get = function ()
 				return style
@@ -101,9 +117,7 @@ local function new (_, init_size, init_style, init_decoration)
 			},
 		Stylesheet = {
 			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
+				updateStylesheet()
 				return stylesheet
 			end,
 			},
