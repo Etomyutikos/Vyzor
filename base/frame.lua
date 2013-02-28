@@ -552,6 +552,12 @@ local function new (_, name, x, y, width, height)
 				end
 			end
 
+			for _, name, frame in frames() do
+				if name:sub(1, 5) ~= "Vyzor" then
+					frame:Draw()
+				end
+			end
+
 			is_drawn = true
 
 			if not resize_registered then

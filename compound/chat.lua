@@ -140,11 +140,12 @@ local function new (_, name, init_back, init_channels, init_tabloc, init_size,
 					word_wrap, font_size )
 				background:Add( mini_consoles[channel] )
 
-			elseif tab_location == TabLocation.Right then
+			elseif tab_location == TabLocation.Left then
 				mini_consoles[channel] = MiniConsole( console_name,
 					size, 0, (1.0 - size), 1,
 					word_wrap, font_size )
 				background:Add( mini_consoles[channel] )
+
 			else
 				mini_consoles[channel] = MiniConsole( console_name,
 					0, 0, (1.0 - size), 1,
