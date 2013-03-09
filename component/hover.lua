@@ -149,6 +149,6 @@ end
 
 setmetatable( Hover, {
 	__index = getmetatable(Hover).__index,
-	__Call = new,
+	__call = new,
 } )
 return Hover
