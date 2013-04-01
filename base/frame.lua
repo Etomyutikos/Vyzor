@@ -637,11 +637,17 @@ local function new (_, name, x, y, width, height)
 			Hides the Frame.
 			Iterates through the Frame's children first, hiding
 			each of them before hiding itself.
+
+		Parameters:
+			skip_children - If true, this will not hide any of
+							the Frame's children.
 	]]
-	function new_frame:Hide ()
-		if frame_count > 0 then
-			for _, _, frame in frames() do
-				frame:Hide()
+	function new_frame:Hide (skip_children)
+		if not skip_children then
+			if frame_count > 0 then
+				for _, _, frame in frames() do
+					frame:Hide()
+				end
 			end
 		end
 
@@ -664,8 +670,12 @@ local function new (_, name, x, y, width, height)
 			Reveals the Frame.
 			Reveals itself first, then iterates through each of its
 			children, revealing them.
+
+		Parameters:
+			skip_children - If true, this will not show any of
+							the Frame's children.
 	]]
-	function new_frame:Show ()
+	function new_frame:Show (skip_children)
 		if not is_first then
 			showWindow( name )
 		end
@@ -679,9 +689,11 @@ local function new (_, name, x, y, width, height)
 			components["Map"]:Show()
 		end
 
-		if frame_count > 0 then
-			for _, _, frame in frames() do
-				frame:Show()
+		if not skip_children then
+			if frame_count > 0 then
+				for _, _, frame in frames() do
+					frame:Show()
+				end
 			end
 		end
 	end

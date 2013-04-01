@@ -584,6 +584,13 @@ Vyzor.HUD:Draw()</script>
             <packageName></packageName>
             <regex>^tnbf$</regex>
         </Alias>
+        <Alias isActive="yes" isFolder="no">
+            <name>vyzor</name>
+            <script></script>
+            <command></command>
+            <packageName></packageName>
+            <regex></regex>
+        </Alias>
     </AliasPackage>
     <ActionPackage/>
     <ScriptPackage>
@@ -616,7 +623,7 @@ if not Vyzor then
 		echo(&quot;Vyzor: Modules successfully loaded.\n&quot;)
 	end
 
-	raiseEvent( &quot;VyzorLoadEvent&quot; )
+	tempTimer( 0, function () raiseEvent( &quot;VyzorLoadEvent&quot; ) end )
 end</script>
             <eventHandlerList/>
         </Script>
