@@ -608,7 +608,7 @@ if not Vyzor then
 	
 	local lua_dir = string.format( &quot;%s/%s&quot;, home_dir, [[?.lua]] )
 	local init_dir = string.format( &quot;%s/%s&quot;, home_dir, [[?/init.lua]] )
-	package.path = string.format( &quot;%s;%s;%s&quot;, path, lua_dir, init_dir )
+	package.path = string.format( &quot;%s;%s;%s&quot;, lua_dir, init_dir, path )
 
 	local okay, content = pcall( require, &quot;vyzor&quot; )
 	package.path = path
