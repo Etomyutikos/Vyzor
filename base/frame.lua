@@ -3,758 +3,784 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base 			= require( "vyzor.base" )
-local Lib 			= require( "vyzor.lib" )
-local Options		= require( "vyzor.base.options" )
-local Position 		= require( "vyzor.component.position" )
-local Size 			= require( "vyzor.component.size" )
-local BoundingMode 	= require( "vyzor.enum.bounding_mode" )
+local Base = require("vyzor.base")
+local Lib = require("vyzor.lib")
+local Options = require("vyzor.base.options")
+local Position = require("vyzor.component.position")
+local Size = require("vyzor.component.size")
+local BoundingMode = require("vyzor.enum.bounding_mode")
 
 --[[
-	Class: Frame
-		Defines the primary container for
-		Vyzor Components. Frames are modified via Components,
-		and may hold other Frames.
+    Class: Frame
+        Defines the primary container for
+        Vyzor Components. Frames are modified via Components,
+        and may hold other Frames.
 ]]
 local Frame = Base("Frame")
 
 -- Boolean: first_frame
 -- Used for very specific handling of the master Vyzor HUD.
-local first_frame = true
+local _FirstFrame = true
 
 -- Boolean: resize_registered
 -- Determines whether or not the resize function has been registered
 -- as an event handler.
-local resize_registered = false
+local _ResizeRegistered = false
 
 -- Array: master_list
 -- Holds all Frames for reference.
-local master_list = {}
+local _MasterList = {}
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		name 	- The name of the Frame, used for addressing.
-		x 		- Initial X position of the Frame. Defaults to 0.
-		y 		- Initial Y position of the Frame. Defaults to 0.
-		width 	- Initial width of the Frame. Defaults to 1.
-		height 	- Initial height of the Frame. Defaults to 1.
+    Parameters:
+        name - The name of the Frame, used for addressing.
+        x - Initial X position of the Frame. Defaults to 0.
+        y - Initial Y position of the Frame. Defaults to 0.
+        width - Initial width of the Frame. Defaults to 1.
+        height - Initial height of the Frame. Defaults to 1.
 
-	Returns:
-		A new Frame.
+    Returns:
+        A new Frame.
 ]]
-local function new (_, name, x, y, width, height)
-	-- Structure: New Frame
-	-- A new Frame object.
-	local new_frame = {}
-
-	-- Boolean: is_first
-	-- Is this the HUD?
-	local is_first = first_frame
-
-	-- Boolean: is_drawn
-	-- Has this Frame been drawn?
-	local is_drawn = false
-
-	-- Boolean: is_bounding
-	-- Does this object obey bounding rules?
-	local is_bounding = false
-
-	-- String: bounding_type
-	-- The <BoundingMode> rules to which this object adheres.
-	local bounding_type = BoundingMode.Size
-
-	-- Object: container
-	-- The Frame that contains this one.
-	local container
-
-	-- Array: components
-	-- A list of Components this Frame contains.
-	local components = {}
-	local component_count = 0
-
-	-- Array: mini_consoles
-	-- Stores MiniConsole Components.
-	local mini_consoles = {}
-	local mini_console_count = 0
-
-	-- Array: compounds
-	-- Stores Compounds.
-	local compounds = {}
-	local compound_count = 0
-
-	-- Array: frames
-	-- A list of Frames this Frame contains.
-	local frames = Lib.OrderedTable()
-	local frame_count = 0
-
-	-- String: callback
-	-- The name of a function to be used as a Label callback.
-	local callback
-
-	-- Array: callback_args
-	-- A table holding the arguments for a Label callback.
-	local callback_args
-
-	-- Object: position
-	-- The Position Supercomponent managing this Frame's
-	-- location.
-	local position = Position( new_frame, x, y, is_first )
-
-	-- Object: size
-	-- The Size Supercomponent managing this Frame's space.
-	local size = Size( new_frame, width, height, is_first )
-
-	first_frame = false
-
-	-- String: stylesheet
-	-- This Frame's Stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
-	--[[
-		Function: updateStylesheet
-			Polls all Component's for their Stylesheets.
-			Constructs the final <stylesheet> applied by setLabelStyleSheet.
-	]]
-	local function updateStylesheet ()
-		if component_count > 0 then
-			local style_table = {}
-			for i,v in pairs( components ) do
-				local v_stype = v.Subtype
-				-- Hover is a special case. It must be last, and it will
-				-- contain its own components. So we save it for last.
-				if v_stype ~= "Hover" or v_stype ~= "MiniConsole" or v_stype ~= "Map" then
-					style_table[#style_table+1] = v.Stylesheet
-				end
-			end
-			style_table[#style_table+1] = components["Hover"] and components["Hover"].Stylesheet
-
-			stylesheet = table.concat( style_table, "; " )
-			stylesheet = string.format( "%s;", stylesheet )
-		end
-	end
-
-	--[[
-		Properties: Frame Properties
-			Name 				- Return the Frame's name.
-			IsBounding 			- Gets and sets a boolean value.
-			BoundingMode		- Gets and sets the BoundingMode for this Frame.
-			Container 			- Gets and sets the parent Frame for this Frame.
-			Components 			- Returns a copy of the Frame's Components.
-			MiniConsoles 		- Returns a copy of the Frame's MiniConsoles.
-			Compounds 			- Returns a copy of the Frame's Compounds.
-			Frames 				- Returns a copy of the Frame's child Frames.
-			Position 			- Returns this Frame's Position Supercomponent.
-			Size 				- Returns this Frame's Size Supercomponent.
-			Stylesheet 			- Updates and returns this Frame's Stylesheet.
-			Callback			- Gets and sets a Callback for this Frame.
-			CallbackArguments 	- Gets and sets the arguments passed to the Callback.
-									Should be a table.
-			IsDrawn				- Has this Frame been drawn?
-	]]
-	local properties = {
-		Name = {
-			get = function ()
-				return name
-			end,
-		},
-		IsBounding = {
-			get = function ()
-				return is_bounding
-			end,
-			set = function (value)
-				is_bounding = value
-			end
-		},
-		BoundingMode = {
-			get = function ()
-				return bounding_type
-			end,
-			set = function (value)
-				bounding_type = value
-			end
-		},
-		Container = {
-			get = function ()
-				return container
-			end,
-			set = function (value)
-				if type( value ) == "string" then
-					container = master_list[value]
-				else
-					container = value
-				end
-				if not value then
-					hideWindow( name )
-				end
-				if is_drawn then
-					raiseEvent( "sysWindowResizeEvent" )
-				end
-			end,
-		},
-		Components = {
-			get = function ()
-				if component_count > 0 then
-					local copy = {}
-					for i in pairs( components ) do
-						copy[i] = components[i]
-					end
-					return copy
-				end
-			end,
-		},
-		MiniConsoles = {
-			get = function ()
-				if mini_console_count > 0 then
-					local copy = {}
-					for i in pairs( mini_consoles ) do
-						copy[i] = mini_consoles[i]
-					end
-					return copy
-				end
-			end,
-		},
-		Compounds = {
-			get = function ()
-				if compound_count > 0 then
-					local copy = {}
-					for i in pairs( compounds ) do
-						copy[i] = compounds[i]
-					end
-					return copy
-				end
-			end
-		},
-		Frames = {
-			get = function ()
-				if frame_count > 0 then
-					local copy = {}
-					for _, k, v in frames() do
-						copy[k] = v
-					end
-					return copy
-				end
-			end
-		},
-		Position = {
-			get = function ()
-				return position
-			end
-		},
-		Size = {
-			get = function ()
-				return size
-			end
-		},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end
-		},
-		Callback = {
-			get = function ()
-				return callback
-			end,
-			set = function (value)
-				callback = value
-				if callback and callback_args then
-					if type( callback_args ) == "table" then
-						setLabelClickCallback( name, callback, unpack(callback_args) )
-					else
-						setLabelClickCallback( name, callback, callback_args )
-					end
-				else
-					setLabelClickCallback( name, callback )
-				end
-			end,
-		},
-		CallbackArguments = {
-			get = function ()
-				return callback_args
-			end,
-			set = function (value)
-				callback_args = value
-				if callback and callback_args then
-					if type( callback_args ) == "table" then
-						setLabelClickCallback( name, callback, unpack(callback_args) )
-					else
-						setLabelClickCallback( name, callback, callback_args )
-					end
-				end
-			end,
-		},
-		IsDrawn = {
-			get = function ()
-				return is_drawn
-			end,
-		},
-	}
-
-	--[[
-		Function: Add
-			Adds a new object to this Frame.
-			Objects can be a string (must be a valid Frame name),
-			a Frame object, or a Component object.
-
-		Parameters:
-			object - A valid Frame name or object, or a Component.
-	]]
-	function new_frame:Add (object)
-		if type( object ) == "string" then
-			if master_list[object] then
-				master_list[object].Container = master_list[name]
-				frames[object] = master_list[object]
-				frame_count = frame_count + 1
-			else
-				error( string.format(
-					"Vyzor: Invalid Frame (%s) passed to %s:Add.",
-					object, name ), 2 )
-			end
-		elseif type( object ) == "table" then
-			local o_type = object.Type
-
-			if o_type then
-				local o_stype = object.Subtype
-				local o_name = object.Name
-
-				if o_type == "Frame" then
-					master_list[o_name].Container = master_list[name]
-					frames[o_name] = master_list[o_name]
-					frame_count = frame_count + 1
-				elseif o_type == "Component" then
-					if not components[o_stype] then
-						if o_stype == "MiniConsole" then
-							mini_consoles[o_name] = object
-							mini_console_count = mini_console_count + 1
-						else
-							components[o_stype] = object
-							component_count = component_count + 1
-						end
-
-						if o_stype == "MiniConsole" or o_stype == "Map" then
-							object.Container = master_list[name]
-						end
-
-						if is_drawn then
-							updateStylesheet()
-							if stylesheet then
-								setLabelStyleSheet( name, stylesheet )
-							end
-						end
-					else
-						error( string.format(
-							"Vyzor: %s (Frame) already contains Component (%s).",
-							name, o_stype ), 2 )
-					end
-				elseif o_type == "Compound" then
-					compounds[o_name] = object
-					compound_count = compound_count + 1
-					object.Container = master_list[name]
-
-					local ob_name = object.Background.Name
-					frames[ob_name] = master_list[ob_name]
-					frame_count = frame_count + 1
-
-					if is_drawn then
-						updateStylesheet()
-						if stylesheet then
-							setLabelStyleSheet( name, stylesheet )
-						end
-					end
-				else
-					error( string.format(
-						"Vyzor: Invalid Type (%s) passed to %s:Add.",
-						o_type, name ), 2 )
-				end
-			else
-				error( string.format(
-					"Vyzor: Invalid object (%s) passed to %s:Add.",
-					type( object ), name ), 2 )
-			end
-		else
-			error( string.format(
-				"Vyzor: Invalid object (%s) passed to %s:Add.",
-				type( object ), name ), 2 )
-		end
-	end
-
-	--[[
-		Function: Remove
-			Removes an object from this Frame.
-			Objects must be a string (must be a valid Frame's name or
-			Component Subtype), a Frame object, or a Component object.
-
-		Parameters:
-			object - A valid Frame name or object, or a Component
-				Subtype or object.
-	]]
-	function new_frame:Remove (object)
-		if type( object ) == "string" then
-			if master_list[object] then
-				master_list[object].Container = nil
-				frames[object] = nil
-				frame_count = frame_count - 1
-			elseif components[object] or mini_consoles[object] then
-				if mini_consoles[object] then
-					mini_consoles[object].Container = nil
-					mini_consoles[object] = nil
-					mini_console_count = mini_console_count - 1
-				else
-					if object == "Map" then
-						components[object].Container = nil
-					end
-					components[object] = nil
-					component_count = component_count - 1
-				end
-
-				if is_drawn then
-					updateStylesheet()
-					if stylesheet then
-						setLabelStyleSheet( name, stylesheet )
-					end
-				end
-			else
-				error( string.format(
-					"Vyzor: Invalid string '%s' passed to %s:Remove.",
-					object, name ), 2 )
-			end
-		elseif type( object ) == "table" then
-			if object.Type then
-				if object.Type == "Frame" then
-					for _, name, frame in frames() do
-						if frame == object then
-							master_list[name].Container = nil
-							frames[name] = nil
-							frame_count = frame_count - 1
-							break
-						end
-					end
-				elseif object.Type == "Component" then
-					if mini_consoles[object.Name] then
-						mini_consoles[object.Name] = nil
-						mini_console_count = mini_console_count - 1
-					elseif components[object.Subtype] then
-						components[object.Subtype] = nil
-						component_count = component_count - 1
-
-						if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
-							object.Container = nil
-						end
-					else
-						error( string.format(
-							"Vyzor: %s (Frame) does not contain Component (%s).",
-							name, object.Subtype ), 2 )
-					end
-
-					if is_drawn then
-						updateStylesheet()
-					end
-				elseif object.Type == "Compound" then
-					if compounds[object.Name] then
-						compounds[object.Name] = nil
-						compound_count = compound_count -1
-						object.Container = nil
-
-						local ob_name = object.Background.Name
-						frames[ob_name] = nil
-						frame_count = frame_count - 1
-					end
-
-					if is_drawn then
-						updateStylesheet()
-						if stylesheet then
-							setLabelStyleSheet( name, stylesheet )
-						end
-					end
-				else
-					error( string.format(
-						"Vyzor: Invalid Type (%s) passed to %s:Remove.",
-						object.Type, name ), 2 )
-				end
-			else
-				error( string.format(
-					"Vyzor: Invalid object (%s) passed to %s:Remove.",
-					type( object ), name ), 2 )
-			end
-		else
-			error( string.format(
-				"Vyzor: Invalid object (%s) passed to %s:Remove.",
-				type( object ), name ), 2 )
-		end
-	end
-
-	--[[
-		Function: Draw
-			Draws this Frame. Is only called via Vyzor:Draw().
-			Should not be used directly on a Frame.
-	]]
-	function new_frame:Draw ()
-		-- We don't draw the master Frame, because it covers
-		-- everything. Think of it as a virtual Frame.
-		if not is_first then
-			createLabel( name,
-				position.AbsoluteX, position.AbsoluteY,
-				size.AbsoluteWidth, size.AbsoluteHeight, 1
-			)
-
-			updateStylesheet()
-			if stylesheet then
-				setLabelStyleSheet( name, stylesheet )
-			end
-
-			if mini_console_count > 0 then
-				for _, console in pairs(mini_consoles) do
-					console:Draw()
-				end
-			end
-			if components["Map"] then
-				components["Map"]:Draw()
-			end
-
-			if callback then
-				if callback_args then
-					if type( callback_args ) == "table" then
-						setLabelClickCallback( name, callback, unpack(callback_args) )
-					else
-						setLabelClickCallback( name, callback, callback_args )
-					end
-				else
-					setLabelClickCallback( name, callback )
-				end
-			end
-
-			is_drawn = true
-
-			if frame_count > 0 then
-				for _, _, frame in frames() do
-					frame:Draw()
-				end
-			end
-		elseif is_first then
-			local draw_order = Options.DrawOrder
-
-			local function title (text)
-				local first = text:sub( 1, 1 ):upper()
-				local rest = text:sub( 2 ):lower()
-				return first .. rest
-			end
-
-			local hud_frames = Vyzor.HUD.Frames
-			for _,v in ipairs( draw_order ) do
-				local side = "Vyzor" .. title( v )
-				if hud_frames[side] then
-					hud_frames[side]:Draw()
-				else
-					error("Vyzor: Invalid entry in Options.DrawOrder. Must be top, bottom, left, or right.", 2)
-				end
-			end
-
-			for _, name, frame in frames() do
-				if name:sub(1, 5) ~= "Vyzor" then
-					frame:Draw()
-				end
-			end
-
-			is_drawn = true
-
-			if not resize_registered then
-				if Options.HandleBorders == true or Options.HandleBorders == "auto" then
-					registerAnonymousEventHandler( "sysWindowResizeEvent", "VyzorResize" )
-					resize_registered = true
-				end
-			end
-			raiseEvent( "sysWindowResizeEvent" )
-
-			raiseEvent( "VyzorDrawnEvent" )
-		end
-	end
-
-	--[[
-		Function: Resize
-			Resizes the Frame.
-
-		Parameters:
-			new_width 	- The Frame's new width.
-			new_height 	- The Frame's new height.
-	]]
-	function new_frame:Resize (new_width, new_height)
-		size.Dimensions = {new_width or size.Width, new_height or size.Height}
-		if not is_first then
-			resizeWindow( name, size.AbsoluteWidth, size.AbsoluteHeight )
-		end
-
-		if mini_console_count > 0 then
-			for _, console in pairs(mini_consoles) do
-				console:Resize()
-			end
-		end
-		if components["Map"] then
-			components["Map"]:Resize()
-		end
-
-		if frame_count > 0 then
-			for _, _, frame in frames() do
-				frame:Resize()
-			end
-		end
-	end
-
-	--[[
-		Function: Move
-			Repositions the Frame.
-
-		Parameters:
-			new_x - The Frame's new X position.
-			new_y - The Frame's new Y position.
-	]]
-	function new_frame:Move (new_x, new_y)
-		position.Coordinates = {new_x or position.X, new_y or position.Y}
-		if not is_first then
-			moveWindow( name, position.AbsoluteX, position.AbsoluteY )
-		end
-
-		if mini_console_count > 0 then
-			for _, console in pairs(mini_consoles) do
-				console:Move()
-			end
-		end
-		if components["Map"] then
-			components["Map"]:Move()
-		end
-
-		if frame_count > 0 then
-			for _, _, frame in frames() do
-				frame:Move()
-			end
-		end
-	end
-
-	--[[
-		Function: Hide
-			Hides the Frame.
-			Iterates through the Frame's children first, hiding
-			each of them before hiding itself.
-
-		Parameters:
-			skip_children - If true, this will not hide any of
-							the Frame's children.
-	]]
-	function new_frame:Hide (skip_children)
-		if not skip_children then
-			if frame_count > 0 then
-				for _, _, frame in frames() do
-					frame:Hide()
-				end
-			end
-		end
-
-		if mini_console_count > 0 then
-			for _, console in pairs(mini_consoles) do
-				console:Hide()
-			end
-		end
-		if components["Map"] then
-			components["Map"]:Hide()
-		end
-
-		if not is_first then
-			hideWindow( name )
-		end
-	end
-
-	--[[
-		Function: Show
-			Reveals the Frame.
-			Reveals itself first, then iterates through each of its
-			children, revealing them.
-
-		Parameters:
-			skip_children - If true, this will not show any of
-							the Frame's children.
-	]]
-	function new_frame:Show (skip_children)
-		if not is_first then
-			showWindow( name )
-		end
-
-		if mini_console_count > 0 then
-			for _, console in pairs(mini_consoles) do
-				console:Show()
-			end
-		end
-		if components["Map"] then
-			components["Map"]:Show()
-		end
-
-		if not skip_children then
-			if frame_count > 0 then
-				for _, _, frame in frames() do
-					frame:Show()
-				end
-			end
-		end
-	end
-
-	--[[
-		Function: Echo
-			Displays text on a Frame.
-
-		Parameters:
-			text - The text to be displayed.
-	]]
-	function new_frame:Echo (text)
-		echo( name, text )
-	end
-
-	--[[
-		Function: Echo
-			Displays text on a Frame.
-
-		Parameters:
-			text - The text to be displayed.
-	]]
-	function new_frame:CEcho (text)
-		cecho( name, text )
-	end
-	--[[
-		Function: Clear
-			Clears all text from the Frame.
-
-		Paramaters:
-			do_children - Will call clear on child Frames if true.
-	]]
-	function new_frame:Clear (do_children)
-		clearWindow( name )
-
-		if do_children then
-			for _, _, frame in frames() do
-				frame:Clear(true)
-			end
-		end
-	end
-
-	setmetatable( new_frame, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Frame[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-		__tostring = function (_)
-			return name
-		end,
-		} )
-	master_list[name] = new_frame
-	return new_frame
+local function new (_, _name, _x, _y, _width, _height)
+    -- Structure: New Frame
+    -- A new Frame object.
+    local self = {}
+
+    -- Boolean: _isFirst
+    -- Is this the HUD?
+    local _isFirst = _FirstFrame
+    _FirstFrame = false
+
+    -- Boolean: _isDrawn
+    -- Has this Frame been drawn?
+    local _isDrawn = false
+
+    -- Boolean: _isBounding
+    -- Does this object obey bounding rules?
+    local _isBounding = false
+
+    -- String: _boundingType
+    -- The <BoundingMode> rules to which this object adheres.
+    local _boundingType = BoundingMode.Size
+
+    -- Object: _parent
+    -- The Frame that contains this one.
+    local _parent
+
+    -- Array: _components
+    -- A list of Components this Frame contains.
+    local _components = {}
+    local _componentCount = 0 -- TODO: Why is this necessary?
+
+    -- Array: _miniConsoles
+    -- Stores MiniConsole Components.
+    local _miniConsoles = {}
+    local _miniConsoleCount = 0 -- TODO: Why is this necessary?
+
+    -- Array: _compounds
+    -- Stores Compounds.
+    local _compounds = {}
+    local _compoundCount = 0 -- TODO: Why is this necessary?
+
+    -- Array: _children
+    -- A list of Frames this Frame contains.
+    local _children = Lib.OrderedTable()
+    local _childCount = 0 -- TODO: Why is this necessary?
+
+    -- String: _callback
+    -- The name of a function to be used as a Label callback.
+    local _callback
+
+    -- Array: _callbackArguments
+    -- A table holding the arguments for a Label callback.
+    local _callbackArguments
+
+    -- Object: _position
+    -- The Position Supercomponent managing this Frame's
+    -- location.
+    local _position = Position(self, _x, _y, _isFirst)
+
+    -- Object: _size
+    -- The Size Supercomponent managing this Frame's space.
+    local _size = Size(self, _width, _height, _isFirst)
+
+    -- String: stylesheet
+    -- This Frame's Stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
+
+    --[[
+        Function: updateStylesheet
+            Polls all Component's for their Stylesheets.
+            Constructs the final <stylesheet> applied by setLabelStyleSheet.
+    ]]
+    local function updateStylesheet ()
+        if _componentCount > 0 then
+            local styleTable = {}
+
+            for _, component in pairs(_components) do
+                local componentSubtype = component.Subtype
+
+                -- Hover is a special case. It must be last, and it will
+                -- contain its own components. So we save it for last.
+                if componentSubtype ~= "Hover" or componentSubtype ~= "MiniConsole" or componentSubtype ~= "Map" then
+                    styleTable[#styleTable + 1] = component.Stylesheet
+                end
+            end
+            styleTable[#styleTable +1] = _components["Hover"] and _components["Hover"].Stylesheet
+
+            _stylesheet = table.concat(styleTable, "; ")
+            _stylesheet = string.format("%s;", _stylesheet)
+        end
+    end
+
+    --[[
+        Properties: Frame Properties
+            Name - Return the Frame's name.
+            IsBounding - Gets and sets a boolean value.
+            BoundingMode - Gets and sets the BoundingMode for this Frame.
+            Container - Gets and sets the parent Frame for this Frame.
+            Components - Returns a copy of the Frame's Components.
+            MiniConsoles - Returns a copy of the Frame's MiniConsoles.
+            Compounds - Returns a copy of the Frame's Compounds.
+            Frames - Returns a copy of the Frame's child Frames.
+            Position - Returns this Frame's Position Supercomponent.
+            Size - Returns this Frame's Size Supercomponent.
+            Stylesheet - Updates and returns this Frame's Stylesheet.
+            Callback - Gets and sets a Callback for this Frame.
+            CallbackArguments - Gets and sets the arguments passed to the Callback. Should be a table.
+            IsDrawn - Has this Frame been drawn?
+    ]]
+    local properties = {
+        Name = {
+            get = function ()
+                return _name
+            end,
+        },
+
+        IsBounding = {
+            get = function ()
+                return _isBounding
+            end,
+            set = function (value)
+                _isBounding = value
+            end
+        },
+
+        BoundingMode = {
+            get = function ()
+                return _boundingType
+            end,
+            set = function (value)
+                _boundingType = value
+            end
+        },
+
+        Container = {
+            get = function ()
+                return _parent
+            end,
+            set = function (value)
+                if type(value) == "string" then
+                    _parent = _MasterList[value]
+                else
+                    _parent = value
+                end
+
+                if not value then
+                    hideWindow(_name)
+                end
+
+                if _isDrawn then
+                    raiseEvent("sysWindowResizeEvent")
+                end
+            end,
+        },
+
+        Components = {
+            get = function ()
+                if _componentCount > 0 then
+                    local copy = {}
+
+                    for i in pairs(_components) do
+                        copy[i] = _components[i]
+                    end
+                    return copy
+                end
+            end,
+        },
+
+        MiniConsoles = {
+            get = function ()
+                if _miniConsoleCount > 0 then
+                    local copy = {}
+
+                    for i in pairs(_miniConsoles) do
+                        copy[i] = _miniConsoles[i]
+                    end
+                    return copy
+                end
+            end,
+        },
+
+        Compounds = {
+            get = function ()
+                if _compoundCount > 0 then
+                    local copy = {}
+
+                    for i in pairs(_compounds) do
+                        copy[i] = _compounds[i]
+                    end
+                    return copy
+                end
+            end
+        },
+
+        Frames = {
+            get = function ()
+                if _childCount > 0 then
+                    local copy = {}
+
+                    for _, name, child in _children() do
+                        copy[name] = child
+                    end
+                    return copy
+                end
+            end
+        },
+
+        Position = {
+            get = function ()
+                return _position
+            end
+        },
+
+        Size = {
+            get = function ()
+                return _size
+            end
+        },
+
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
+                return _stylesheet
+            end
+        },
+
+        Callback = {
+            get = function ()
+                return _callback
+            end,
+            set = function (value)
+                _callback = value
+
+                if _callback and _callbackArguments then
+                    if type(_callbackArguments) == "table" then
+                        setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
+                    else
+                        setLabelClickCallback(_name, _callback, _callbackArguments)
+                    end
+                else
+                    setLabelClickCallback(_name, _callback)
+                end
+            end,
+        },
+
+        CallbackArguments = {
+            get = function ()
+                return _callbackArguments
+            end,
+            set = function (value)
+                _callbackArguments = value
+
+                if _callback and _callbackArguments then
+                    if type(_callbackArguments) == "table" then
+                        setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
+                    else
+                        setLabelClickCallback(_name, _callback, _callbackArguments)
+                    end
+                end
+            end,
+        },
+
+        IsDrawn = {
+            get = function ()
+                return _isDrawn
+            end,
+        },
+    }
+
+    --[[
+        Function: Add
+            Adds a new object to this Frame.
+            Objects can be a string (must be a valid Frame name),
+            a Frame object, or a Component object.
+
+        Parameters:
+            object - A valid Frame name or object, or a Component.
+    ]]
+    function self:Add (object) -- TODO: Break this up.
+        if type(object) == "string" then
+            if _MasterList[object] then
+                _MasterList[object].Container = _MasterList[_name]
+                _children[object] = _MasterList[object]
+                _childCount = _childCount + 1
+            else
+                error(string.format(
+                    "Vyzor: Invalid Frame (%s) passed to %s:Add.",
+                    object, _name), 2)
+            end
+        elseif type(object) == "table" then
+            if object.Type then
+                if object.Type == "Frame" then
+                    _MasterList[object.Name].Container = _MasterList[_name]
+                    _children[object.Name] = _MasterList[object.Name]
+                    _childCount = _childCount + 1
+                elseif object.Type == "Component" then
+                    if not _components[object.Subtype] then
+                        if object.Subtype == "MiniConsole" then
+                            _miniConsoles[object.Name] = object
+                            _miniConsoleCount = _miniConsoleCount + 1
+                        else
+                            _components[object.Subtype] = object
+                            _componentCount = _componentCount + 1
+                        end
+
+                        if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
+                            object.Container = _MasterList[_name]
+                        end
+
+                        if _isDrawn then
+                            updateStylesheet()
+
+                            if _stylesheet then
+                                setLabelStyleSheet(_name, _stylesheet)
+                            end
+                        end
+                    else
+                        error(string.format(
+                            "Vyzor: %s (Frame) already contains Component (%s).",
+                            _name, object.Subtype), 2)
+                    end
+                elseif object.Type == "Compound" then
+                    _compounds[object.Name] = object
+                    _compoundCount = _compoundCount + 1
+                    object.Container = _MasterList[_name]
+
+                    local compoundContainerName = object.Background.Name
+                    _children[compoundContainerName] = _MasterList[compoundContainerName]
+                    _childCount = _childCount + 1
+
+                    if _isDrawn then
+                        updateStylesheet()
+                        if _stylesheet then
+                            setLabelStyleSheet(_name, _stylesheet)
+                        end
+                    end
+                else
+                    error(string.format(
+                        "Vyzor: Invalid Type (%s) passed to %s:Add.",
+                        object.Type, _name), 2)
+                end
+            else
+                error(string.format(
+                    "Vyzor: Invalid object (%s) passed to %s:Add.",
+                    type(object), _name), 2)
+            end
+        else
+            error(string.format(
+                "Vyzor: Invalid object (%s) passed to %s:Add.",
+                type(object), _name), 2)
+        end
+    end
+
+    --[[
+        Function: Remove
+            Removes an object from this Frame.
+            Objects must be a string (must be a valid Frame's name or
+            Component Subtype), a Frame object, or a Component object.
+
+        Parameters:
+            object - A valid Frame name or object, or a Component Subtype or object.
+    ]]
+    function self:Remove (object) -- TODO: Break this up.
+        if type(object) == "string" then
+            if _MasterList[object] then
+                _MasterList[object].Container = nil
+                _children[object] = nil
+                _childCount = _childCount - 1
+            elseif _components[object] or _miniConsoles[object] then
+                if _miniConsoles[object] then
+                    _miniConsoles[object].Container = nil
+                    _miniConsoles[object] = nil
+                    _miniConsoleCount = _miniConsoleCount - 1
+                else
+                    if object == "Map" then
+                        _components[object].Container = nil
+                    end
+
+                    _components[object] = nil
+                    _componentCount = _componentCount - 1
+                end
+
+                if _isDrawn then
+                    updateStylesheet()
+
+                    if _stylesheet then
+                        setLabelStyleSheet(_name, _stylesheet)
+                    end
+                end
+            else
+                error(string.format(
+                    "Vyzor: Invalid string '%s' passed to %s:Remove.",
+                    object, _name), 2)
+            end
+        elseif type(object) == "table" then
+            if object.Type then
+                if object.Type == "Frame" then
+                    for _, name, frame in _children() do -- TODO: Can't I just index into this?
+                        if frame == object then
+                            _MasterList[name].Container = nil
+                            _children[name] = nil
+                            _childCount = _childCount - 1
+                            break
+                        end
+                    end
+                elseif object.Type == "Component" then
+                    if _miniConsoles[object.Name] then
+                        _miniConsoles[object.Name] = nil
+                        _miniConsoleCount = _miniConsoleCount - 1
+                    elseif _components[object.Subtype] then
+                        _components[object.Subtype] = nil
+                        _componentCount = _componentCount - 1
+
+                        if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
+                            object.Container = nil
+                        end
+                    else
+                        error(string.format(
+                            "Vyzor: %s (Frame) does not contain Component (%s).",
+                            _name, object.Subtype), 2)
+                    end
+
+                    if _isDrawn then
+                        updateStylesheet()
+                    end
+                elseif object.Type == "Compound" then
+                    if _compounds[object.Name] then
+                        _compounds[object.Name] = nil
+                        _compoundCount = _compoundCount - 1
+                        object.Container = nil
+
+                        local compoundContainerName = object.Background.Name
+                        _children[compoundContainerName] = nil
+                        _childCount = _childCount - 1
+                    end
+
+                    if _isDrawn then
+                        updateStylesheet()
+
+                        if _stylesheet then
+                            setLabelStyleSheet(_name, _stylesheet)
+                        end
+                    end
+                else
+                    error(string.format(
+                        "Vyzor: Invalid Type (%s) passed to %s:Remove.",
+                        object.Type, _name), 2)
+                end
+            else
+                error(string.format(
+                    "Vyzor: Invalid object (%s) passed to %s:Remove.",
+                    type(object), _name), 2)
+            end
+        else
+            error(string.format(
+                "Vyzor: Invalid object (%s) passed to %s:Remove.",
+                type(object), _name), 2)
+        end
+    end
+
+    --[[
+        Function: Draw
+            Draws this Frame. Is only called via Vyzor:Draw().
+            Should not be used directly on a Frame.
+    ]]
+    function self:Draw () -- TODO: Break this up.
+        -- We don't draw the master Frame, because it covers
+        -- everything. Think of it as a virtual Frame.
+        if not _isFirst then
+            createLabel(
+                _name,
+                _position.AbsoluteX, _position.AbsoluteY,
+                _size.AbsoluteWidth, _size.AbsoluteHeight, 1)
+
+            updateStylesheet()
+            if _stylesheet then
+                setLabelStyleSheet(_name, _stylesheet)
+            end
+
+            if _miniConsoleCount > 0 then
+                for _, console in pairs(_miniConsoles) do
+                    console:Draw()
+                end
+            end
+
+            if _components["Map"] then
+                _components["Map"]:Draw()
+            end
+
+            if _callback then
+                if _callbackArguments then
+                    if type(_callbackArguments) == "table" then
+                        setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
+                    else
+                        setLabelClickCallback(_name, _callback, _callbackArguments)
+                    end
+                else
+                    setLabelClickCallback(_name, _callback)
+                end
+            end
+
+            _isDrawn = true
+
+            if _childCount > 0 then
+                for _, _, frame in _children() do
+                    frame:Draw()
+                end
+            end
+        elseif _isFirst then
+            local drawOrder = Options.DrawOrder
+
+            local function title (text)
+                local first = text:sub(1, 1):upper()
+                local rest = text:sub(2):lower()
+                return first .. rest
+            end
+
+            local hudChildren = Vyzor.HUD.Frames
+            for _, frame in ipairs(drawOrder) do
+                local frame = "Vyzor" .. title(frame)
+                if hudChildren[frame] then
+                    hudChildren[frame]:Draw()
+                else
+                    error("Vyzor: Invalid entry in Options.DrawOrder. Must be top, bottom, left, or right.", 2)
+                end
+            end
+
+            for _, name, frame in _children() do
+                if name:sub(1, 5) ~= "Vyzor" then
+                    frame:Draw()
+                end
+            end
+
+            _isDrawn = true
+
+            if not _ResizeRegistered then
+                if Options.HandleBorders == true or Options.HandleBorders == "auto" then
+                    registerAnonymousEventHandler("sysWindowResizeEvent", "VyzorResize")
+                    _ResizeRegistered = true
+                end
+            end
+            raiseEvent("sysWindowResizeEvent")
+
+            raiseEvent("VyzorDrawnEvent")
+        end
+    end
+
+    --[[
+        Function: Resize
+            Resizes the Frame.
+
+        Parameters:
+            width - The Frame's new width.
+            height - The Frame's new height.
+    ]]
+    function self:Resize (width, height)
+        _size.Dimensions = { width or _size.Width, height or _size.Height }
+
+        if not _isFirst then
+            resizeWindow(_name, _size.AbsoluteWidth, _size.AbsoluteHeight)
+        end
+
+        if _miniConsoleCount > 0 then
+            for _, console in pairs(_miniConsoles) do
+                console:Resize()
+            end
+        end
+
+        if _components["Map"] then
+            _components["Map"]:Resize()
+        end
+
+        if _childCount > 0 then
+            for _, _, frame in _children() do
+                frame:Resize()
+            end
+        end
+    end
+
+    --[[
+        Function: Move
+            Repositions the Frame.
+
+        Parameters:
+            x - The Frame's new X position.
+            y - The Frame's new Y position.
+    ]]
+    function self:Move (x, y)
+        _position.Coordinates = { x or _position.X, y or _position.Y }
+
+        if not _isFirst then
+            moveWindow(_name, _position.AbsoluteX, _position.AbsoluteY)
+        end
+
+        if _miniConsoleCount > 0 then
+            for _, console in pairs(_miniConsoles) do
+                console:Move()
+            end
+        end
+
+        if _components["Map"] then
+            _components["Map"]:Move()
+        end
+
+        if _childCount > 0 then
+            for _, _, frame in _children() do
+                frame:Move()
+            end
+        end
+    end
+
+    --[[
+        Function: Hide
+            Hides the Frame.
+            Iterates through the Frame's children first, hiding
+            each of them before hiding itself.
+
+        Parameters:
+            skipChildren - If true, this will not hide any of the Frame's children.
+    ]]
+    function self:Hide (skipChildren)
+        if not skipChildren then
+            if _childCount > 0 then
+                for _, _, frame in _children() do
+                    frame:Hide()
+                end
+            end
+        end
+
+        if _miniConsoleCount > 0 then
+            for _, console in pairs(_miniConsoles) do
+                console:Hide()
+            end
+        end
+
+        if _components["Map"] then
+            _components["Map"]:Hide()
+        end
+
+        if not _isFirst then
+            hideWindow(_name)
+        end
+    end
+
+    --[[
+        Function: Show
+            Reveals the Frame.
+            Reveals itself first, then iterates through each of its
+            children, revealing them.
+
+        Parameters:
+            skipChildren - If true, this will not show any of the Frame's children.
+    ]]
+    function self:Show (skipChildren)
+        if not _isFirst then
+            showWindow(_name)
+        end
+
+        if _miniConsoleCount > 0 then
+            for _, console in pairs(_miniConsoles) do
+                console:Show()
+            end
+        end
+
+        if _components["Map"] then
+            _components["Map"]:Show()
+        end
+
+        if not skipChildren then
+            if _childCount > 0 then
+                for _, _, frame in _children() do
+                    frame:Show()
+                end
+            end
+        end
+    end
+
+    --[[
+        Function: Echo
+            Displays text on a Frame.
+
+        Parameters:
+            text - The text to be displayed.
+    ]]
+    function self:Echo (text)
+        echo(_name, text)
+    end
+
+    --[[
+        Function: Echo
+            Displays text on a Frame.
+
+        Parameters:
+            text - The text to be displayed.
+    ]]
+    function self:CEcho (text)
+        cecho(_name, text)
+    end
+    --[[
+        Function: Clear
+            Clears all text from the Frame.
+
+        Paramaters:
+            clearChildren - Will call clear on child Frames if true.
+    ]]
+    function self:Clear (clearChildren)
+        clearWindow(_name)
+
+        if clearChildren then
+            for _, _, frame in _children() do
+                frame:Clear(true)
+            end
+        end
+    end
+
+    setmetatable(self, { -- TODO: It should be possible to generify this.
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Frame[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+        __tostring = function (_)
+            return _name
+        end,
+        })
+
+    _MasterList[_name] = self
+    return self
 end
 
-setmetatable( Frame, {
-	__index = getmetatable(Frame).__index,
-	__call = new,
-	} )
+setmetatable(Frame, {
+    __index = getmetatable(Frame).__index,
+    __call = new,
+    })
 return Frame
