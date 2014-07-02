@@ -7,24 +7,24 @@ local Enum = require("vyzor.enum")
 -- Title: FontStyle
 
 --[[
-	Array: enum_table
-		Defines options for FontStyle.
+    Array: _enum
+        Defines options for FontStyle.
 
-	Fields:
-		Normal 	- Applies no style to the text.
-		Italic 	- Makes the text italic.
-		Oblique - Your guess is as good as mine.
+    Fields:
+        Normal - Applies no style to the text.
+        Italic - Makes the text italic.
+        Oblique - Your guess is as good as mine.
 ]]
-local enum_table = {
-	Normal = "normal",
-	Italic = "italic",
-	Oblique = "oblique",
+local _enum = {
+    Normal = "normal",
+    Italic = "italic",
+    Oblique = "oblique",
 }
 
 --[[
-	Enum: FontStyle
-		Specifies options for <Font> styles.
+    Enum: FontStyle
+        Specifies options for <Font> styles.
 ]]
-local FontStyle = Enum("FontStyle", enum_table)
+local FontStyle = Enum("FontStyle", _enum)
 
 return FontStyle

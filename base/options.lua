@@ -3,7 +3,7 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Lib = require( "vyzor.lib" )
+local Lib = require("vyzor.lib")
 
 --[[
 	Structure: Options
@@ -11,43 +11,43 @@ local Lib = require( "vyzor.lib" )
 ]]
 local Options = {}
 
--- Array: default_draw_order
+-- Array: DEFAULT_DRAW_ORDER
 -- Default draw order for Border Frames.
-local default_draw_order = {"top", "bottom", "left", "right"}
+local DEFAULT_DRAW_ORDER = {"top", "bottom", "left", "right"}
 
--- Array: draw_order
+-- Array: _drawOrder
 -- Determines layering for Border Frames.
-local draw_order = default_draw_order
+local _drawOrder = DEFAULT_DRAW_ORDER
 
--- Array: default_borders
+-- Array: DEFAULT_BORDERS
 -- Default state for Border Frames.
-local default_borders = {
+local DEFAULT_BORDERS = {
 	Top = "dynamic",
 	Bottom = "dynamic",
 	Right = "dynamic",
 	Left = "dynamic"
 }
 
--- Array: borders
+-- Array: _borders
 -- Determines Border Frame size.
-local borders = default_borders
+local _borders = DEFAULT_BORDERS
 
--- Boolean: default_handle_borders
+-- Boolean: DEFAULT_BORDER_HANDLING
 -- Default setting for determing whether or not Vyzor handles
 -- Mudlet's borders.
-local default_handle_borders = "auto"
+local DEFAULT_BORDER_HANDLING = "auto"
 
--- Boolean: handle_borders
+-- Boolean: _borderHandling
 -- Determines whether or not Vyzor handles Mudlet's borders.
-local handle_borders = default_handle_borders
+local _borderHandling = DEFAULT_BORDER_HANDLING
 
--- Double: default_console_height
+-- Double: DEFAULT_CONSOLE_HEIGHT
 -- Default height of main console is window height.
-local _,default_console_height = getMainWindowSize()
+local _, DEFAULT_CONSOLE_HEIGHT = getMainWindowSize()
 
--- Double: console_height
+-- Double: _consoleHeight
 -- User-defined height for main console.
-local console_height = default_console_height
+local _consoleHeight = DEFAULT_CONSOLE_HEIGHT
 
 --[[
 	Properties: Option Properties
@@ -63,82 +63,90 @@ local console_height = default_console_height
 local properties = {
 	DrawOrder = {
 		get = function ()
-			return draw_order
+			return _drawOrder
 		end,
 		set = function (value)
-			draw_order = value
+			_drawOrder = value
 		end,
 	},
+
 	Borders = {
 		get = function ()
-			return borders
+			return _borders
 		end,
 		set = function (value)
-			local changed = {}
-			local last_borders = borders
-			borders = {
-				Top = value["Top"] or last_borders["Top"],
-				Right = value["Right"] or last_borders["Right"],
-				Bottom = value["Bottom"] or last_borders["Bottom"],
-				Left = value["Left"] or last_borders["Left"]
+			local changedBorders = {}
+			local previousBorders = _borders
+
+			_borders = {
+				Top = value["Top"] or previousBorders["Top"],
+				Right = value["Right"] or previousBorders["Right"],
+				Bottom = value["Bottom"] or previousBorders["Bottom"],
+				Left = value["Left"] or previousBorders["Left"]
 			}
 
 			-- We really only want to waste time updating changed
 			-- values.
-			for k,v in pairs( borders ) do
-				if v ~= last_borders[k] then
-					changed[#changed+1] = k
+			for name, border in pairs(_borders) do
+				if border ~= previousBorders[name] then
+					changedBorders[#changedBorders +1] = name
 				end
 			end
 
-			if #changed > 0 then
-				for _,k in ipairs( changed ) do
+			if #changedBorders > 0 then
+				for _, border in ipairs(changedBorders) do
 					-- Recalculate all these values. This bit of numeric magic,
 					-- reused as often as it is, should probably be outsourced to
 					-- an independent function.
-					if borders[k] ~= "dynamic" then
-						if k == "Top" or k == "Bottom" then
-							Vyzor.HUD.Frames["Vyzor" .. k].Size.Height = borders[k]
-							if k == "Bottom" then
-								local cont_height = Vyzor.HUD.Size.ContentHeight
+					if _borders[border] ~= "dynamic" then
+						if border == "Top" or border == "Bottom" then
+							Vyzor.HUD.Frames["Vyzor" .. border].Size.Height = _borders[border]
+
+							if border == "Bottom" then
+								local contentHeight = Vyzor.HUD.Size.ContentHeight
+
 								Vyzor.HUD.Frames["VyzorBottom"].Position.Y =
-									(((borders["Bottom"] > 0 and borders["Bottom"] <= 1.0) and 1.0) or cont_height) -
-										borders["Bottom"]
+									(((_borders["Bottom"] > 0 and _borders["Bottom"] <= 1.0) and 1.0) or contentHeight) -
+										_borders["Bottom"]
 							end
 						else
-							Vyzor.HUD.Frames["Vyzor" .. k].Size.Width = borders[k]
-							if k == "Right" then
-								local cont_width = Vyzor.HUD.Size.ContentWidth
+							Vyzor.HUD.Frames["Vyzor" .. border].Size.Width = _borders[border]
+
+							if border == "Right" then
+								local contentWidth = Vyzor.HUD.Size.ContentWidth
+
 								Vyzor.HUD.Frames["VyzorRight"].Position.X =
-									(((borders["Right"] > 0 and borders["Right"] <= 1.0) and 1.0) or cont_width) -
-										borders["Right"]
+									(((_borders["Right"] > 0 and _borders["Right"] <= 1.0) and 1.0) or contentWidth) -
+										_borders["Right"]
 							end
 						end
-					else
 					end
-				end
-				raiseEvent( "sysWindowResizeEvent" )
+                end
+
+				raiseEvent("sysWindowResizeEvent")
 			end
 		end
 	},
+
 	ConsoleHeight = {
 		get = function ()
-			return console_height
+			return _consoleHeight
 		end,
 		set = function (value)
-			console_height = value
-			raiseEvent( "sysWindowResizeEvent" )
+			_consoleHeight = value
+			raiseEvent("sysWindowResizeEvent")
 		end,
 	},
+
 	HandleBorders = {
 		get = function ()
-			return handle_borders
+			return _borderHandling
 		end,
 		set = function (value)
-			handle_borders = value
+			_borderHandling = value
 
 			if value == true then
-				raiseEvent( "sysWindowResizeEvent" )
+				raiseEvent("sysWindowResizeEvent")
 			end
 		end
 	},
@@ -149,23 +157,23 @@ local properties = {
 		Resets all Options to default values.
 ]]
 function Options:Reset ()
-	draw_order 		= default_draw_order
-	borders 		= default_borders
-	console_height 	= default_console_height
-	handle_borders 	= default_handle_borders
+	_drawOrder = DEFAULT_DRAW_ORDER
+	_borders = DEFAULT_BORDERS
+	_consoleHeight = DEFAULT_CONSOLE_HEIGHT
+	_borderHandling = DEFAULT_BORDER_HANDLING
 
-	raiseEvent( "sysWindowResizeEvent" )
+	raiseEvent("sysWindowResizeEvent")
 end
 
-setmetatable( Options, {
+setmetatable(Options, {
 	__index = function (_, key)
 		return properties[key] and properties[key].get()
 	end,
 	__newindex = function (_, key, value)
 		if properties[key] and properties[key].set then
-			properties[key].set( value )
+			properties[key].set(value)
 		end
 	end,
-} )
+})
 
 return Options

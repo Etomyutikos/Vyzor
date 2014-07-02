@@ -3,30 +3,30 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base = require( "vyzor.base" )
+local Base = require("vyzor.base")
 
 --[[
 	Class: Enum
 		Defines the Enum object.
 ]]
-local Enum = Base( "Enum" )
+local Enum = Base("Enum")
 
 --[[
 	Constructor: new
 
 	Parameters:
-		_subtype 		- A string identifying the Enum.
-		options_table 	- A table of valid options for the Enum.
+		_subtype - A string identifying the Enum.
+		options_table - A table of valid options for the Enum.
 
 	Returns:
 		A new Enum object.
 ]]
-local function new (_, _subtype, options_table)
+local function new (_, _subtype, _optionsTable)
 	--[[
 		Structure: New Enum
 			A base object for all Enum objects.
 	]]
-	local new_enum = {}
+	local self = {}
 
 	--[[
 		Properties:
@@ -53,34 +53,37 @@ local function new (_, _subtype, options_table)
 		Returns:
 			A boolean value.
 	]]
-	function new_enum:IsValid (key)
-		local is_valid = false
-		for index, value in pairs( options_table ) do
+	function self:IsValid (key)
+		local isValid = false
+
+		for index, value in pairs(_optionsTable) do
 			if ((key == value) or (key == index)) then
-				is_valid = true
+				isValid = true
+            end
+
+			if isValid then
+				return isValid
 			end
-			if is_valid then
-				return is_valid
-			end
-		end
-		return is_valid
+        end
+
+		return isValid
 	end
 
-	setmetatable( new_enum, {
+	setmetatable(self, {
 		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or options_table[key] or Enum[key]
+			return (properties[key] and properties[key].get()) or _optionsTable[key] or Enum[key]
 		end,
 		__newindex = function (_, key, value)
 			if properties[key] and properties[key].set then
-				properties[key].set( value )
+				properties[key].set(value)
 			end
 		end
-		} )
-	return new_enum
+		})
+	return self
 end
 
-setmetatable( Enum, {
+setmetatable(Enum, {
 	__index = getmetatable(Enum).__index,
 	__call = new,
-	} )
+	})
 return Enum
