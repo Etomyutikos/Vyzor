@@ -6,149 +6,155 @@
 local Base = require("vyzor.base")
 
 --[[
-	Class: Hover
-		Defines a Hover Component.
+    Class: Hover
+        Defines a Hover Component.
 ]]
-local Hover = Base( "Component", "Hover" )
+local Hover = Base("Component", "Hover")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		init_components - A table of Components to be contained in this Hover Component.
-							Optional.
+    Parameters:
+        initialComponents - A table of Components to be contained in this Hover Component. Optional.
 
-	Returns:
-		A new Hover Component.
+    Returns:
+        A new Hover Component.
 ]]
-local function new (_, init_components )
-	--[[
-		Structure: New Hover
-			This Component defines <Frame> behaviour on mouse-over,
-			and may contain other Components much like <Frames>.
-	]]
-	local new_hover = {}
+local function new (_, initialComponents)
+    --[[
+        Structure: New Hover
+            This Component defines <Frame> behaviour on mouse-over,
+            and may contain other Components much like <Frames>.
+    ]]
+    local self = {}
 
-	-- Array: components
-	-- A table of Components.
-	local components = {}
-	local component_count = 0
+    -- Array: _components
+    -- A table of Components.
+    local _components = {}
+    local _componentCount = 0 -- TODO: Fix me.
 
-	if init_components then
-		for i,v in ipairs( init_components ) do
-			assert( not components[v.Subtype], "Vyzor: Attempt to add duplicate Component to Hover Component." )
-			assert( v.Subtype ~= "Hover", "Vyzor: May not add Hover Component to Hover Component." )
-			components[v.Subtype] = v
-			component_count = component_count + 1
-		end
-	end
+    if initialComponents then
+        for _, component in ipairs(initialComponents) do
+            assert(not _components[component.Subtype], "Vyzor: Attempt to add duplicate Component to Hover Component.")
+            assert(component.Subtype ~= "Hover", "Vyzor: May not add Hover Component to Hover Component.")
 
-	-- String: stylesheet
-	-- Hover Component's stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
+            _components[component.Subtype] = component
+            _componentCount = _componentCount + 1
+        end
+    end
 
-	--[[
-		Function: updateStylesheet
-			Updates the Hover Component's <stylesheet>.
-			The string generated is a combination of all Components'
-			stylesheets.
-	]]
-	local function updateStylesheet ()
-		if component_count > 0 then
-			local style_table = {}
-			for _,v in pairs( components ) do
-				style_table[#style_table+1] = v.Stylesheet
-			end
+    -- String: _stylesheet
+    -- Hover Component's stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
 
-			-- I don't know why that opening brace is there. I assume
-			-- it's some weird artifact caused by Mudlet's handling
-			-- of QT's Stylesheets. But it has to be there.
-			stylesheet = string.format( "}QLabel::Hover{ %s }",
-				table.concat( style_table, "; " ) )
-		end
-	end
+    --[[
+        Function: updateStylesheet
+            Updates the Hover Component's <stylesheet>.
+            The string generated is a combination of all Components'
+            stylesheets.
+    ]]
+    local function updateStylesheet ()
+        if _componentCount > 0 then
+            local _styleTable = {}
 
-	--[[
-		Properties: Hover Properties
-			Components - Returns a table copy of Hover Component's contained Components.
-			Stylesheet - Updates and returns the Hover Component's <stylesheet>.
-	]]
-	local properties = {
-		Components = {
-			get = function ()
-				if component_count > 0 then
-					local copy = {}
-					for i in ipairs( components ) do
-						copy[i] = components[i]
-					end
-					return copy
-				end
-			end,
-		},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end,
-		},
-	}
+            for _, component in pairs(_components) do
+                _styleTable[#_styleTable + 1] = component.Stylesheet
+            end
 
-	--[[
-		Function: Add
-			Adds a new Component to the Hover Component.
+            -- I don't know why that opening brace is there. I assume
+            -- it's some weird artifact caused by Mudlet's handling
+            -- of QT's Stylesheets. But it has to be there.
+            _stylesheet = string.format("}QLabel::Hover{ %s }", table.concat(_styleTable, "; "))
+        end
+    end
 
-		Parameters:
-			component - The Component to be added.
-	]]
-	function new_hover:Add (component)
-		if not components[component.Subtype] then
-			components[component.Subtype] = component
-			component_count = component_count + 1
-		end
-	end
+    --[[
+        Properties: Hover Properties
+            Components - Returns a table copy of Hover Component's contained Components.
+            Stylesheet - Updates and returns the Hover Component's <stylesheet>.
+    ]]
+    local properties = {
+        Components = {
+            get = function ()
+                if _componentCount > 0 then
+                    local copy = {}
 
-	--[[
-		Function: Remove
-			Removes a Component from the Hover Component.
+                    for i in ipairs(_components) do
+                        copy[i] = _components[i]
+                    end
 
-		Paramaters:
-			subtype - The Subtype of the Component to be removed.
-	]]
-	function new_hover:Remove (subtype)
-		if components[subtype] then
-			components[subtype] = nil
-			component_count = component_count - 1
-		end
-	end
+                    return copy
+                end
+            end,
+        },
 
-	--[[
-		Function: Replace
-			Replaces a Component in the Hover Component.
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
 
-		Parameters:
-			component - The Component to be added.
-	]]
-	function new_hover:Replace (component)
-		components[component.Subtype] = component
-	end
+                return _stylesheet
+            end,
+        },
+    }
 
-	setmetatable( new_hover, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Hover[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set()
-			end
-		end,
-	} )
-	return new_hover
+    --[[
+        Function: Add
+            Adds a new Component to the Hover Component.
+
+        Parameters:
+            component - The Component to be added.
+    ]]
+    function self:Add (component)
+        if not _components[component.Subtype] then
+            _components[component.Subtype] = component
+            _componentCount = _componentCount + 1
+        end
+    end
+
+    --[[
+        Function: Remove
+            Removes a Component from the Hover Component.
+
+        Paramaters:
+            subtype - The Subtype of the Component to be removed.
+    ]]
+    function self:Remove (subtype)
+        if _components[subtype] then
+            _components[subtype] = nil
+            _componentCount = _componentCount - 1
+        end
+    end
+
+    --[[
+        Function: Replace
+            Replaces a Component in the Hover Component.
+
+        Parameters:
+            component - The Component to be added.
+    ]]
+    function self:Replace (component)
+        _components[component.Subtype] = component
+    end
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Hover[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set()
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Hover, {
-	__index = getmetatable(Hover).__index,
-	__call = new,
-} )
+setmetatable(Hover, {
+    __index = getmetatable(Hover).__index,
+    __call = new,
+})
+
 return Hover

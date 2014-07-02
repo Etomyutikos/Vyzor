@@ -39,7 +39,7 @@ local _enum = {
     Right = "right",
     RightCenter = "right center",
     Center = "center",
-    }
+}
 
 --[[
     Enum: Alignment

@@ -562,7 +562,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 				if tab.Components["Background"] then
 					tab:Remove("Background")
                 end
-                
+
 				tab:Add(_inactiveBackground)
 			end
 		end

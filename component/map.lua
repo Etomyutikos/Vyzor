@@ -3,276 +3,288 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base = require( "vyzor.base")
+local Base = require("vyzor.base")
 
 --[[
-	Class: Map
-		Defines the Map Component.
+    Class: Map
+        Defines the Map Component.
 ]]
-local Map = Base( "Component", "Map" )
+local Map = Base("Component", "Map")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		init_x 		- Mapper's initial X coordinate.
-		init_y 		- Mapper's initial Y coordinate.
-		init_width 	- Mapper's initial Width.
-		init_height - Mapper's initial Height.
+    Parameters:
+        initialX - Mapper's initial X coordinate.
+        initialY - Mapper's initial Y coordinate.
+        initialWidth - Mapper's initial Width.
+        initialHeight - Mapper's initial Height.
 ]]
-local function new (_, init_x, init_y, init_width, init_height)
-	--[[
-		Structure: New Map
-			A container for Mudlet's built-in Map display.
-	]]
-	local new_map = {}
+local function new (_, initialX, initialY, initialWidth, initialHeight)
+    --[[
+        Structure: New Map
+            A container for Mudlet's built-in Map display.
+    ]]
+    local self = {}
 
-	-- Object: container
-	-- Parent Frame.
-	local container
+    -- Object: _container
+    -- Parent Frame.
+    local _container
 
-	-- Boolean: is_hidden
-	-- Special handling for special Map hiding.
-	local is_hidden = false
+    -- Boolean: _isHidden
+    -- Special handling for special Map hiding.
+    local _isHidden = false
 
-	-- Number: x
-	-- User-defined X coordinate.
-	local x = init_x or 0
+    -- Number: _x
+    -- User-defined X coordinate.
+    local _x = initialX or 0
 
-	-- Number: absolute_x
-	-- Actual X coordinate.
-	local absolute_x
+    -- Number: _absoluteX
+    -- Actual X coordinate.
+    local _absoluteX
 
-	-- Number: y
-	-- User-defined Y coordinate.
-	local y = init_y or 0
+    -- Number: _y
+    -- User-defined Y coordinate.
+    local _y = initialY or 0
 
-	-- Number: absolute_y
-	-- Actual Y coordinate.
-	local absolute_y
+    -- Number: _absoluteY
+    -- Actual Y coordinate.
+    local _absoluteY
 
-	-- Number: width
-	-- User-defined width.
-	local width = init_width or 1.0
+    -- Number: _width
+    -- User-defined width.
+    local _width = initialWidth or 1.0
 
-	-- Number: absolute_width
-	-- Actual width.
-	local absolute_width
+    -- Number: _absoluteWidth
+    -- Actual width.
+    local _absoluteWidth
 
-	-- Number: height
-	-- User-defined height.
-	local height = init_height or 1.0
+    -- Number: _height
+    -- User-defined height.
+    local _height = initialHeight or 1.0
 
-	-- Number: absolute_height
-	-- Actual height.
-	local absolute_height
+    -- Number: _absoluteHeight
+    -- Actual height.
+    local _absoluteHeight
 
-	--[[
-		Properties: Map Properties
-			Container 		- Gets and sets the Map's parent Frame.
-			X 				- Gets and sets the user-defined X coordinate.
-			AbsoluteX 		- Returns the actual X coordinate.
-			Y 				- Gets and sets the user-defined Y coordinate.
-			AbsoluteY 		- Returns the actual Y coordinate.
-			Width 			- Gets and sets the user-defined width.
-			AbsoluteWidth 	- Returns the actual width.
-			Height 			- Gets and sets the user-defined height.
-			AbsoluteHeight 	- Returns the actual height.
-	]]
-	local properties = {
-		Container = {
-			get = function ()
-				return container
-			end,
-			set = function (value)
-				if value.Type == "Frame" then
-					container = value
-				end
-			end
-		},
-		X = {
-			get = function ()
-				return x
-			end,
-			set = function (value)
-				x = value
-				updateAbsolutes()
-			end
-		},
-		AbsoluteX = {
-			get = function ()
-				return absolute_x
-			end
-		},
-		Y = {
-			get = function ()
-				return y
-			end,
-			set = function (value)
-				y = value
-				updateAbsolutes()
-			end
-		},
-		AbsoluteY = {
-			get = function ()
-				return absolute_y
-			end
-		},
-		Width = {
-			get = function ()
-				return width
-			end,
-			set = function (value)
-				width = value
-				updateAbsolutes()
-			end
-		},
-		AbsoluteWidth = {
-			get = function ()
-				return absolute_width
-			end
-		},
-		Height = {
-			get = function ()
-				return height
-			end,
-			set = function (value)
-				height = value
-				updateAbsolutes()
-			end
-		},
-		AbsoluteHeight = {
-			get = function ()
-				return absolute_height
-			end
-		}
-	}
+    --[[
+        Properties: Map Properties
+            Container - Gets and sets the Map's parent Frame.
+            X - Gets and sets the user-defined X coordinate.
+            AbsoluteX - Returns the actual X coordinate.
+            Y - Gets and sets the user-defined Y coordinate.
+            AbsoluteY - Returns the actual Y coordinate.
+            Width - Gets and sets the user-defined width.
+            AbsoluteWidth - Returns the actual width.
+            Height - Gets and sets the user-defined height.
+            AbsoluteHeight - Returns the actual height.
+    ]]
+    local properties = {
+        Container = {
+            get = function ()
+                return _container
+            end,
+            set = function (value)
+                if value.Type == "Frame" then
+                    _container = value
+                end
+            end
+        },
 
-	--[[
-		Function: updateAbsolutes
-			Sets the actual size and position of the Map
-			using the parent Frame's Content.
-	]]
-	local function updateAbsolutes ()
-		if container then
-			local frame_pos		= container.Position
-			local frame_x 		= frame_pos.ContentX
-			local frame_y 		= frame_pos.ContentY
+        X = {
+            get = function ()
+                return _x
+            end,
+            set = function (value)
+                _x = value
+                updateAbsolutes()
+            end
+        },
 
-			local frame_siz		= container.Size
-			local frame_width 	= frame_siz.ContentWidth
-			local frame_height 	= frame_siz.ContentHeight
+        AbsoluteX = {
+            get = function ()
+                return _absoluteX
+            end
+        },
 
-			if x >= 0.0 and x <= 1.0 then
-				absolute_x = frame_x + (x * frame_width)
-			else
-				absolute_x = frame_x + x
-			end
+        Y = {
+            get = function ()
+                return _y
+            end,
+            set = function (value)
+                _y = value
+                updateAbsolutes()
+            end
+        },
 
-			if y >= 0.0 and y <= 1.0 then
-				absolute_y = frame_y + (y * frame_height)
-			else
-				absolute_y = frame_y + y
-			end
+        AbsoluteY = {
+            get = function ()
+                return _absoluteY
+            end
+        },
 
-			if width >= 0.0 and width <= 1.0 then
-				absolute_width = width * frame_width
-			else
-				absolute_width = width
-			end
+        Width = {
+            get = function ()
+                return _width
+            end,
+            set = function (value)
+                _width = value
+                updateAbsolutes()
+            end
+        },
 
-			if height >= 0.0 and height <= 1.0 then
-				absolute_height = height * frame_height
-			else
-				absolute_height = height
-			end
-		end
-	end
+        AbsoluteWidth = {
+            get = function ()
+                return _absoluteWidth
+            end
+        },
 
-	--[[
-		Function: Draw
-			The map magically appears! Probably best used
-			internally only.
-	]]
-	function new_map:Draw ()
-		updateAbsolutes()
+        Height = {
+            get = function ()
+                return _height
+            end,
+            set = function (value)
+                _height = value
+                updateAbsolutes()
+            end
+        },
 
-		createMapper( absolute_x, absolute_y, absolute_width, absolute_height )
-	end
+        AbsoluteHeight = {
+            get = function ()
+                return _absoluteHeight
+            end
+        }
+    }
 
-	--[[
-		Function: Resize
-			Adjusts the Map's size.
+    --[[
+        Function: updateAbsolutes
+            Sets the actual size and position of the Map
+            using the parent Frame's Content.
+    ]]
+    local function updateAbsolutes () -- TODO: Functionify this.
+        if _container then
+            local framePosition = _container.Position
+            local frameX = framePosition.ContentX
+            local frameY = framePosition.ContentY
 
-		Parameters:
-			new_width 	- Map's new width.
-			new_height 	- Map's new height.
-	]]
-	function new_map:Resize (new_width, new_height)
-		width = new_width or width
-		height = new_height or height
-		updateAbsolutes()
+            local frameSize = _container.Size
+            local frameWidth = frameSize.ContentWidth
+            local frameHeight = frameSize.ContentHeight
 
-		if not is_hidden then
-			createMapper( absolute_x, absolute_y, absolute_width, absolute_height )
-		else
-			createMapper( absolute_x, absolute_y, 0, 0 )
-		end
-	end
+            if _x >= 0.0 and _x <= 1.0 then
+                _absoluteX = frameX + (_x * frameWidth)
+            else
+                _absoluteX = frameX + _x
+            end
 
-	--[[
-		Function: Move
-			Moves the Map.
+            if _y >= 0.0 and _y <= 1.0 then
+                _absoluteY = frameY + (_y * frameHeight)
+            else
+                _absoluteY = frameY + _y
+            end
 
-		Parameters:
-			new_x - Map's new relative X coordinate.
-			new_y - Map's new relative Y coordinate.
-	]]
-	function new_map:Move (new_x, new_y)
-		x = new_x or x
-		y = new_y or y
-		updateAbsolutes()
+            if _width >= 0.0 and _width <= 1.0 then
+                _absoluteWidth = _width * frameWidth
+            else
+                _absoluteWidth = _width
+            end
 
-		if not is_hidden then
-			createMapper( absolute_x, absolute_y, absolute_width, absolute_height )
-		else
-			createMapper( absolute_x, absolute_y, 0, 0 )
-		end
-	end
+            if _height >= 0.0 and _height <= 1.0 then
+                _absoluteHeight = _height * frameHeight
+            else
+                _absoluteHeight = _height
+            end
+        end
+    end
 
-	--[[
-		Function: Hide
-			Hides the Map. Sort of. Makes it very, very tiny.
-	]]
-	function new_map:Hide ()
-		is_hidden = true
-		createMapper( absolute_x, absolute_y, 0, 0 )
-	end
+    --[[
+        Function: Draw
+            The map magically appears! Probably best used
+            internally only.
+    ]]
+    function self:Draw ()
+        updateAbsolutes()
 
-	--[[
-		Function: Show
-			Returns the Map to its original size.
-	]]
-	function new_map:Show ()
-		is_hidden = false
-		createMapper( absolute_x, absolute_y, absolute_width, absolute_height )
-	end
+        createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)
+    end
 
-	setmetatable( new_map, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Map[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-		} )
-	return new_map
+    --[[
+        Function: Resize
+            Adjusts the Map's size.
+
+        Parameters:
+            width - Map's new width.
+            height - Map's new height.
+    ]]
+    function self:Resize (width, height)
+        _width = width or _width
+        _height = height or _height
+
+        updateAbsolutes()
+
+        if not _isHidden then
+            createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)
+        else
+            createMapper(_absoluteX, _absoluteY, 0, 0)
+        end
+    end
+
+    --[[
+        Function: Move
+            Moves the Map.
+
+        Parameters:
+            x - Map's new relative X coordinate.
+            y - Map's new relative Y coordinate.
+    ]]
+    function self:Move (x, y)
+        _x = x or _x
+        _y = y or _y
+
+        updateAbsolutes()
+
+        if not _isHidden then
+            createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)
+        else
+            createMapper(_absoluteX, _absoluteY, 0, 0)
+        end
+    end
+
+    --[[
+        Function: Hide
+            Hides the Map. Sort of. Makes it very, very tiny.
+    ]]
+    function self:Hide ()
+        _isHidden = true
+        createMapper(_absoluteX, _absoluteY, 0, 0)
+    end
+
+    --[[
+        Function: Show
+            Returns the Map to its original size.
+    ]]
+    function self:Show ()
+        _isHidden = false
+        createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)
+    end
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Map[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Map, {
-	__index = getmetatable(Map).__index,
-	__call = new,
-	} )
+setmetatable(Map, {
+    __index = getmetatable(Map).__index,
+    __call = new,
+})
+
 return Map

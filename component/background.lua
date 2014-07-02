@@ -3,143 +3,143 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base 		= require( "vyzor.base" )
-local Alignment = require( "vyzor.enum.alignment" )
-local Lib 		= require( "vyzor.lib" )
-local Repeat 	= require( "vyzor.enum.repeat" )
+local Base = require("vyzor.base")
+local Alignment = require("vyzor.enum.alignment")
+local Repeat = require("vyzor.enum.repeat")
 
 --[[
-	Class: Background
-		Defines a Background Component.
+    Class: Background
+        Defines a Background Component.
 ]]
-local Background = Base( "Component", "Background" )
+local Background = Base("Component", "Background")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		init_content 	- Either a <Brush> or <Image> Component.
-		init_alignment 	- Initial <Alignment> of the Background content. Default is top-left.
-		init_repeat 	- Initial <Repeat> rules for the Background content. Default is repeat-xy.
+    Parameters:
+        initialContent - Either a <Brush> or <Image> Component.
+        initialAlignment - Initial <Alignment> of the Background content. Default is top-left.
+        initialRepeatMode - Initial <Repeat> rules for the Background content. Default is repeat-xy.
 
-	Returns:
-		A new Background Component.
+    Returns:
+        A new Background Component.
 ]]
-local function new (_, init_content, init_alignment, init_repeat)
-	--[[
-		Structure: New Background
-			A Component defining a <Frame's> background.
-	]]
-	local new_background = {}
+local function new (_, initialContent, initialAlignment, initialRepeatMode)
+    --[[
+        Structure: New Background
+            A Component defining a <Frame's> background.
+    ]]
+    local self = {}
 
-	-- Object: content
-	-- Either an Image Component or a Brush Component.
-	local content = init_content
+    -- Object: _content
+    -- Either an Image Component or a Brush Component.
+    local _content = initialContent
 
-	-- Object: alignment
-	-- An Alignment Enum. Defaults to TopLeft.
-	local alignment = (init_alignment or Alignment.TopLeft)
+    -- Object: _alignment
+    -- An Alignment Enum. Defaults to TopLeft.
+    local _alignment = (initialAlignment or Alignment.TopLeft)
 
-	-- Object: repetition
-	-- A Repeat Enum. Defaults to RepeatXY.
-	local repetition = (init_repeat or Repeat.RepeatXY)
-
-
-	-- String: stylesheet
-	-- This Component's Stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
-
-	--[[
-		Function: updateStylesheet
-			Updates the Component's <stylesheet>.
-			Used by the containing <Frame>.
-	]]
-	local function updateStylesheet ()
-		local style_table = {
-			string.format( "background-position: %s", alignment ),
-			string.format( "background-repeat: %s", repetition ),
-		}
-
-		if content then
-			if content.Subtype == "Brush" then
-				if content.Content.Subtype == "Gradient" then
-					style_table[#style_table+1] = string.format( "background: %s",
-						content.Stylesheet )
-				else
-					style_table[#style_table+1] = string.format( "background-%s",
-						content.Stylesheet )
-				end
-			else
-				style_table[#style_table+1] = string.format( "background-image: %s",
-					content.Url )
-			end
-		end
+    -- Object: _repeatMode
+    -- A Repeat Enum. Defaults to RepeatXY.
+    local _repeatMode = (initialRepeatMode or Repeat.RepeatXY)
 
 
-		stylesheet = table.concat( style_table, "; " )
-	end
+    -- String: _stylesheet
+    -- This Component's Stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
 
-	--[[
-		Properties: Background Properties
-			Content 	- Gets and sets the <Image> or <Brush> used by the Background Component.
-			Alignment 	- Gets and sets the Background Component's content Alignment.
-			Repeat 		- Gets and sets the Background Component's Repeat rule.
-			Stylesheet 	- Updates and returns the Background Component's <stylesheet>.
-	]]
-	local properties = {
-		Content = {
-			get = function ()
-				return content
-			end,
-			set = function (value)
-				content = value
-			end,
-		},
-		Alignment = {
-			get = function ()
-				return alignment
-			end,
-			set = function (value)
-				if Alignment:IsValid( value ) then
-					alignment = value
-				end
-			end
-		},
-		Repeat = {
-			get = function ()
-				return repetition
-			end,
-			set = function (value)
-				if Repeat:IsValid( value ) then
-					repetition = value
-				end
-			end
-		},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end,
-		},
-	}
+    --[[
+        Function: updateStylesheet
+            Updates the Component's <stylesheet>.
+            Used by the containing <Frame>.
+    ]]
+    local function updateStylesheet ()
+        local styleTable = {
+            string.format("background-position: %s", _alignment),
+            string.format("background-repeat: %s", _repeatMode),
+        }
 
-	setmetatable( new_background, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Background[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end
-		} )
-	return new_background
+        if _content then
+            if _content.Subtype == "Brush" then
+                if _content.Content.Subtype == "Gradient" then
+                    styleTable[#styleTable + 1] = string.format("background: %s", _content.Stylesheet)
+                else
+                    styleTable[#styleTable + 1] = string.format("background-%s", _content.Stylesheet)
+                end
+            else
+                styleTable[#styleTable + 1] = string.format("background-image: %s", _content.Url)
+            end
+        end
+
+        _stylesheet = table.concat(styleTable, "; ")
+    end
+
+    --[[
+        Properties: Background Properties
+            Content - Gets and sets the <Image> or <Brush> used by the Background Component.
+            Alignment - Gets and sets the Background Component's content Alignment.
+            Repeat - Gets and sets the Background Component's Repeat rule.
+            Stylesheet - Updates and returns the Background Component's <stylesheet>.
+    ]]
+    local properties = {
+        Content = {
+            get = function ()
+                return _content
+            end,
+            set = function (value)
+                _content = value
+            end,
+        },
+
+        Alignment = {
+            get = function ()
+                return _alignment
+            end,
+            set = function (value)
+                if Alignment:IsValid(value) then
+                    _alignment = value
+                end
+            end
+        },
+
+        Repeat = {
+            get = function ()
+                return _repeatMode
+            end,
+            set = function (value)
+                if Repeat:IsValid(value) then
+                    _repeatMode = value
+                end
+            end
+        },
+
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
+                return _stylesheet
+            end,
+        },
+    }
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Background[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end
+        })
+
+    return self
 end
 
-setmetatable( Background, {
-	__index = getmetatable(Background).__index,
-	__call = new,
-	} )
+setmetatable(Background, {
+    __index = getmetatable(Background).__index,
+    __call = new,
+    })
+
 return Background

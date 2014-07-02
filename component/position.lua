@@ -3,289 +3,309 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base 			= require( "vyzor.base" )
-local BoundingMode 	= require( "vyzor.enum.bounding_mode" )
+local Base = require("vyzor.base")
+local BoundingMode = require("vyzor.enum.bounding_mode")
 
 --[[
-	Class: Position
-		Defines a Position Supercomponent.
+    Class: Position
+        Defines a Position Supercomponent.
 ]]
-local Position = Base( "Supercomponent", "Position" )
+local Position = Base("Supercomponent", "Position")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		frame 		- The <Frame> to which this Supercomponent belongs.
-		init_x 		- The initial x coordinate position.
-		init_y 		- The initial y coordinate position.
-		is_first 	- Determines whether or not the parent <Frame> is the <HUD>.
+    Parameters:
+        _frame - The <Frame> to which this Supercomponent belongs.
+        initialX - The initial x coordinate position.
+        initialY - The initial y coordinate position.
+        _isFirst - Determines whether or not the parent <Frame> is the <HUD>.
 
-	Returns:
-		A new Position Supercomponent.
+    Returns:
+        A new Position Supercomponent.
 ]]
-local function new (_, frame, init_x, init_y, is_first)
-	--[[
-		Structure: New Position
-			A Supercomponent, for use only with <Frames>.
-			Responsible for managing the coordinate
-			positioning of the <Frame> within its parent.
-			This is only used internally. Not to be exposed.
-	]]
-	local new_position = {}
+local function new (_, _frame, initialX, initialY, _isFirst)
+    --[[
+        Structure: New Position
+            A Supercomponent, for use only with <Frames>.
+            Responsible for managing the coordinate
+            positioning of the <Frame> within its parent.
+            This is only used internally. Not to be exposed.
+    ]]
+    local self = {}
 
-	-- Array: coords
-	-- Contains the <Frame's> user-defined coordinates.
-	local coords = {
-		X = (init_x or 0),
-		Y = (init_y or 0),
-	}
+    -- Array: _coordinates
+    -- Contains the <Frame's> user-defined coordinates.
+    local _coordinates = {
+        X = (initialX or 0),
+        Y = (initialY or 0),
+    }
 
-	-- Array: abs_coords
-	-- Contains the <Frame's> generated, window coordinates.
-	local abs_coords = {}
+    -- Array: _absoluteCoordinates
+    -- Contains the <Frame's> generated, window coordinates.
+    local _absoluteCoordinates = {}
 
-	-- Array: content_coords
-	-- Contains the <Frame's> generated, Content Rectangle coordinates.
-	local content_coords = {}
+    -- Array: _contentCoordinates
+    -- Contains the <Frame's> generated, Content Rectangle coordinates.
+    local _contentCoordinates = {}
 
-	--[[
-		Function: updateAbsolute
-			Generates the absolute coordinates (<abs_coords>) of
-			the <Frame>.
-			Also used to generate the content coordinates (<content_coords>).
-	]]
-	local function updateAbsolute ()
-		-- The HUD.
-		if is_first then
-			abs_coords = coords
-			content_coords = coords
-			return
-		end
+    --[[
+        Function: updateAbsolute
+            Generates the absolute coordinates (<abs_coords>) of
+            the <Frame>.
+            Also used to generate the content coordinates (<content_coords>).
+    ]]
+    local function updateAbsolute () -- TODO: Break this up.
+        -- The HUD.
+        if _isFirst then
+            _absoluteCoordinates = _coordinates
+            _contentCoordinates = _coordinates
+            return
+        end
 
-		local frame_container = frame.Container
-		assert( frame_container, "Vyzor: Frame must have container before Position can be determined." )
-		local container_pos 	= frame_container.Position.Content
-		local container_size 	= frame_container.Size.Content
-		-- We convert the size table from width/height to X/Y so we can
-		-- use it in our loop below.
-		local size_table = {
-			X = container_size.Width,
-			Y = container_size.Height,
-			}
+        local frameContainer = _frame.Container
+        assert(frameContainer, "Vyzor: Frame must have container before Position can be determined.")
 
-		for coord, value in pairs(coords) do
-			if value > 1 then
-				abs_coords[coord] = container_pos[coord] + value
-			elseif value > 0 then
-				abs_coords[coord] = container_pos[coord] + (size_table[coord] * value)
-			elseif value < 0 then
-				abs_coords[coord] = container_pos[coord] + (size_table[coord] + value)
-			else
-				abs_coords[coord] = container_pos[coord]
-			end
-		end
+        local containerPosition = frameContainer.Position.Content
+        local containerSize = frameContainer.Size.Content
 
-		-- We follow Bounding rules, which determine how to manipulate
-		-- child Frames as the parent Frame is resized.
-		if frame_container.IsBounding then
-			if frame.BoundingMode == BoundingMode.Position then
-				local frame_width = frame.Size.AbsoluteWidth
-				local cont_edge_x = container_pos.X + container_size.Width
-				if abs_coords.X < container_pos.X then
-					abs_coords.X = container_pos.X
-				elseif (abs_coords.X + frame_width) > cont_edge_x then
-					abs_coords.X = cont_edge_x - frame_width
-				end
+        -- We convert the size table from width/height to X/Y so we can
+        -- use it in our loop below.
+        local sizeTable = { -- TODO: This seems like a hack.
+            X = containerSize.Width,
+            Y = containerSize.Height,
+        }
 
-				local frame_height = frame.Size.AbsoluteHeight
-				local cont_edge_y = container_pos.Y + size_table.Y
-				if abs_coords.Y < container_pos.Y then
-					abs_coords.Y = container_pos.Y
-				elseif (abs_coords.Y + frame_height) > cont_edge_y then
-					abs_coords.Y = cont_edge_y - frame_height
-				end
-			end
-		end
+        for axis, value in pairs(_coordinates) do
+            if value > 1 then
+                _absoluteCoordinates[axis] = containerPosition[axis] + value
+            elseif value > 0 then
+                _absoluteCoordinates[axis] = containerPosition[axis] + (sizeTable[axis] * value)
+            elseif value < 0 then
+                _absoluteCoordinates[axis] = containerPosition[axis] + (sizeTable[axis] + value)
+            else
+                _absoluteCoordinates[axis] = containerPosition[axis]
+            end
+        end
 
-		do
-		-- In order to respect the QT Box Model, we have to determine the
-		-- actual position of the Content Rectangle. All child Frames
-		-- are placed using the Content Rectangle, not the Absolute Rectangle.
-		-- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
-			local blank_x = 0
-			local blank_y = 0
+        -- We follow Bounding rules, which determine how to manipulate
+        -- child Frames as the parent Frame is resized.
+        if frameContainer.IsBounding then
+            if _frame.BoundingMode == BoundingMode.Position then
+                local frameWidth = _frame.Size.AbsoluteWidth
+                local containerEdgeX = containerPosition.X + containerSize.Width
 
-			local frame_comps = frame.Components
+                if _absoluteCoordinates.X < containerPosition.X then
+                    _absoluteCoordinates.X = containerPosition.X
+                elseif (_absoluteCoordinates.X + frameWidth) > containerEdgeX then
+                    _absoluteCoordinates.X = containerEdgeX - frameWidth
+                end
 
-			if frame_comps then
-				local frame_border = frame_comps["Border"]
-				if frame_border then
-					local border = frame_border
-					if border.Top then
-						blank_x = blank_x + border.Left.Width
-						blank_y = blank_y + border.Top.Width
-					else
-						if type( border.Width ) == "table" then
-							blank_x = blank_x + border.Width[4]
-							blank_y = blank_y + border.Width[1]
-						else
-							blank_x = blank_x + border.Width
-							blank_y = blank_y + border.Width
-						end
-					end
-				end
+                local frameHeight = _frame.Size.AbsoluteHeight
+                local containerEdgeY = containerPosition.Y + sizeTable.Y
 
-				local frame_margin = frame_comps["Margin"]
-				if frame_margin then
-					local margin = frame_margin
-					blank_x = blank_x + margin.Left
-					blank_y = blank_y + margin.Top
-				end
+                if _absoluteCoordinates.Y < containerPosition.Y then
+                    _absoluteCoordinates.Y = containerPosition.Y
+                elseif (_absoluteCoordinates.Y + frameHeight) > containerEdgeY then
+                    _absoluteCoordinates.Y = containerEdgeY - frameHeight
+                end
+            end
+        end
 
-				local frame_padding = frame_comps["Padding"]
-				if frame_padding then
-					local padding = frame_padding
-					blank_x = blank_x + padding.Left
-					blank_y = blank_y + padding.Top
-				end
-			end
-			content_coords = {
-				X = abs_coords.X + blank_x,
-				Y = abs_coords.Y + blank_y
-			}
-		end
-	end
+        do
+            -- In order to respect the QT Box Model, we have to determine the
+            -- actual position of the Content Rectangle. All child Frames
+            -- are placed using the Content Rectangle, not the Absolute Rectangle.
+            -- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
+            local blankX = 0 -- TODO: Are these the best names?
+            local blankY = 0
 
-	--[[
-		Properties: Position Properties
-			Coordinates - Gets and sets the relative (user-defined) coordinates
-							(<coords>) of the <Frame>.
-			Absolute 	- Returns the coordinates of the <Frame> within the Mudlet window
-							(<abs_coords>).
-			Content 	- Returns the coordinates of the Content Rectangle within the Mudlet window
-							(<content_coords>).
-			X 			- Gets and sets the relative (user-defined) x value of the Frame.
-			Y 			- Gets and sets the relative (user-defined) y value of the Frame.
-			AbsoluteX 	- Returns the X value of the Frame within the Mudlet window.
-			AbsoluteY 	- Returns the Y value of the Frame within the Mudlet window.
-			ContentX 	- Returns the X value of the Content Rectangle
-							within the Mudlet window.
-			ContentY 	- Returns the Y value of the Content Rectangle
-							within the Mudlet window.
-	]]
-	local properties = {
-		Coordinates = {
-			get = function ()
-				local copy = {}
-				for index in pairs( coords ) do
-					copy[index] = coords[index]
-				end
-				return copy
-			end,
-			set = function (value)
-				coords.X = value.X or value[1]
-				coords.Y = value.Y or value[2]
-				updateAbsolute()
-			end
-		},
-		Absolute = {
-			get = function ()
-				if not abs_coords.X or not abs_coords.Y then
-					updateAbsolute()
-				end
-				local copy = {}
-				for index in pairs( abs_coords ) do
-					copy[index] = abs_coords[index]
-				end
-				return copy
-			end
-		},
-		Content = {
-			get = function ()
-				if not content_coords.X or not content_coords.Y then
-					updateAbsolute()
-				end
-				local copy = {}
-				for i in pairs( content_coords ) do
-					copy[i] = content_coords[i]
-				end
-				return copy
-			end
-		},
-		X = {
-			get = function ()
-				return coords.X
-			end,
-			set = function (value)
-				coords.X = value
+            local frameComponents = _frame.Components
 
-				if frame.Container.IsDrawn then
-					updateAbsolute()
-				end
-			end
-		},
-		Y = {
-			get = function ()
-				return coords.Y
-			end,
-			set = function (value)
-				coords.Y = value
+            if frameComponents then
+                local frameBorder = frameComponents["Border"]
 
-				if frame.Container.IsDrawn then
-					updateAbsolute()
-				end
-			end
-		},
-		AbsoluteX = {
-			get = function ()
-				if not abs_coords.X then
-					updateAbsolute()
-				end
-				return abs_coords.X
-			end
-		},
-		AbsoluteY = {
-			get = function ()
-				if not abs_coords.Y then
-					updateAbsolute()
-				end
-				return abs_coords.Y
-			end
-		},
-		ContentX = {
-			get = function ()
-				if not content_coords.X then
-					updateAbsolute()
-				end
-				return content_coords.X
-			end
-		},
-		ContentY = {
-			get = function ()
-				if not content_coords.Y then
-					updateAbsolute()
-				end
-				return content_coords.Y
-			end
-		},
-	}
+                if frameBorder then
+                    local border = frameBorder
 
-	setmetatable( new_position, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Position[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-		} )
-	return new_position
+                    if border.Top then
+                        blankX = blankX + border.Left.Width
+                        blankY = blankY + border.Top.Width
+                    else
+                        if type(border.Width) == "table" then
+                            blankX = blankX + border.Width[4]
+                            blankY = blankY + border.Width[1]
+                        else
+                            blankX = blankX + border.Width
+                            blankY = blankY + border.Width
+                        end
+                    end
+                end
+
+                local frameMargin = frameComponents["Margin"]
+                if frameMargin then
+                    blankX = blankX + frameMargin.Left
+                    blankY = blankY + frameMargin.Top
+                end
+
+                local framePadding = frameComponents["Padding"]
+                if framePadding then
+                    blankX = blankX + framePadding.Left
+                    blankY = blankY + framePadding.Top
+                end
+            end
+
+            _contentCoordinates = {
+                X = _absoluteCoordinates.X + blankX,
+                Y = _absoluteCoordinates.Y + blankY
+            }
+        end
+    end
+
+    --[[
+        Properties: Position Properties
+            Coordinates - Gets and sets the relative (user-defined) coordinates (<coords>) of the <Frame>.
+            Absolute - Returns the coordinates of the <Frame> within the Mudlet window (<abs_coords>).
+            Content - Returns the coordinates of the Content Rectangle within the Mudlet window (<content_coords>).
+            X - Gets and sets the relative (user-defined) x value of the Frame.
+            Y - Gets and sets the relative (user-defined) y value of the Frame.
+            AbsoluteX - Returns the X value of the Frame within the Mudlet window.
+            AbsoluteY - Returns the Y value of the Frame within the Mudlet window.
+            ContentX - Returns the X value of the Content Rectangle within the Mudlet window.
+            ContentY - Returns the Y value of the Content Rectangle within the Mudlet window.
+    ]]
+    local properties = {
+        Coordinates = {
+            get = function ()
+                local copy = {}
+
+                for index in pairs(_coordinates) do
+                    copy[index] = _coordinates[index]
+                end
+
+                return copy
+            end,
+            set = function (value)
+                _coordinates.X = value.X or value[1]
+                _coordinates.Y = value.Y or value[2]
+                updateAbsolute()
+            end
+        },
+
+        Absolute = {
+            get = function ()
+                if not _absoluteCoordinates.X or not _absoluteCoordinates.Y then
+                    updateAbsolute()
+                end
+
+                local copy = {}
+
+                for index in pairs(_absoluteCoordinates) do
+                    copy[index] = _absoluteCoordinates[index]
+                end
+
+                return copy
+            end
+        },
+
+        Content = {
+            get = function ()
+                if not _contentCoordinates.X or not _contentCoordinates.Y then
+                    updateAbsolute()
+                end
+
+                local copy = {}
+
+                for i in pairs(_contentCoordinates) do
+                    copy[i] = _contentCoordinates[i]
+                end
+
+                return copy
+            end
+        },
+
+        X = {
+            get = function ()
+                return _coordinates.X
+            end,
+            set = function (value)
+                _coordinates.X = value
+
+                if _frame.Container.IsDrawn then
+                    updateAbsolute()
+                end
+            end
+        },
+
+        Y = {
+            get = function ()
+                return _coordinates.Y
+            end,
+            set = function (value)
+                _coordinates.Y = value
+
+                if _frame.Container.IsDrawn then
+                    updateAbsolute()
+                end
+            end
+        },
+
+        AbsoluteX = {
+            get = function ()
+                if not _absoluteCoordinates.X then
+                    updateAbsolute()
+                end
+                return _absoluteCoordinates.X
+            end
+        },
+        AbsoluteY = {
+            get = function ()
+                if not _absoluteCoordinates.Y then
+                    updateAbsolute()
+                end
+
+                return _absoluteCoordinates.Y
+            end
+        },
+
+        ContentX = {
+            get = function ()
+                if not _contentCoordinates.X then
+                    updateAbsolute()
+                end
+
+                return _contentCoordinates.X
+            end
+        },
+
+        ContentY = {
+            get = function ()
+                if not _contentCoordinates.Y then
+                    updateAbsolute()
+                end
+
+                return _contentCoordinates.Y
+            end
+        },
+    }
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Position[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Position, {
-	__index = getmetatable(Position).__index,
-	__call = new,
-	} )
+setmetatable(Position, {
+    __index = getmetatable(Position).__index,
+    __call = new,
+})
+
 return Position

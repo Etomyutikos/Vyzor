@@ -6,134 +6,140 @@
 local Base = require("vyzor.base")
 
 --[[
-	Class: Margin
-		Defines a Margin Component.
+    Class: Margin
+        Defines a Margin Component.
 ]]
-local Margin = Base( "Component", "Margin" )
+local Margin = Base("Component", "Margin")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		... - A list of numbers defining the size of each side of the Margin.
+    Parameters:
+        ... - A list of numbers defining the size of each side of the Margin.
 
-	Returns:
-		A new Margin Component.
+    Returns:
+        A new Margin Component.
 ]]
 local function new (_, ...)
-	--[[
-		Structure: New Margin
-			This Component defines the Margin of a <Frame>.
-			The Margin is the exterior part of the <Frame>.
+    local arg = { ... }
+    if not arg[1] then
+        error("Vyzor: Must pass at least one size to new Margin.", 2)
+    end
 
-		See Also:
-			<http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html>
-	]]
-	local new_margin = {}
+    --[[
+        Structure: New Margin
+            This Component defines the Margin of a <Frame>.
+            The Margin is the exterior part of the <Frame>.
 
-	local arg = {...}
-	if not arg[1] then
-		error( "Vyzor: Must pass at least one size to new Margin.", 2 )
-	end
+        See Also:
+            <http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html>
+    ]]
+    local self = {}
 
-	-- Double: top
-	-- The size of the top of the Margin.
-	local top = arg[1]
+    -- Double: _top
+    -- The size of the top of the Margin.
+    local _top = arg[1]
 
-	-- Double: right
-	-- The size of the right side of the Margin.
-	-- Defaults to <top>.
-	local right = arg[2] or top
+    -- Double: _right
+    -- The size of the right side of the Margin.
+    -- Defaults to <top>.
+    local _right = arg[2] or _top
 
-	-- Double: bottom
-	-- The size of the bottom of the Margin.
-	-- Defaults to <top>.
-	local bottom = arg[3] or top
+    -- Double: _bottom
+    -- The size of the bottom of the Margin.
+    -- Defaults to <top>.
+    local _bottom = arg[3] or _top
 
-	-- Double: left
-	-- The size of the left side of the Margin.
-	-- Defaults to <right>.
-	local left = arg[4] or right
+    -- Double: _left
+    -- The size of the left side of the Margin.
+    -- Defaults to <right>.
+    local _left = arg[4] or _right
 
-	-- String: stylesheet
-	-- The Margin Component's stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
+    -- String: stylesheet
+    -- The Margin Component's stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
 
-	--[[
-		Function: updateStylesheet
-			Updates the Margin Component's <stylesheet>.
-	]]
-	local function updateStylesheet ()
-		stylesheet = string.format( "margin: %s",
-			table.concat( {top, right, bottom, left}, " " ) )
-	end
+    --[[
+        Function: updateStylesheet
+            Updates the Margin Component's <stylesheet>.
+    ]]
+    local function updateStylesheet ()
+        _stylesheet = string.format("margin: %s", table.concat({ _top, _right, _bottom, _left }, " "))
+    end
 
-	--[[
-		Properties: Margin Properties
-			Top 		- Gets and sets the size of a side of the Margin Component.
-			Right 		- Gets and sets the size of a side of the Margin Component.
-			Bottom 		- Gets and sets the size of a side of the Margin Component.
-			Left 		- Gets and sets the size of a side of the Margin Component.
-			Stylesheet 	- Updates and returns the Margin Component's <stylesheet>.
-	]]
-	local properties = {
-		Top = {
-			get = function ()
-				return top
-			end,
-			set = function (value)
-				top = value
-			end,
-			},
-		Right = {
-			get = function ()
-				return right
-			end,
-			set = function (value)
-				right = value
-			end,
-			},
-		Bottom = {
-			get = function ()
-				return bottom
-			end,
-			set = function (value)
-				bottom = value
-			end,
-			},
-		Left = {
-			get = function ()
-				return left
-			end,
-			set = function (value)
-				left = value
-			end,
-			},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end,
-			},
-		}
+    --[[
+        Properties: Margin Properties
+            Top - Gets and sets the size of a side of the Margin Component.
+            Right - Gets and sets the size of a side of the Margin Component.
+            Bottom - Gets and sets the size of a side of the Margin Component.
+            Left - Gets and sets the size of a side of the Margin Component.
+            Stylesheet - Updates and returns the Margin Component's <stylesheet>.
+    ]]
+    local properties = {
+        Top = {
+            get = function ()
+                return _top
+            end,
+            set = function (value)
+                _top = value
+            end,
+        },
 
-	setmetatable( new_margin, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Margin[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-		} )
-	return new_margin
+        Right = {
+            get = function ()
+                return _right
+            end,
+            set = function (value)
+                _right = value
+            end,
+        },
+
+        Bottom = {
+            get = function ()
+                return _bottom
+            end,
+            set = function (value)
+                _bottom = value
+            end,
+        },
+
+        Left = {
+            get = function ()
+                return _left
+            end,
+            set = function (value)
+                _left = value
+            end,
+        },
+
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
+
+                return _stylesheet
+            end,
+        },
+    }
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Margin[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Margin, {
-	__index = getmetatable(Margin).__index,
-	__call = new,
-	} )
+setmetatable(Margin, {
+    __index = getmetatable(Margin).__index,
+    __call = new,
+})
+
 return Margin

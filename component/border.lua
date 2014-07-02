@@ -3,217 +3,226 @@
 -- Licensed under the MIT license:
 --    http://www.opensource.org/licenses/MIT
 
-local Base 			= require("vyzor.base")
-local Brush 		= require("vyzor.component.brush")
-local BorderSide 	= require("vyzor.component.border_side")
-local BorderStyle 	= require("vyzor.enum.border_style")
+local Base = require("vyzor.base")
+local BorderSide = require("vyzor.component.border_side")
+local BorderStyle = require("vyzor.enum.border_style")
 
 --[[
-	Class: Border
-		Defines the Border Component.
+    Class: Border
+        Defines the Border Component.
 ]]
-local Border = Base( "Component", "Border" )
+local Border = Base("Component", "Border")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		init_width 		- The Border Component's initial width.
-							May be a number or a table of numbers.
-		init_style 		- The Border Component's initial <BorderStyle>.
-							Defaults to None.
-		init_content 	- The Border Component's initial content.
-							Can be an <Image>, <Brush>, or table of <Brushes>.
-		init_radius 	- The Border Component's initial radius, for rounded corners.
-							Can be a number or a table of numbers.
-		init_borders 	- The Border Component's initial <BorderSide> Subcomponents.
-							Must be a table containing one to four <BorderSides>.
+    Parameters:
+        initialWidth - The Border Component's initial width. May be a number or a table of numbers.
+        initialStyle - The Border Component's initial <BorderStyle>. Defaults to None.
+        initialContent - The Border Component's initial content. Can be an <Image>, <Brush>, or table of <Brushes>.
+        initialRadius - The Border Component's initial radius, for rounded corners. Can be a number or a table of numbers.
+        initialBorders - The Border Component's initial <BorderSide> Subcomponents. Must be a table containing one to four <BorderSides>.
 
-	Returns:
-		A new Border Component.
+    Returns:
+        A new Border Component.
 ]]
-local function new (_, init_width, init_style, init_content, init_radius, init_borders)
-	--[[
-		Structure: New Border
-			A Component that defines a <Frame's> Border.
-	]]
-	local new_border = {}
+local function new (_, initialWidth, initialStyle, initialContent, initialRadius, initialBorders)
+    --[[
+        Structure: New Border
+            A Component that defines a <Frame's> Border.
+    ]]
+    local self = {}
 
-	-- Double: width
-	-- The Border's width. Defaults to 0.
-	local width = init_width or 0
+    -- Double: _width
+    -- The Border's width. Defaults to 0.
+    local _width = initialWidth or 0
 
-	-- Object: style
-	-- The Border's <BorderStyle>. Defaults to None.
-	local style = init_style or BorderStyle.None
+    -- Object: _style
+    -- The Border's <BorderStyle>. Defaults to None.
+    local _style = initialStyle or BorderStyle.None
 
-	-- Object: content
-	-- The Border's Brush or Image Component.
-	local content = init_content
+    -- Object: _content
+    -- The Border's Brush or Image Component.
+    local _content = initialContent
 
-	-- Double: radius
-	-- The Border's radius. Makes rounded corners. Defaults to 0.
-	local radius = init_radius or 0
+    -- Double: _radius
+    -- The Border's radius. Makes rounded corners. Defaults to 0.
+    local _radius = initialRadius or 0
 
-	-- Array: borders
-	-- A table holding <BorderSide> Subcomponents.
-	local borders
+    -- Array: _borders
+    -- A table holding <BorderSide> Subcomponents.
+    local _borders
 
-	if init_borders and type( init_borders ) == "table" then
-		local default_side = BorderSide( width, style, content, radius )
-		borders = {}
-		borders["top"] = init_borders["top"] or init_borders[1] or default_side
-		borders["right"] = init_borders["right"] or init_borders[2] or default_side
-		borders["bottom"] = init_borders["bottom"] or init_borders[3] or default_side
-		borders["left"] = init_borders["left"] or init_borders[4] or default_side
-	end
+    if initialBorders and type(initialBorders) == "table" then
+        local defaultSide = BorderSide(_width, _style, _content, _radius)
 
-	-- String: stylesheet
-	-- The Border's stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
+        _borders = {}
+        _borders["top"] = initialBorders["top"] or initialBorders[1] or defaultSide
+        _borders["right"] = initialBorders["right"] or initialBorders[2] or defaultSide
+        _borders["bottom"] = initialBorders["bottom"] or initialBorders[3] or defaultSide
+        _borders["left"] = initialBorders["left"] or initialBorders[4] or defaultSide
+    end
 
-	--[[
-		Function: updateStylesheet
-			Updates the Border Component's <stylesheet>.
-	]]
-	local function updateStylesheet ()
-		local style_table = {
-			string.format( "border-width: %s", width ),
-			string.format( "border-style: %s", style ),
-			string.format( "border-radius: %s", radius ),
-		}
-		if content then
-			style_table[#style_table+1] = string.format( "border-%s",
-				(content.Subtype == "Brush" and content.Stylesheet) or
-				(content.Subtype == "Image" and string.format( "image: %s", content.Url))
-			)
-			if content.Subtype == "Image" then
-				style_table[#style_table+1] = string.format( "border-image-position: %s",
-					content.Alignment )
-			end
-		end
+    -- String: _stylesheet
+    -- The Border's stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
 
-		if borders then
-			for _,k in ipairs( {"top", "right", "bottom", "left"} ) do
-				for _,v in ipairs( borders[k].Styletable ) do
-					style_table[#style_table+1] = string.format( "border-%s-%s", k, v )
-				end
-			end
-		end
+    --[[
+        Function: updateStylesheet
+            Updates the Border Component's <stylesheet>.
+    ]]
+    local function updateStylesheet ()
+        local styleTable = {
+            string.format("border-width: %s", _width),
+            string.format("border-style: %s", _style),
+            string.format("border-radius: %s", _radius),
+        }
 
-		stylesheet = table.concat( style_table, "; " )
-	end
+        if _content then
+            styleTable[#styleTable +1] = string.format("border-%s",
+                (_content.Subtype == "Brush" and _content.Stylesheet) or
+                (_content.Subtype == "Image" and string.format("image: %s", _content.Url)))
 
-	--[[
-		Properties: Border Properties
-			Style 		- Gets and sets the <BorderStyle> Component.
-			Width 		- Gets and sets the Border Component's width.
-			Content		- Gets and sets the Border Component's Brush or Image Component.
-			Top 		- Gets and sets an individual <BorderSide> Subcomponent.
-			Right 		- Gets and sets an individual <BorderSide> Subcomponent.
-			Bottom 		- Gets and sets an individual <BorderSide> Subcomponent.
-			Left 		- Gets and sets an individual <BorderSide> Subcomponent.
-			Stylesheet 	- Updates and returns the Border Component's <stylesheet>.
-	]]
-	local properties = {
-		Style = {
-			get = function ()
-				return style
-			end,
-			set = function (value)
-				assert( BorderStyle:IsValid( value ), "Vyzor: Invalid BorderStyle passed to Border.")
-				style = value
-			end,
-		},
-		Width = {
-			get = function ()
-				if type( width ) == "table" then
-					local copy = {}
-					for i in ipairs( width ) do
-						copy[i] = width[i]
-					end
-					return copy
-				else
-					return width
-				end
-			end,
-			set = function (value)
-				width = value
-			end,
-		},
-		Content = {
-			get = function ()
-				if type( content ) ~= "table" then
-					return content
-				else
-					local copy = {}
-					for i in ipairs( content ) do
-						copy[i] = content[i]
-					end
-					return copy
-				end
-			end,
-			set = function (value)
-				content = value
-			end,
-		},
-		Top = {
-			get = function ()
-				return (borders and borders["top"]) or nil
-			end,
-			set = function (value)
-				borders["top"] = value
-			end
-		},
-		Right = {
-			get = function ()
-				return (borders and borders["right"]) or nil
-			end,
-			set = function (value)
-				borders["right"] = value
-			end
-		},
-		Bottom = {
-			get = function ()
-				return (borders and borders["bottom"]) or nil
-			end,
-			set = function (value)
-				borders["bottom"] = value
-			end
-		},
-		Left = {
-			get = function ()
-				return (borders and borders["left"]) or nil
-			end,
-			set = function (value)
-				borders["left"] = value
-			end
-		},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end,
-		},
-	}
+            if _content.Subtype == "Image" then
+                styleTable[#styleTable +1] = string.format("border-image-position: %s", _content.Alignment)
+            end
+        end
 
-	setmetatable( new_border, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Border[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-	} )
-	return new_border
+        if _borders then
+            for _, side in ipairs({"top", "right", "bottom", "left"}) do
+                for _, sideStyleTable in ipairs(_borders[side].Styletable) do
+                    styleTable[#styleTable +1] = string.format("border-%s-%s", side, sideStyleTable)
+                end
+            end
+        end
+
+        _stylesheet = table.concat(styleTable, "; ")
+    end
+
+    --[[
+        Properties: Border Properties
+            Style - Gets and sets the <BorderStyle> Component.
+            Width - Gets and sets the Border Component's width.
+            Content - Gets and sets the Border Component's Brush or Image Component.
+            Top - Gets and sets an individual <BorderSide> Subcomponent.
+            Right - Gets and sets an individual <BorderSide> Subcomponent.
+            Bottom - Gets and sets an individual <BorderSide> Subcomponent.
+            Left - Gets and sets an individual <BorderSide> Subcomponent.
+            Stylesheet - Updates and returns the Border Component's <stylesheet>.
+    ]]
+    local properties = {
+        Style = {
+            get = function ()
+                return _style
+            end,
+            set = function (value)
+                assert(BorderStyle:IsValid(value), "Vyzor: Invalid BorderStyle passed to Border.")
+                _style = value
+            end,
+        },
+
+        Width = {
+            get = function ()
+                if type(_width) == "table" then
+                    local copy = {}
+
+                    for i in ipairs(_width) do
+                        copy[i] = _width[i]
+                    end
+
+                    return copy
+                else
+                    return _width
+                end
+            end,
+            set = function (value)
+                _width = value
+            end,
+        },
+
+        Content = {
+            get = function ()
+                if type(_content) ~= "table" then
+                    return _content
+                else
+                    local copy = {}
+
+                    for i in ipairs(_content) do
+                        copy[i] = _content[i]
+                    end
+
+                    return copy
+                end
+            end,
+            set = function (value)
+                _content = value
+            end,
+        },
+
+        Top = {
+            get = function ()
+                return (_borders and _borders["top"]) or nil
+            end,
+            set = function (value)
+                _borders["top"] = value
+            end
+        },
+
+        Right = {
+            get = function ()
+                return (_borders and _borders["right"]) or nil
+            end,
+            set = function (value)
+                _borders["right"] = value
+            end
+        },
+
+        Bottom = {
+            get = function ()
+                return (_borders and _borders["bottom"]) or nil
+            end,
+            set = function (value)
+                _borders["bottom"] = value
+            end
+        },
+
+        Left = {
+            get = function ()
+                return (_borders and _borders["left"]) or nil
+            end,
+            set = function (value)
+                _borders["left"] = value
+            end
+        },
+
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
+
+                return _stylesheet
+            end,
+        },
+    }
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Border[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Border, {
-	__index = getmetatable(Border).__index,
-	__call = new,
-} )
+setmetatable(Border, {
+    __index = getmetatable(Border).__index,
+    __call = new,
+})
+
 return Border

@@ -6,135 +6,141 @@
 local Base = require("vyzor.base")
 
 --[[
-	Class: Padding
-		Defines the Padding Component.
+    Class: Padding
+        Defines the Padding Component.
 ]]
-local Padding = Base( "Component", "Padding" )
+local Padding = Base("Component", "Padding")
 
 --[[
-	Constructor: new
+    Constructor: new
 
-	Parameters:
-		... - A list of numbers defining the size of each side of the Padding Component.
+    Parameters:
+        ... - A list of numbers defining the size of each side of the Padding Component.
 
-	Returns:
-		A new Padding Component.
+    Returns:
+        A new Padding Component.
 ]]
 local function new (_, ...)
-	--[[
-		Structure: New Padding
-			This Component defines the Padding of a <Frame>.
-			The Padding between the Content and the Border.
+    local arg = { ... }
+    if not arg[1] then
+        error("Vyzor: Must pass at least one size to a new Padding.", 2)
+    end
 
-		See Also:
-			<http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html>
-	]]
-	local new_padding = {}
+    --[[
+        Structure: New Padding
+            This Component defines the Padding of a <Frame>.
+            The Padding between the Content and the Border.
 
-	local arg = {...}
-	if not arg[1] then
-		error( "Vyzor: Must pass at least one size to a new Padding.", 2 )
-	end
+        See Also:
+            <http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html>
+    ]]
+    local self = {}
 
-	-- Double: top
-	-- The size of the top of the Padding.
-	local top = arg[1]
+    -- Double: _top
+    -- The size of the top of the Padding.
+    local _top = arg[1]
 
-	-- Double: right
-	-- The size of the right side of the Padding.
-	-- Defaults to <top>.
-	local right = arg[2] or top
+    -- Double: _right
+    -- The size of the right side of the Padding.
+    -- Defaults to <top>.
+    local _right = arg[2] or _top
 
-	-- Double: bottom
-	-- The size of the bottom of the Padding.
-	-- Defaults to <top>.
-	local bottom = arg[3] or top
+    -- Double: _bottom
+    -- The size of the bottom of the Padding.
+    -- Defaults to <top>.
+    local _bottom = arg[3] or _top
 
-	-- Double: left
-	-- The size of the left side of the Padding.
-	-- Defaults to <right>.
-	local left = arg[4] or right
+    -- Double: _left
+    -- The size of the left side of the Padding.
+    -- Defaults to <right>.
+    local _left = arg[4] or _right
 
-	-- String: stylesheet
-	-- The Padding Component's stylesheet. Generated via <updateStylesheet>.
-	local stylesheet
+    -- String: _stylesheet
+    -- The Padding Component's stylesheet. Generated via <updateStylesheet>.
+    local _stylesheet
 
-	--[[
-		Function: updateStylesheet
-			Updates the Padding Component's <stylesheet>.
-	]]
-	local function updateStylesheet ()
-		stylesheet = string.format( "padding: %s",
-			table.concat( {top, right, bottom, left}, " " ) )
-	end
+    --[[
+        Function: updateStylesheet
+            Updates the Padding Component's <stylesheet>.
+    ]]
+    local function updateStylesheet ()
+        _stylesheet = string.format("padding: %s", table.concat({ _top, _right, _bottom, _left }, " "))
+    end
 
-	--[[
-		Properties: Padding Properties
-			Top 		- Gets and sets the size of a side of the Padding Component.
-			Right 		- Gets and sets the size of a side of the Padding Component.
-			Bottom 		- Gets and sets the size of a side of the Padding Component.
-			Left 		- Gets and sets the size of a side of the Padding Component.
-			Stylesheet 	- Updates and returns the Padding Component's <stylesheet>.
-	]]
-	local properties = {
-		Top = {
-			get = function ()
-				return top
-			end,
-			set = function (value)
-				top = value
-			end,
-			},
-		Right = {
-			get = function ()
-				return right
-			end,
-			set = function (value)
-				right = value
-			end,
-			},
-		Bottom = {
-			get = function ()
-				return bottom
-			end,
-			set = function (value)
-				bottom = value
-			end,
-			},
-		Left = {
-			get = function ()
-				return left
-			end,
-			set = function (value)
-				left = value
-			end,
-			},
-		Stylesheet = {
-			get = function ()
-				if not stylesheet then
-					updateStylesheet()
-				end
-				return stylesheet
-			end,
-			},
-		}
+    --[[
+        Properties: Padding Properties
+            Top - Gets and sets the size of a side of the Padding Component.
+            Right - Gets and sets the size of a side of the Padding Component.
+            Bottom - Gets and sets the size of a side of the Padding Component.
+            Left - Gets and sets the size of a side of the Padding Component.
+            Stylesheet - Updates and returns the Padding Component's <stylesheet>.
+    ]]
+    local properties = {
+        Top = {
+            get = function ()
+                return _top
+            end,
+            set = function (value)
+                _top = value
+            end,
+        },
 
-	setmetatable( new_padding, {
-		__index = function (_, key)
-			return (properties[key] and properties[key].get()) or Padding[key]
-		end,
-		__newindex = function (_, key, value)
-			if properties[key] and properties[key].set then
-				properties[key].set( value )
-			end
-		end,
-		} )
-	return new_padding
+        Right = {
+            get = function ()
+                return _right
+            end,
+            set = function (value)
+                _right = value
+            end,
+        },
+
+        Bottom = {
+            get = function ()
+                return _bottom
+            end,
+            set = function (value)
+                _bottom = value
+            end,
+        },
+
+        Left = {
+            get = function ()
+                return _left
+            end,
+            set = function (value)
+                _left = value
+            end,
+        },
+
+        Stylesheet = {
+            get = function ()
+                if not _stylesheet then
+                    updateStylesheet()
+                end
+
+                return _stylesheet
+            end,
+            },
+        }
+
+    setmetatable(self, {
+        __index = function (_, key)
+            return (properties[key] and properties[key].get()) or Padding[key]
+        end,
+        __newindex = function (_, key, value)
+            if properties[key] and properties[key].set then
+                properties[key].set(value)
+            end
+        end,
+    })
+
+    return self
 end
 
-setmetatable( Padding, {
-	__index = getmetatable(Padding).__index,
-	__call = new,
-	} )
+setmetatable(Padding, {
+    __index = getmetatable(Padding).__index,
+    __call = new,
+})
+
 return Padding
 
