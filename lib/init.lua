@@ -24,7 +24,76 @@ function Lib.OrderedTable ()
     local dictionary = {}
     local proxy = {}
 
-    setmetatable(proxy, {
+    function proxy:count ()
+        return #list
+    end
+
+    function proxy:each()
+        local i = 0
+
+        local function iter(_)
+            i = i + 1
+            if i > #list then
+                return nil
+            else
+                local k = list[i]
+                local v = dictionary[k]
+
+                return v
+            end
+        end
+
+        return iter, nil, i
+    end
+
+    function proxy:ipairs ()
+        local function iter(_, i)
+            i = i + 1
+            if i > #list then
+                return nil
+            else
+                return i, dictionary[k]
+            end
+        end
+
+        return iter, nil, 0
+    end
+
+    function proxy:opairs ()
+        local function iter(_, i)
+            i = i + 1
+            if i > #list then
+                return nil
+            else
+                local k = list[i]
+                local v = dictionary[k]
+
+                return i, k, v
+            end
+        end
+
+        return iter, nil, 0
+    end
+
+    function proxy:pairs ()
+        local i = 0
+
+        local function iter(_)
+            i = i + 1
+            if i > #list then
+                return nil
+            else
+                local k = list[i]
+                local v = dictionary[k]
+
+                return k, v
+            end
+        end
+
+        return iter, nil, i
+    end
+
+    return setmetatable(proxy, {
         __index = function (_, key)
             if type(key) == "number" then
                 return dictionary[list[key]]
@@ -55,25 +124,8 @@ function Lib.OrderedTable ()
                     error(string.format("No such value (%s) in OrderedTable.", tostring(key)),3)
                 end
             end
-        end,
-        __call = function (_)
-            local function iter (_, i)
-                i = i+1
-                if i > #list then
-                    return nil
-                else
-                    local k = list[i]
-                    local v = dictionary[k]
-
-                    return i, k, v
-                end
-            end
-
-            return iter, nil, 0
-        end,
+        end
     })
-
-    return proxy
 end
 
 --[[

@@ -72,23 +72,19 @@ local function new (_, _name, _x, _y, _width, _height)
 
     -- Array: _components
     -- A list of Components this Frame contains.
-    local _components = {}
-    local _componentCount = 0 -- TODO: Why is this necessary?
+    local _components = Lib.OrderedTable()
 
     -- Array: _miniConsoles
     -- Stores MiniConsole Components.
-    local _miniConsoles = {}
-    local _miniConsoleCount = 0 -- TODO: Why is this necessary?
+    local _miniConsoles = Lib.OrderedTable()
 
     -- Array: _compounds
     -- Stores Compounds.
-    local _compounds = {}
-    local _compoundCount = 0 -- TODO: Why is this necessary?
+    local _compounds = Lib.OrderedTable()
 
     -- Array: _children
     -- A list of Frames this Frame contains.
     local _children = Lib.OrderedTable()
-    local _childCount = 0 -- TODO: Why is this necessary?
 
     -- String: _callback
     -- The name of a function to be used as a Label callback.
@@ -117,10 +113,10 @@ local function new (_, _name, _x, _y, _width, _height)
             Constructs the final <stylesheet> applied by setLabelStyleSheet.
     ]]
     local function updateStylesheet ()
-        if _componentCount > 0 then
+        if _components:count() > 0 then
             local styleTable = {}
 
-            for _, component in pairs(_components) do
+            for component in _components:each() do
                 local componentSubtype = component.Subtype
 
                 -- Hover is a special case. It must be last, and it will
@@ -201,12 +197,13 @@ local function new (_, _name, _x, _y, _width, _height)
 
         Components = {
             get = function ()
-                if _componentCount > 0 then
+                if _components:count() > 0 then
                     local copy = {}
 
-                    for i in pairs(_components) do
-                        copy[i] = _components[i]
+                    for subType, component in _components:pairs() do
+                        copy[subType] = component
                     end
+
                     return copy
                 end
             end,
@@ -214,12 +211,14 @@ local function new (_, _name, _x, _y, _width, _height)
 
         MiniConsoles = {
             get = function ()
-                if _miniConsoleCount > 0 then
+                echo("_miniConsoles:count() = " .. _miniConsoles:count() .. "\n")
+                if _miniConsoles:count() > 0 then
                     local copy = {}
 
-                    for i in pairs(_miniConsoles) do
-                        copy[i] = _miniConsoles[i]
+                    for name, miniConsole in _miniConsoles:pairs() do
+                        copy[name] = miniConsole
                     end
+
                     return copy
                 end
             end,
@@ -227,11 +226,11 @@ local function new (_, _name, _x, _y, _width, _height)
 
         Compounds = {
             get = function ()
-                if _compoundCount > 0 then
+                if _compounds:count() > 0 then
                     local copy = {}
 
-                    for i in pairs(_compounds) do
-                        copy[i] = _compounds[i]
+                    for subtype, compound in _compounds:pairs() do
+                        copy[subtype] = compound
                     end
                     return copy
                 end
@@ -240,12 +239,13 @@ local function new (_, _name, _x, _y, _width, _height)
 
         Frames = {
             get = function ()
-                if _childCount > 0 then
+                if _children:count() > 0 then
                     local copy = {}
 
-                    for _, name, child in _children() do
+                    for name, child in _children:pairs() do
                         copy[name] = child
                     end
+
                     return copy
                 end
             end
@@ -268,6 +268,7 @@ local function new (_, _name, _x, _y, _width, _height)
                 if not _stylesheet then
                     updateStylesheet()
                 end
+
                 return _stylesheet
             end
         },
@@ -329,7 +330,6 @@ local function new (_, _name, _x, _y, _width, _height)
             if _MasterList[object] then
                 _MasterList[object].Container = _MasterList[_name]
                 _children[object] = _MasterList[object]
-                _childCount = _childCount + 1
             else
                 error(string.format(
                     "Vyzor: Invalid Frame (%s) passed to %s:Add.",
@@ -340,41 +340,32 @@ local function new (_, _name, _x, _y, _width, _height)
                 if object.Type == "Frame" then
                     _MasterList[object.Name].Container = _MasterList[_name]
                     _children[object.Name] = _MasterList[object.Name]
-                    _childCount = _childCount + 1
                 elseif object.Type == "Component" then
-                    if not _components[object.Subtype] then
-                        if object.Subtype == "MiniConsole" then
-                            _miniConsoles[object.Name] = object
-                            _miniConsoleCount = _miniConsoleCount + 1
-                        else
-                            _components[object.Subtype] = object
-                            _componentCount = _componentCount + 1
-                        end
-
-                        if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
-                            object.Container = _MasterList[_name]
-                        end
-
-                        if _isDrawn then
-                            updateStylesheet()
-
-                            if _stylesheet then
-                                setLabelStyleSheet(_name, _stylesheet)
-                            end
-                        end
+                    if object.Subtype == "MiniConsole" then
+                        _miniConsoles[object.Name] = object
+                    elseif not _components[object.Subtype] then
+                        _components[object.Subtype] = object
                     else
-                        error(string.format(
-                            "Vyzor: %s (Frame) already contains Component (%s).",
-                            _name, object.Subtype), 2)
+                        error(string.format("Vyzor: %s (Frame) already contains Component (%s).", _name, object.Subtype), 2)
+                    end
+
+                    if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
+                        object.Container = _MasterList[_name]
+                    end
+
+                    if _isDrawn then
+                        updateStylesheet()
+
+                        if _stylesheet then
+                            setLabelStyleSheet(_name, _stylesheet)
+                        end
                     end
                 elseif object.Type == "Compound" then
                     _compounds[object.Name] = object
-                    _compoundCount = _compoundCount + 1
                     object.Container = _MasterList[_name]
 
                     local compoundContainerName = object.Background.Name
                     _children[compoundContainerName] = _MasterList[compoundContainerName]
-                    _childCount = _childCount + 1
 
                     if _isDrawn then
                         updateStylesheet()
@@ -413,19 +404,16 @@ local function new (_, _name, _x, _y, _width, _height)
             if _MasterList[object] then
                 _MasterList[object].Container = nil
                 _children[object] = nil
-                _childCount = _childCount - 1
             elseif _components[object] or _miniConsoles[object] then
                 if _miniConsoles[object] then
                     _miniConsoles[object].Container = nil
                     _miniConsoles[object] = nil
-                    _miniConsoleCount = _miniConsoleCount - 1
                 else
                     if object == "Map" then
                         _components[object].Container = nil
                     end
 
                     _components[object] = nil
-                    _componentCount = _componentCount - 1
                 end
 
                 if _isDrawn then
@@ -443,21 +431,18 @@ local function new (_, _name, _x, _y, _width, _height)
         elseif type(object) == "table" then
             if object.Type then
                 if object.Type == "Frame" then
-                    for _, name, frame in _children() do -- TODO: Can't I just index into this?
+                    for name, frame in _children:pairs() do -- TODO: Can't I just index into this?
                         if frame == object then
                             _MasterList[name].Container = nil
                             _children[name] = nil
-                            _childCount = _childCount - 1
                             break
                         end
                     end
                 elseif object.Type == "Component" then
                     if _miniConsoles[object.Name] then
                         _miniConsoles[object.Name] = nil
-                        _miniConsoleCount = _miniConsoleCount - 1
                     elseif _components[object.Subtype] then
                         _components[object.Subtype] = nil
-                        _componentCount = _componentCount - 1
 
                         if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
                             object.Container = nil
@@ -474,12 +459,10 @@ local function new (_, _name, _x, _y, _width, _height)
                 elseif object.Type == "Compound" then
                     if _compounds[object.Name] then
                         _compounds[object.Name] = nil
-                        _compoundCount = _compoundCount - 1
                         object.Container = nil
 
                         local compoundContainerName = object.Background.Name
                         _children[compoundContainerName] = nil
-                        _childCount = _childCount - 1
                     end
 
                     if _isDrawn then
@@ -525,8 +508,8 @@ local function new (_, _name, _x, _y, _width, _height)
                 setLabelStyleSheet(_name, _stylesheet)
             end
 
-            if _miniConsoleCount > 0 then
-                for _, console in pairs(_miniConsoles) do
+            if _miniConsoles:count() > 0 then
+                for console in _miniConsoles:each() do
                     console:Draw()
                 end
             end
@@ -549,8 +532,8 @@ local function new (_, _name, _x, _y, _width, _height)
 
             _isDrawn = true
 
-            if _childCount > 0 then
-                for _, _, frame in _children() do
+            if _children:count() > 0 then
+                for frame in _children:each() do
                     frame:Draw()
                 end
             end
@@ -573,7 +556,7 @@ local function new (_, _name, _x, _y, _width, _height)
                 end
             end
 
-            for _, name, frame in _children() do
+            for name, frame in _children:pairs() do
                 if name:sub(1, 5) ~= "Vyzor" then
                     frame:Draw()
                 end
@@ -608,8 +591,8 @@ local function new (_, _name, _x, _y, _width, _height)
             resizeWindow(_name, _size.AbsoluteWidth, _size.AbsoluteHeight)
         end
 
-        if _miniConsoleCount > 0 then
-            for _, console in pairs(_miniConsoles) do
+        if _miniConsoles:count() > 0 then
+            for console in _miniConsoles:each() do
                 console:Resize()
             end
         end
@@ -618,8 +601,8 @@ local function new (_, _name, _x, _y, _width, _height)
             _components["Map"]:Resize()
         end
 
-        if _childCount > 0 then
-            for _, _, frame in _children() do
+        if _children:count() > 0 then
+            for frame in _children:each() do
                 frame:Resize()
             end
         end
@@ -640,8 +623,8 @@ local function new (_, _name, _x, _y, _width, _height)
             moveWindow(_name, _position.AbsoluteX, _position.AbsoluteY)
         end
 
-        if _miniConsoleCount > 0 then
-            for _, console in pairs(_miniConsoles) do
+        if _miniConsoles:count() > 0 then
+            for console in _miniConsoles:each() do
                 console:Move()
             end
         end
@@ -650,8 +633,8 @@ local function new (_, _name, _x, _y, _width, _height)
             _components["Map"]:Move()
         end
 
-        if _childCount > 0 then
-            for _, _, frame in _children() do
+        if _children:count() > 0 then
+            for frame in _children:each() do
                 frame:Move()
             end
         end
@@ -668,15 +651,15 @@ local function new (_, _name, _x, _y, _width, _height)
     ]]
     function self:Hide (skipChildren)
         if not skipChildren then
-            if _childCount > 0 then
-                for _, _, frame in _children() do
+            if _children:count() > 0 then
+                for frame in _children:each() do
                     frame:Hide()
                 end
             end
         end
 
-        if _miniConsoleCount > 0 then
-            for _, console in pairs(_miniConsoles) do
+        if _miniConsoles:count() > 0 then
+            for console in _miniConsoles:each() do
                 console:Hide()
             end
         end
@@ -704,8 +687,8 @@ local function new (_, _name, _x, _y, _width, _height)
             showWindow(_name)
         end
 
-        if _miniConsoleCount > 0 then
-            for _, console in pairs(_miniConsoles) do
+        if _miniConsoles:count() > 0 then
+            for console in _miniConsoles:each() do
                 console:Show()
             end
         end
@@ -715,8 +698,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end
 
         if not skipChildren then
-            if _childCount > 0 then
-                for _, _, frame in _children() do
+            if _children:count() > 0 then
+                for frame in _children:each() do
                     frame:Show()
                 end
             end
@@ -755,7 +738,7 @@ local function new (_, _name, _x, _y, _width, _height)
         clearWindow(_name)
 
         if clearChildren then
-            for _, _, frame in _children() do
+            for frame in _children:each() do
                 frame:Clear(true)
             end
         end

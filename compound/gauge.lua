@@ -94,12 +94,10 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
     -- Array: _overflowFrames
     -- Contains the Gauge's overflow frames.
     local _overflowFrames = Lib.OrderedTable()
-    local _overflowCount = 0 -- TODO: Fix this.
 
     if initialOverflowFrames and type(initialOverflowFrames) == "table" then
         for _, frame in ipairs(initialOverflowFrames) do
             _overflowFrames[frame.Name] = frame
-            _overflowCount = _overflowCount + 1
         end
     end
 
@@ -125,8 +123,8 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
     -- The foreground is a child of the background. Let's do that.
     _backgroundFrame:Add(_foregroundFrame)
 
-    if _overflowCount > 0 then
-        for _, _, frame in _overflowFrames() do
+    if _overflowFrames:count() > 0 then
+        for frame in _overflowFrames:each() do
             _backgroundFrame:Add(frame)
         end
     end
@@ -231,7 +229,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         Overflow = {
             get = function ()
                 local copy = {}
-                for _, k, v in _overflowFrames() do
+                for k, v in _overflowFrames:pairs() do
                     copy[k] = v
                 end
                 return copy
@@ -271,7 +269,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
             local currentScalar = scalar - 1
             scalar = 1
 
-            if _overflowCount > 0 then
+            if _overflowFrames:count() > 0 then
                 local i = 1
 
                 while currentScalar > 1 do
@@ -287,14 +285,14 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         if _fillMode == GaugeFill.LeftRight then
             _foregroundFrame.Size.Width = scalar
 
-            if _overflowCount > 0 then
-                for _, _, frame in _overflowFrames() do
+            if _overflowFrames:count() > 0 then
+                for frame in _overflowFrames:each() do
                     frame:Hide()
                 end
             end
 
             if #overflowScalars > 0 then
-                for index, _, frame in _overflowFrames() do
+                for index, frame in _overflowFrames:ipairs() do
                     local overage = overflowScalars[index]
 
                     if overage then
@@ -308,7 +306,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
             _foregroundFrame.Position.X = 1.0 - scalar
 
             if #overflowScalars > 0 then
-                for index, _, frame in _overflowFrames() do
+                for index, frame in _overflowFrames:ipairs() do
                     local overage = overflowScalars[index]
 
                     if overage then
@@ -322,7 +320,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
             _foregroundFrame.Size.Height = scalar
 
             if #overflowScalars > 0 then
-                for index, _, frame in _overflowFrames() do
+                for index, frame in _overflowFrames:ipairs() do
                     local overage = overflowScalars[index]
 
                     if overage then
@@ -336,7 +334,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
             _foregroundFrame.Position.Y = 1.0 - scalar
 
             if #overflowScalars > 0 then
-                for index, _, frame in _overflowFrames() do
+                for index, frame in _overflowFrames:ipairs() do
                     frame.Size.Height = overflowScalars[index] or 0
                     frame.Position.Y = 1.0 - overflowScalars[index] or 0
                 end
@@ -346,8 +344,8 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         _foregroundFrame:Resize()
         _foregroundFrame:Move()
 
-        if _overflowCount > 0 then
-            for _, _, frame in _overflowFrames() do
+        if _overflowFrames:count() > 0 then
+            for frame in _overflowFrames:each() do
                 frame:Resize()
                 frame:Move()
             end

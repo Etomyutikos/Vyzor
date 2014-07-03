@@ -4,6 +4,7 @@
 --    http://www.opensource.org/licenses/MIT
 
 local Base = require("vyzor.base")
+local Lib = require("vyzor.lib")
 
 --[[
     Class: Hover
@@ -30,8 +31,7 @@ local function new (_, initialComponents)
 
     -- Array: _components
     -- A table of Components.
-    local _components = {}
-    local _componentCount = 0 -- TODO: Fix me.
+    local _components = Lib.OrderedTable()
 
     if initialComponents then
         for _, component in ipairs(initialComponents) do
@@ -39,7 +39,6 @@ local function new (_, initialComponents)
             assert(component.Subtype ~= "Hover", "Vyzor: May not add Hover Component to Hover Component.")
 
             _components[component.Subtype] = component
-            _componentCount = _componentCount + 1
         end
     end
 
@@ -54,10 +53,10 @@ local function new (_, initialComponents)
             stylesheets.
     ]]
     local function updateStylesheet ()
-        if _componentCount > 0 then
+        if _components:count() > 0 then
             local _styleTable = {}
 
-            for _, component in pairs(_components) do
+            for component in _components:each() do
                 _styleTable[#_styleTable + 1] = component.Stylesheet
             end
 
@@ -76,10 +75,10 @@ local function new (_, initialComponents)
     local properties = {
         Components = {
             get = function ()
-                if _componentCount > 0 then
+                if _components:count() > 0 then
                     local copy = {}
 
-                    for i in ipairs(_components) do
+                    for i in _components:ipairs() do
                         copy[i] = _components[i]
                     end
 
@@ -109,7 +108,6 @@ local function new (_, initialComponents)
     function self:Add (component)
         if not _components[component.Subtype] then
             _components[component.Subtype] = component
-            _componentCount = _componentCount + 1
         end
     end
 
@@ -123,7 +121,6 @@ local function new (_, initialComponents)
     function self:Remove (subtype)
         if _components[subtype] then
             _components[subtype] = nil
-            _componentCount = _componentCount - 1
         end
     end
 

@@ -40,19 +40,18 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
     -- Array: frames
     -- Holds this Box's Frames.
     local _frames = Lib.OrderedTable()
-    local _frameCount = 0 -- TODO: Why is this here?
+
     if initialFrames and type(initialFrames) == "table" then
         for _, frame in ipairs(initialFrames) do
             _frames[frame.Name] = frame
-            _frameCount = _frameCount + 1
         end
     end
 
     -- Object: background_frame
     -- The Frame containing all other Frames.
     local _backgroundFrame = initialBackground
-    if _frameCount > 0 then
-        for _, _, frame in _frames() do
+    if _frames:count() > 0 then
+        for frame in _frames:each() do
             _backgroundFrame:Add(frame)
         end
     end
@@ -63,27 +62,27 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
     ]]
     local function updateFrames()
         if _mode == BoxMode.Horizontal then
-            for index, _, frame in _frames() do
-                frame.Position.X = (1 / _frameCount) * (index - 1)
+            for index, frame in _frames:ipairs() do
+                frame.Position.X = (1 / _frames:count()) * (index - 1)
                 frame.Position.Y = 0
-                frame.Size.Width = (1 / _frameCount)
+                frame.Size.Width = (1 / _frames:count())
                 frame.Size.Height = 1
             end
         elseif _mode == BoxMode.Vertical then
-            for index, _, frame in _frames() do
+            for index, frame in _frames:ipairs() do
                 frame.Position.X = 0
-                frame.Position.Y = (1 / _frameCount) * (index - 1)
+                frame.Position.Y = (1 / _frames:count()) * (index - 1)
                 frame.Size.Width = 1
-                frame.Size.Height = (1 / _frameCount)
+                frame.Size.Height = (1 / _frames:count())
             end
         elseif _mode == BoxMode.Grid then
-            local rows = math.floor(math.sqrt(_frameCount))
-            local columns = math.ceil(_frameCount / rows)
+            local rows = math.floor(math.sqrt(_frames:count()))
+            local columns = math.ceil(_frames:count() / rows)
 
             local currentRow = 1
             local currentColumn = 1
 
-            for _, _, frame in _frames() do
+            for frame in _frames:each() do
                 if currentColumn > rows then
                     currentColumn = 1
                     currentRow = currentRow + 1
@@ -122,11 +121,13 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
 
         Frames = {
             get = function ()
-                if _frameCount > 0 then
+                if _frames:count() > 0 then
                     local copy = {}
-                    for _, k, v in _frames() do
+
+                    for k, v in _frames:pairs() do
                         copy[k] = v
                     end
+
                     return copy
                 else
                     return {}

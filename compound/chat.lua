@@ -174,7 +174,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		local tabBox
 		local indexedTabs = {}
 
-		for i, _, tab in _tabs() do
+		for i, tab in _tabs:ipairs() do
 			indexedTabs[i] = tab
         end
 
@@ -269,7 +269,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			set = function (value)
 				_tabSize = value
 
-				for _, _, tab in _tabs() do
+				for tab in _tabs:each() do
 					if _tabLocation == TabLocation.Top or _tabLocation == TabLocation.Bottom then
 						tab.Height = _tabSize
 					else
@@ -377,7 +377,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			get = function ()
 				local copy = {}
 
-				for i, _, tab in _tabs() do
+				for i, tab in _tabs:ipairs() do
 					copy[i] = tab
                 end
 
@@ -503,7 +503,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			end
 		end
 
-		for _, name, tab in _tabs() do
+		for name, tab in _tabs:pairs() do
 			if name == channel then
 				if tab.Components["Background"] then
 					tab:Remove("Background")
@@ -549,7 +549,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			end
 		end
 
-		for _, name, tab in _tabs() do
+		for name, tab in _tabs:pairs() do
 			tab:Echo("<center>" .. name .. "</center>")
 
 			if name == _currentChannel then
