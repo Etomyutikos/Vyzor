@@ -132,6 +132,16 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
+    local function updateStylesheetIfDrawn ()
+        if _isDrawn then
+            updateStylesheet()
+
+            if _stylesheet then
+                setLabelStyleSheet(_name, _stylesheet)
+            end
+        end
+    end
+
     --[[
         Properties: Frame Properties
             Name - Return the Frame's name.
@@ -316,6 +326,47 @@ local function new (_, _name, _x, _y, _width, _height)
         },
     }
 
+    local function addComponent (component)
+        if component.Subtype == "MiniConsole" then
+            _miniConsoles[component.Name] = component
+        else
+            if not _components[component.Subtype] then
+                _components[component.Subtype] = component
+            else
+                error(string.format("Vyzor: %s (Frame) already contains Component (%s).", _name, component.Subtype), 3)
+            end
+        end
+
+        if component.Subtype == "MiniConsole" or component.Subtype == "Map" then
+            component.Container = _MasterList[_name]
+        end
+
+        updateStylesheetIfDrawn()
+    end
+
+    local function addCompound (compound)
+        _compounds[compound.Name] = compound
+        compound.Container = _MasterList[_name]
+
+        _children[compound.Background.Name] = _MasterList[compound.Background.Name]
+
+        updateStylesheetIfDrawn()
+    end
+
+    local function addFrame(frame)
+        _MasterList[frame.Name].Container = _MasterList[_name]
+        _children[frame.Name] = _MasterList[frame.Name]
+    end
+
+    local function addFrameByName (name)
+        if _MasterList[name] then
+            _MasterList[name].Container = _MasterList[_name]
+            _children[name] = _MasterList[name]
+        else
+            error(string.format("Vyzor: Invalid Frame (%s) passed to %s:Add.", name, _name), 3)
+        end
+    end
+
     --[[
         Function: Add
             Adds a new object to this Frame.
@@ -325,68 +376,95 @@ local function new (_, _name, _x, _y, _width, _height)
         Parameters:
             object - A valid Frame name or object, or a Component.
     ]]
-    function self:Add (object) -- TODO: Break this up.
+    function self:Add (object)
         if type(object) == "string" then
-            if _MasterList[object] then
-                _MasterList[object].Container = _MasterList[_name]
-                _children[object] = _MasterList[object]
-            else
-                error(string.format(
-                    "Vyzor: Invalid Frame (%s) passed to %s:Add.",
-                    object, _name), 2)
-            end
+            addFrameByName(object)
+
         elseif type(object) == "table" then
-            if object.Type then
-                if object.Type == "Frame" then
-                    _MasterList[object.Name].Container = _MasterList[_name]
-                    _children[object.Name] = _MasterList[object.Name]
-                elseif object.Type == "Component" then
-                    if object.Subtype == "MiniConsole" then
-                        _miniConsoles[object.Name] = object
-                    elseif not _components[object.Subtype] then
-                        _components[object.Subtype] = object
-                    else
-                        error(string.format("Vyzor: %s (Frame) already contains Component (%s).", _name, object.Subtype), 2)
-                    end
-
-                    if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
-                        object.Container = _MasterList[_name]
-                    end
-
-                    if _isDrawn then
-                        updateStylesheet()
-
-                        if _stylesheet then
-                            setLabelStyleSheet(_name, _stylesheet)
-                        end
-                    end
-                elseif object.Type == "Compound" then
-                    _compounds[object.Name] = object
-                    object.Container = _MasterList[_name]
-
-                    local compoundContainerName = object.Background.Name
-                    _children[compoundContainerName] = _MasterList[compoundContainerName]
-
-                    if _isDrawn then
-                        updateStylesheet()
-                        if _stylesheet then
-                            setLabelStyleSheet(_name, _stylesheet)
-                        end
-                    end
-                else
-                    error(string.format(
-                        "Vyzor: Invalid Type (%s) passed to %s:Add.",
-                        object.Type, _name), 2)
-                end
-            else
-                error(string.format(
-                    "Vyzor: Invalid object (%s) passed to %s:Add.",
-                    type(object), _name), 2)
+            if not object.Type then
+                error(string.format("Vyzor: Non-Vyzor object passed to %s:Add.", _name), 2)
             end
+
+            if object.Type == "Frame" then
+                addFrame(object)
+
+            elseif object.Type == "Component" then
+                addComponent(object)
+
+            elseif object.Type == "Compound" then
+                addCompound(object)
+
+            else
+                error(string.format("Vyzor: Invalid Type (%s) passed to %s:Add.", object.Type, _name), 2)
+            end
+
         else
-            error(string.format(
-                "Vyzor: Invalid object (%s) passed to %s:Add.",
-                type(object), _name), 2)
+            error(string.format("Vyzor: Invalid object (%s) passed to %s:Add.", type(object), _name), 2)
+        end
+    end
+
+    local function removeComponent (component)
+        if _miniConsoles[component.Name] then
+            _miniConsoles[component.Name] = nil
+
+        elseif _components[component.Subtype] then
+            _components[component.Subtype] = nil
+
+        else
+            error(string.format("Vyzor: %s (Frame) does not contain Component (%s).", _name, component.Subtype), 3)
+        end
+
+        if component.Subtype == "MiniConsole" or component.Subtype == "Map" then
+            component.Container = nil
+        end
+
+        updateStylesheetIfDrawn()
+    end
+
+    local function removeCompoound (compound)
+        if not _compounds[compound.Name] then
+            error(string.format("Vyzor: Compound (%s) is not a child of Frame (%s).", compound.Name, _name), 3)
+        end
+
+        if _compounds[compound.Name] then
+            _compounds[compound.Name] = nil
+            compound.Container = nil
+
+            _children[compound.Background.Name] = nil
+        end
+
+        updateStylesheetIfDrawn()
+    end
+
+    local function removeFrame (frame)
+        if not _children[frame.Name] then
+            error(string.format("Vyzor: Frame (%s) is not a child of Frame (%s).", frame.Name, _name), 3)
+        end
+
+        _children[frame.Name] = nil
+        _MasterList[frame.Name].Container = nil
+    end
+
+    local function removeObjectByName (name)
+        if _MasterList[name] then
+            _MasterList[name].Container = nil
+            _children[name] = nil
+
+        elseif _miniConsoles[name] then
+            _miniConsoles[name].Container = nil
+            _miniConsoles[name] = nil
+
+        elseif _components[name] then
+            _components[name] = nil
+
+            if name == "Map" then
+                _components[name].Container = nil
+            end
+
+            updateStylesheetIfDrawn()
+
+        else
+            error(string.format("Vyzor: Invalid string '%s' passed to %s:Remove.", name, _name), 3)
         end
     end
 
@@ -399,93 +477,110 @@ local function new (_, _name, _x, _y, _width, _height)
         Parameters:
             object - A valid Frame name or object, or a Component Subtype or object.
     ]]
-    function self:Remove (object) -- TODO: Break this up.
+    function self:Remove (object)
         if type(object) == "string" then
-            if _MasterList[object] then
-                _MasterList[object].Container = nil
-                _children[object] = nil
-            elseif _components[object] or _miniConsoles[object] then
-                if _miniConsoles[object] then
-                    _miniConsoles[object].Container = nil
-                    _miniConsoles[object] = nil
-                else
-                    if object == "Map" then
-                        _components[object].Container = nil
-                    end
+            removeObjectByName(object)
 
-                    _components[object] = nil
-                end
-
-                if _isDrawn then
-                    updateStylesheet()
-
-                    if _stylesheet then
-                        setLabelStyleSheet(_name, _stylesheet)
-                    end
-                end
-            else
-                error(string.format(
-                    "Vyzor: Invalid string '%s' passed to %s:Remove.",
-                    object, _name), 2)
-            end
         elseif type(object) == "table" then
-            if object.Type then
-                if object.Type == "Frame" then
-                    for name, frame in _children:pairs() do -- TODO: Can't I just index into this?
-                        if frame == object then
-                            _MasterList[name].Container = nil
-                            _children[name] = nil
-                            break
-                        end
-                    end
-                elseif object.Type == "Component" then
-                    if _miniConsoles[object.Name] then
-                        _miniConsoles[object.Name] = nil
-                    elseif _components[object.Subtype] then
-                        _components[object.Subtype] = nil
+            if not object.Type then
+                error(string.format("Vyzor: Non-Vyzor object passed to %s:Remove.", _name), 2)
+            end
 
-                        if object.Subtype == "MiniConsole" or object.Subtype == "Map" then
-                            object.Container = nil
-                        end
-                    else
-                        error(string.format(
-                            "Vyzor: %s (Frame) does not contain Component (%s).",
-                            _name, object.Subtype), 2)
-                    end
+            if object.Type == "Frame" then
+                removeFrame(object)
 
-                    if _isDrawn then
-                        updateStylesheet()
-                    end
-                elseif object.Type == "Compound" then
-                    if _compounds[object.Name] then
-                        _compounds[object.Name] = nil
-                        object.Container = nil
+            elseif object.Type == "Component" then
+                removeComponent(object)
 
-                        local compoundContainerName = object.Background.Name
-                        _children[compoundContainerName] = nil
-                    end
+            elseif object.Type == "Compound" then
+                removeCompound(object)
 
-                    if _isDrawn then
-                        updateStylesheet()
-
-                        if _stylesheet then
-                            setLabelStyleSheet(_name, _stylesheet)
-                        end
-                    end
-                else
-                    error(string.format(
-                        "Vyzor: Invalid Type (%s) passed to %s:Remove.",
-                        object.Type, _name), 2)
-                end
             else
-                error(string.format(
-                    "Vyzor: Invalid object (%s) passed to %s:Remove.",
-                    type(object), _name), 2)
+                error(string.format("Vyzor: Invalid Type (%s) passed to %s:Remove.", object.Type, _name), 2)
             end
         else
-            error(string.format(
-                "Vyzor: Invalid object (%s) passed to %s:Remove.",
-                type(object), _name), 2)
+            error(string.format("Vyzor: Invalid object (%s) passed to %s:Remove.", type(object), _name), 2)
+        end
+    end
+
+    local function drawHUD()
+        local borderOrder = Options.DrawOrder
+
+        local function title(text)
+            local first = text:sub(1, 1):upper()
+            local rest = text:sub(2):lower()
+
+            return first .. rest
+        end
+
+        local borderFrames = Vyzor.HUD.Frames
+        for _, border in ipairs(borderOrder) do
+            local name = "Vyzor" .. title(border)
+
+            if borderFrames[name] then
+                borderFrames[name]:Draw()
+            else
+                error("Vyzor: Invalid entry in Options.DrawOrder. Must be top, bottom, left, or right.", 2)
+            end
+        end
+
+        for name, frame in _children:pairs() do
+            if name:sub(1, 5) ~= "Vyzor" then
+                frame:Draw()
+            end
+        end
+
+        _isDrawn = true
+
+        if not _ResizeRegistered then
+            if Options.HandleBorders == true or Options.HandleBorders == "auto" then
+                registerAnonymousEventHandler("sysWindowResizeEvent", "VyzorResize")
+                _ResizeRegistered = true
+            end
+        end
+
+        raiseEvent("sysWindowResizeEvent")
+        raiseEvent("VyzorDrawnEvent")
+    end
+
+    local function drawFrame ()
+        createLabel(_name,
+            _position.AbsoluteX, _position.AbsoluteY,
+            _size.AbsoluteWidth, _size.AbsoluteHeight, 1)
+
+        updateStylesheet()
+        if _stylesheet then
+            setLabelStyleSheet(_name, _stylesheet)
+        end
+
+        if _miniConsoles:count() > 0 then
+            for console in _miniConsoles:each() do
+                console:Draw()
+            end
+        end
+
+        if _components["Map"] then
+            _components["Map"]:Draw()
+        end
+
+        if _callback then
+            if _callbackArguments then
+                if type(_callbackArguments) == "table" then
+                    setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
+                else
+                    setLabelClickCallback(_name, _callback, _callbackArguments)
+                end
+            else
+                setLabelClickCallback(_name, _callback)
+            end
+        end
+
+        _isDrawn = true
+
+        if _children:count() > 0 then
+            for frame in _children:each() do
+                frame:Draw()
+            end
         end
     end
 
@@ -494,85 +589,12 @@ local function new (_, _name, _x, _y, _width, _height)
             Draws this Frame. Is only called via Vyzor:Draw().
             Should not be used directly on a Frame.
     ]]
-    function self:Draw () -- TODO: Break this up.
-        -- We don't draw the master Frame, because it covers
-        -- everything. Think of it as a virtual Frame.
+    function self:Draw ()
         if not _isFirst then
-            createLabel(
-                _name,
-                _position.AbsoluteX, _position.AbsoluteY,
-                _size.AbsoluteWidth, _size.AbsoluteHeight, 1)
+            drawFrame()
 
-            updateStylesheet()
-            if _stylesheet then
-                setLabelStyleSheet(_name, _stylesheet)
-            end
-
-            if _miniConsoles:count() > 0 then
-                for console in _miniConsoles:each() do
-                    console:Draw()
-                end
-            end
-
-            if _components["Map"] then
-                _components["Map"]:Draw()
-            end
-
-            if _callback then
-                if _callbackArguments then
-                    if type(_callbackArguments) == "table" then
-                        setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
-                    else
-                        setLabelClickCallback(_name, _callback, _callbackArguments)
-                    end
-                else
-                    setLabelClickCallback(_name, _callback)
-                end
-            end
-
-            _isDrawn = true
-
-            if _children:count() > 0 then
-                for frame in _children:each() do
-                    frame:Draw()
-                end
-            end
         elseif _isFirst then
-            local drawOrder = Options.DrawOrder
-
-            local function title (text)
-                local first = text:sub(1, 1):upper()
-                local rest = text:sub(2):lower()
-                return first .. rest
-            end
-
-            local hudChildren = Vyzor.HUD.Frames
-            for _, frame in ipairs(drawOrder) do
-                local frame = "Vyzor" .. title(frame)
-                if hudChildren[frame] then
-                    hudChildren[frame]:Draw()
-                else
-                    error("Vyzor: Invalid entry in Options.DrawOrder. Must be top, bottom, left, or right.", 2)
-                end
-            end
-
-            for name, frame in _children:pairs() do
-                if name:sub(1, 5) ~= "Vyzor" then
-                    frame:Draw()
-                end
-            end
-
-            _isDrawn = true
-
-            if not _ResizeRegistered then
-                if Options.HandleBorders == true or Options.HandleBorders == "auto" then
-                    registerAnonymousEventHandler("sysWindowResizeEvent", "VyzorResize")
-                    _ResizeRegistered = true
-                end
-            end
-            raiseEvent("sysWindowResizeEvent")
-
-            raiseEvent("VyzorDrawnEvent")
+            drawHUD()
         end
     end
 
