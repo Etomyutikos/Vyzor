@@ -48,13 +48,74 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
     -- Contains the <Frame's> generated, Content Rectangle dimensions.
     local _contentDimensions = {}
 
+    local function updateContent ()
+        -- We must respect QT's Box Model, so we have to find the space the
+        -- Content Rectangle occupies.
+        -- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
+        local top = 0
+        local right = 0
+        local bottom = 0
+        local left = 0
+
+        if _frame.Components then
+            local border = _frame.Components["Border"]
+            if border then
+                if border.Top then
+                    right = right + border.Right.Width
+                    left = left + border.Left.Width
+
+                    top = top + border.Top.Width
+                    bottom = bottom + border.Bottom.Width
+                else
+                    -- TODO: This is internal detail that introduces extra complexity at the call site.
+                    if type(border.Width) == "table" then
+                        right = right + border.Width[2]
+                        left = left + border.Width[4]
+
+                        top = top + borders.Width[1]
+                        bottom = bottom + borders.Width[3]
+                    else
+                        right = right + border.Width
+                        left = left + border.Width
+
+                        top = top + border.Width
+                        bottom = bottom + border.Width
+                    end
+                end
+            end
+
+            local margin = _frame.Components["Margin"]
+            if margin then
+                right = right + margin.Right
+                left = left + margin.Left
+
+                top = top + margin.Top
+                bottom = bottom + margin.Bottom
+            end
+
+            local padding = _frame.Components["Padding"]
+            if padding then
+                right = right + padding.Right
+                left = left + padding.Left
+
+                top = top + padding.Top
+                bottom = bottom + padding.Bottom
+            end
+        end
+
+        _contentDimensions = {
+            Width = _absoluteDimensions.Width - (right + left),
+            Height = _absoluteDimensions.Height - (top + bottom)
+        }
+    end
+
     --[[
         Function: updateAbsolute
             Generates the absolute dimensions (<abs_dims>) of
             the <Frame>.
             Also generates content dimensions <content_dims>.
     ]]
-    local function updateAbsolute () -- TODO: Break this up.
+    local function updateAbsolute ()
         -- Is HUD.
         if _isFirst then
             _absoluteDimensions = _dimensions
@@ -62,113 +123,49 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
             return
         end
 
-        local frameContainer = _frame.Container
-        assert(frameContainer, "Vyzor: Frame must have container before Size can be determined.")
+        assert(_frame.Container, "Vyzor: Frame must have container before Size can be determined.")
 
+        local function calculateAbsoluteDimension (rawDimension, containerDimension)
+            if rawDimension <= 1 and rawDimension > 0 then
+                return containerDimension * rawDimension
+            elseif rawDimension < 0 then
+                return containerDimension + rawDimension
+            else
+                return rawDimension
+            end
+        end
+
+        local frameContainer = _frame.Container
         local containerPosition = frameContainer.Position.Content
         local containerSize = frameContainer.Size.Content
 
-        for dimension, value in pairs(_dimensions) do
-            if value <= 1 and value > 0 then
-                _absoluteDimensions[dimension] = containerSize[dimension] * value
-            elseif value < 0 then
-                -- Between 0 and -1 to get inverse percentage. Necessary?
-                _absoluteDimensions[dimension] = containerSize[dimension] + value
-            else
-                _absoluteDimensions[dimension] = value
-            end
-        end
+        _absoluteDimensions.Width = calculateAbsoluteDimension(_dimensions.Width, containerSize.Width)
+        _absoluteDimensions.Height = calculateAbsoluteDimension(_dimensions.Height, containerSize.Height)
 
-        -- Bounding rules. Determines Frame manipulation when parent
-        -- Frame is resized.
-        if frameContainer.IsBounding then
-            if _frame.BoundingMode == BoundingMode.Size then
-                local frameX = _frame.Position.AbsoluteX
-                local frameEdgeX = frameX + _absoluteDimensions.Width
-                local containerEdgeX = containerPosition.X + containerSize.Width
-
-                if _absoluteDimensions.Width > containerSize.Width then
-                    _absoluteDimensions.Width = containerSize.Width
-                elseif frameEdgeX > containerEdgeX then
-                    _absoluteDimensions.Width = _absoluteDimensions.Width - (frameEdgeX - containerEdgeX)
-                end
-
-                local frameY = _frame.Position.AbsoluteY
-                local frameEdgeY = frameY + _absoluteDimensions.Height
-                local containerEdgeY = containerPosition.Y + containerSize.Height
-
-                if _absoluteDimensions.Height > containerSize.Height then
-                    _absoluteDimensions.Height = containerSize.Height
-                elseif frameEdgeY > containerEdgeY then
-                    _absoluteDimensions.Height = _absoluteDimensions.Height - (frameEdgeY - containerEdgeY)
-                end
-            end
-        end
-
-        do
-        -- We must respect QT's Box Model, so we have to find the space the
-        -- Content Rectangle occupies.
-        -- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
-            local topHeight = 0
-            local rightWidth = 0
-            local bottomHeight = 0
-            local leftWidth = 0
-
-            local frameComponents = _frame.Components
-
-            if frameComponents then
-                local frameBorder = frameComponents["Border"]
-
-                if frameBorder then
-                    local border = frameBorder
-
-                    if border.Top then
-                        rightWidth = rightWidth + border.Right.Width
-                        leftWidth = leftWidth + border.Left.Width
-
-                        topHeight = topHeight + border.Top.Width
-                        bottomHeight = bottomHeight + border.Bottom.Width
-                    else
-                        if type(border.Width) == "table" then
-                            rightWidth = rightWidth + border.Width[2]
-                            leftWidth = leftWidth + border.Width[4]
-
-                            topHeight = topHeight + borders.Width[1]
-                            bottomHeight = bottomHeight + borders.Width[3]
-                        else
-                            rightWidth = rightWidth + border.Width
-                            leftWidth = leftWidth + border.Width
-
-                            topHeight = topHeight + border.Width
-                            bottomHeight = bottomHeight + border.Width
-                        end
-                    end
-                end
-
-                local frameMargin = frameComponents["Margin"]
-                if frameMargin then
-                    rightWidth = rightWidth + frameMargin.Right
-                    leftWidth = leftWidth + frameMargin.Left
-
-                    topHeight = topHeight + frameMargin.Top
-                    bottomHeight = bottomHeight + frameMargin.Bottom
-                end
-
-                local framePadding = frameComponents["Padding"]
-                if framePadding then
-                    rightWidth = rightWidth + framePadding.Right
-                    leftWidth = leftWidth + framePadding.Left
-
-                    topHeight = topHeight + framePadding.Top
-                    bottomHeight = bottomHeight + framePadding.Bottom
+        if frameContainer.IsBounding and _frame.BoundingMode == BoundingMode.Size then
+            local function setBoundedDimension (absoluteDimension, maximum, edge, containerEdge)
+                if absoluteDimension > maximum then
+                    return maximum
+                elseif edge > containerEdge then
+                    return absoluteDimension - (edge - containerEdge)
+                else
+                    return absoluteDimension
                 end
             end
 
-            _contentDimensions = {
-                Width = _absoluteDimensions.Width - (rightWidth + leftWidth),
-                Height = _absoluteDimensions.Height - (topHeight + bottomHeight)
-            }
+            _absoluteDimensions.Width = setBoundedDimension(
+                _absoluteDimensions.Width,
+                containerSize.Width,
+                _frame.Position.AbsoluteX + _absoluteDimensions.Width, -- TODO: Edge calculation should be an internal detail.
+                containerPosition.X + containerSize.Width)
+
+            _absoluteDimensions.Height = setBoundedDimension(_absoluteDimensions.Height,
+                containerSize.Height,
+                _frame.Position.AbsoluteY + _absoluteDimensions.Height,
+                containerPosition.Y + containerSize.Width)
         end
+
+        updateContent()
     end
 
     --[[

@@ -161,39 +161,30 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
             Sets the actual size and position of the Map
             using the parent Frame's Content.
     ]]
-    local function updateAbsolutes () -- TODO: Functionify this.
+    local function updateAbsolutes ()
+        -- TODO: These are shared. Move to single location?
+        local function calculateAbsolutePosition (axis, frameAxis, frameDimension)
+            if axis >= 0.0 and axis <= 1.0 then
+                return frameAxis + (axis * frameDimension)
+            else
+                return frameAxis + axis
+            end
+        end
+
+        local function calculateAbsoluteDimension (dimension, frameDimension)
+            if dimension >= 0.0 and dimension <= 1.0 then
+                return dimension * frameDimension
+            else
+                return dimension
+            end
+        end
+
         if _container then
-            local framePosition = _container.Position
-            local frameX = framePosition.ContentX
-            local frameY = framePosition.ContentY
+            _absoluteX = calculateAbsolutePosition(_x, _container.Position.ContentX, _container.Size.ContentWidth)
+            _absoluteY = calculateAbsolutePosition(_y, _container.Position.ContentY, _container.Size.ContentHeight)
 
-            local frameSize = _container.Size
-            local frameWidth = frameSize.ContentWidth
-            local frameHeight = frameSize.ContentHeight
-
-            if _x >= 0.0 and _x <= 1.0 then
-                _absoluteX = frameX + (_x * frameWidth)
-            else
-                _absoluteX = frameX + _x
-            end
-
-            if _y >= 0.0 and _y <= 1.0 then
-                _absoluteY = frameY + (_y * frameHeight)
-            else
-                _absoluteY = frameY + _y
-            end
-
-            if _width >= 0.0 and _width <= 1.0 then
-                _absoluteWidth = _width * frameWidth
-            else
-                _absoluteWidth = _width
-            end
-
-            if _height >= 0.0 and _height <= 1.0 then
-                _absoluteHeight = _height * frameHeight
-            else
-                _absoluteHeight = _height
-            end
+            _absoluteWidth = calculateAbsoluteDimension(_width, _container.Size.ContentWidth)
+            _absoluteHeight = calculateAbsoluteDimension(_height, _container.Size.ContentHeight)
         end
     end
 

@@ -143,36 +143,6 @@ local top = Frame("VyzorTop",
     1.0,
     (Options.Borders["Top"] == "dynamic" and _borders["Top"]) or Options.Borders["Top"])
 
--- Object: VyzorBottom
--- The Frame defined by Mudlet's bottom border.
-local bottom = Frame("VyzorBottom",
-    0,
-    -- This messy bit says...
-    -- local var
-    -- if Options.Borders["Bottom"] is "dynamic" then y = window - borders["Bottom"]
-    -- else
-    -- if Options.Borders["Bottom"] is between 0 and 1.0 then var = 1.0
-    -- else
-    -- var = window_height
-    -- y = var - Options.Borders["Bottom"]
-    (Options.Borders["Bottom"] == "dynamic" and (_windowHeight - _borders["Bottom"])) or
-        ((((Options.Borders["Bottom"] > 0 and Options.Borders["Bottom"] <= 1.0) and 1.0) or
-                _windowHeight) - Options.Borders["Bottom"]),
-    1.0,
-    (Options.Borders["Bottom"] == "dynamic" and _borders["Bottom"]) or Options.Borders["Bottom"])
-
--- Object: VyzorRight
--- The Frame defined by Mudlet's right border.
-local right = Frame("VyzorRight",
-    -- Solve for x.
-    -- I thought these bits were clever. Go me. =\
-    (Options.Borders["Right"] == "dynamic" and (_windowWidth - _borders["Right"])) or
-        ((((Options.Borders["Right"] > 0 and Options.Borders["Right"] <= 1.0) and 1.0) or
-                _windowWidth) - Options.Borders["Right"]),
-    0,
-    (Options.Borders["Right"] == "dynamic" and _borders["Right"]) or Options.Borders["Right"],
-    1.0)
-
 -- Object: VyzorLeft
 -- The Frame defined by Mudlet's left border.
 local left = Frame("VyzorLeft",
@@ -181,12 +151,43 @@ local left = Frame("VyzorLeft",
     (Options.Borders["Left"] == "dynamic" and _borders["Left"]) or Options.Borders["Left"],
     1.0)
 
+local bottom
+local right
+do
+    local function calculateBorderPosition(windowDimension, borderOption, borderValue)
+        if borderOption == "dynamic" then
+            return windowDimension - borderValue
+        else
+            if borderOption > 0 and borderOption <= 1.0 then
+                return 1.0 - borderOption
+            else
+                return windowDimension - borderOption
+            end
+        end
+    end
+
+    -- Object: VyzorBottom
+    -- The Frame defined by Mudlet's bottom border.
+    bottom = Frame("VyzorBottom",
+        0,
+        calculateBorderPosition(_windowHeight, Options.Borders["Bottom"], _borders["Bottom"]),
+        1.0,
+        (Options.Borders["Bottom"] == "dynamic" and _borders["Bottom"]) or Options.Borders["Bottom"])
+
+    -- Object: VyzorRight
+    -- The Frame defined by Mudlet's right border.
+    right = Frame("VyzorRight",
+        calculateBorderPosition(_windowWidth, Options.Borders["Right"], _borders["Right"]),
+        0,
+        (Options.Borders["Right"] == "dynamic" and _borders["Right"]) or Options.Borders["Right"],
+        1.0)
+end
+
 -- Add our Border Frames to Vyzor.
 HUD:Add(top)
 HUD:Add(bottom)
 HUD:Add(right)
 HUD:Add(left)
-
 
 -- I hate to do this, but must make a global function to handle resize. =\
 local _Resizing

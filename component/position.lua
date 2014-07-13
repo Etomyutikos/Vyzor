@@ -49,13 +49,58 @@ local function new (_, _frame, initialX, initialY, _isFirst)
     -- Contains the <Frame's> generated, Content Rectangle coordinates.
     local _contentCoordinates = {}
 
+    local function updateContent()
+        -- In order to respect the QT Box Model, we have to determine the
+        -- actual position of the Content Rectangle. All child Frames
+        -- are placed using the Content Rectangle, not the Absolute Rectangle.
+        -- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
+        local x = 0
+        local y = 0
+
+        if _frame.Components then
+            local border = _frame.Components["Border"]
+            if border then
+                if border.Top then
+                    x = x + border.Left.Width
+                    y = y + border.Top.Width
+                else
+                    -- TODO: This is internal detail that introduces extra complexity at the call site.
+                    if type(border.Width) == "table" then
+                        x = x + border.Width[4]
+                        y = y + border.Width[1]
+                    else
+                        x = x + border.Width
+                        y = y + border.Width
+                    end
+                end
+            end
+
+            local margin = _frame.Components["Margin"]
+            if margin then
+                x = x + margin.Left
+                y = y + margin.Top
+            end
+
+            local padding = _frame.Components["Padding"]
+            if padding then
+                x = x + padding.Left
+                y = y + padding.Top
+            end
+        end
+
+        _contentCoordinates = {
+            X = _absoluteCoordinates.X + x,
+            Y = _absoluteCoordinates.Y + y
+        }
+    end
+
     --[[
         Function: updateAbsolute
             Generates the absolute coordinates (<abs_coords>) of
             the <Frame>.
             Also used to generate the content coordinates (<content_coords>).
     ]]
-    local function updateAbsolute () -- TODO: Break this up.
+    local function updateAbsolutes()
         -- The HUD.
         if _isFirst then
             _absoluteCoordinates = _coordinates
@@ -63,103 +108,52 @@ local function new (_, _frame, initialX, initialY, _isFirst)
             return
         end
 
-        local frameContainer = _frame.Container
-        assert(frameContainer, "Vyzor: Frame must have container before Position can be determined.")
+        assert(_frame.Container, "Vyzor: Frame must have container before Position can be determined.")
 
-        local containerPosition = frameContainer.Position.Content
-        local containerSize = frameContainer.Size.Content
-
-        -- We convert the size table from width/height to X/Y so we can
-        -- use it in our loop below.
-        local sizeTable = { -- TODO: This seems like a hack.
-            X = containerSize.Width,
-            Y = containerSize.Height,
-        }
-
-        for axis, value in pairs(_coordinates) do
-            if value > 1 then
-                _absoluteCoordinates[axis] = containerPosition[axis] + value
-            elseif value > 0 then
-                _absoluteCoordinates[axis] = containerPosition[axis] + (sizeTable[axis] * value)
-            elseif value < 0 then
-                _absoluteCoordinates[axis] = containerPosition[axis] + (sizeTable[axis] + value)
+        local function calculateAbsoluteCoordinate (rawAxis, containerAxis, dimension)
+            if rawAxis > 1 then
+                return containerAxis + rawAxis
+            elseif rawAxis > 0 then
+                return containerAxis + (dimension * rawAxis)
+            elseif rawAxis < 0 then
+                return containerAxis + (dimension + rawAxis)
             else
-                _absoluteCoordinates[axis] = containerPosition[axis]
+                return containerAxis
             end
         end
 
-        -- We follow Bounding rules, which determine how to manipulate
-        -- child Frames as the parent Frame is resized.
-        if frameContainer.IsBounding then
-            if _frame.BoundingMode == BoundingMode.Position then
-                local frameWidth = _frame.Size.AbsoluteWidth
-                local containerEdgeX = containerPosition.X + containerSize.Width
+        local container = _frame.Container
+        local containerPosition = container.Position.Content
+        local containerSize = container.Size.Content
 
-                if _absoluteCoordinates.X < containerPosition.X then
-                    _absoluteCoordinates.X = containerPosition.X
-                elseif (_absoluteCoordinates.X + frameWidth) > containerEdgeX then
-                    _absoluteCoordinates.X = containerEdgeX - frameWidth
-                end
+        _absoluteCoordinates.X = calculateAbsoluteCoordinate(_coordinates.X, containerPosition.X, containerSize.Width)
+        _absoluteCoordinates.Y = calculateAbsoluteCoordinate(_coordinates.Y, containerPosition.Y, containerSize.Height)
 
-                local frameHeight = _frame.Size.AbsoluteHeight
-                local containerEdgeY = containerPosition.Y + sizeTable.Y
-
-                if _absoluteCoordinates.Y < containerPosition.Y then
-                    _absoluteCoordinates.Y = containerPosition.Y
-                elseif (_absoluteCoordinates.Y + frameHeight) > containerEdgeY then
-                    _absoluteCoordinates.Y = containerEdgeY - frameHeight
-                end
-            end
-        end
-
-        do
-            -- In order to respect the QT Box Model, we have to determine the
-            -- actual position of the Content Rectangle. All child Frames
-            -- are placed using the Content Rectangle, not the Absolute Rectangle.
-            -- See: http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
-            local blankX = 0 -- TODO: Are these the best names?
-            local blankY = 0
-
-            local frameComponents = _frame.Components
-
-            if frameComponents then
-                local frameBorder = frameComponents["Border"]
-
-                if frameBorder then
-                    local border = frameBorder
-
-                    if border.Top then
-                        blankX = blankX + border.Left.Width
-                        blankY = blankY + border.Top.Width
-                    else
-                        if type(border.Width) == "table" then
-                            blankX = blankX + border.Width[4]
-                            blankY = blankY + border.Width[1]
-                        else
-                            blankX = blankX + border.Width
-                            blankY = blankY + border.Width
-                        end
-                    end
-                end
-
-                local frameMargin = frameComponents["Margin"]
-                if frameMargin then
-                    blankX = blankX + frameMargin.Left
-                    blankY = blankY + frameMargin.Top
-                end
-
-                local framePadding = frameComponents["Padding"]
-                if framePadding then
-                    blankX = blankX + framePadding.Left
-                    blankY = blankY + framePadding.Top
+        if container.IsBounding and _frame.BoundingMode == BoundingMode.Position then
+            local function setBoundedCoordinate (absoluteAxis, minimum, maximum, dimension)
+                if absoluteAxis < minimum then
+                    return minimum
+                elseif (absoluteAxis + dimension) > maximum then
+                    return maximum - dimension
+                else
+                    return absoluteAxis
                 end
             end
 
-            _contentCoordinates = {
-                X = _absoluteCoordinates.X + blankX,
-                Y = _absoluteCoordinates.Y + blankY
-            }
+            _absoluteCoordinates.X = setBoundedCoordinate(
+                _absoluteCoordinates.X,
+                containerPosition.X,
+                containerPosition.X + containerSize.Width, -- TODO: Edge calculation should be an internal detail.
+                _frame.Size.AbsoluteWidth)
+
+            _absoluteCoordinates.Y = setBoundedCoordinate(
+                _absoluteCoordinates.Y,
+                containerPosition.Y,
+                containerPosition.Y + containerSize.Height,
+                _frame.Size.AbsoluteHeight)
         end
+
+        updateContent()
     end
 
     --[[
@@ -188,14 +182,14 @@ local function new (_, _frame, initialX, initialY, _isFirst)
             set = function (value)
                 _coordinates.X = value.X or value[1]
                 _coordinates.Y = value.Y or value[2]
-                updateAbsolute()
+                updateAbsolutes()
             end
         },
 
         Absolute = {
             get = function ()
                 if not _absoluteCoordinates.X or not _absoluteCoordinates.Y then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
 
                 local copy = {}
@@ -211,7 +205,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         Content = {
             get = function ()
                 if not _contentCoordinates.X or not _contentCoordinates.Y then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
 
                 local copy = {}
@@ -232,7 +226,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
                 _coordinates.X = value
 
                 if _frame.Container.IsDrawn then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
             end
         },
@@ -245,7 +239,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
                 _coordinates.Y = value
 
                 if _frame.Container.IsDrawn then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
             end
         },
@@ -253,7 +247,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         AbsoluteX = {
             get = function ()
                 if not _absoluteCoordinates.X then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
                 return _absoluteCoordinates.X
             end
@@ -261,7 +255,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         AbsoluteY = {
             get = function ()
                 if not _absoluteCoordinates.Y then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
 
                 return _absoluteCoordinates.Y
@@ -271,7 +265,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         ContentX = {
             get = function ()
                 if not _contentCoordinates.X then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
 
                 return _contentCoordinates.X
@@ -281,7 +275,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         ContentY = {
             get = function ()
                 if not _contentCoordinates.Y then
-                    updateAbsolute()
+                    updateAbsolutes()
                 end
 
                 return _contentCoordinates.Y

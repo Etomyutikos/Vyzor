@@ -51,7 +51,7 @@ local _consoleHeight = DEFAULT_CONSOLE_HEIGHT
 
 --[[
 	Properties: Option Properties
-		DrawOrder 		- TODO: Will determine z-layer ordering for Border Frames.
+		DrawOrder 		- Determines z-layer ordering for Border Frames.
 		Borders 		- Returns a table containing options.
 							Sets Border options via a table.
 		ConsoleHeight 	- Sets and gets a user-defined main console height.

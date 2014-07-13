@@ -1,3 +1,6 @@
+-- TODO: Remove NaturalDocs comments. Replace with LuaDoc?
+-- TODO: Do Size and Position need to be separated from Frames?
+
 -- Vyzor, UI Manager for Mudlet
 -- Copyright (c) 2012 Erik Pettis
 -- Licensed under the MIT license:

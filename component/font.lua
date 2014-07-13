@@ -57,7 +57,7 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
         Function: updateStylesheet
             Updates the Font Component's <stylesheet>.
     ]]
-    local function updateStylesheet () -- TODO: Maybe break this up.
+    local function updateStylesheet ()
         _stylesheet = string.format("font-size: %s; font-family: %s; %s: %s; text-decoration: %s",
             (type(_size) == "number" and tostring(_size) .. "px") or _size,
             _family,

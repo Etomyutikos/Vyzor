@@ -530,8 +530,6 @@ local function new (_, _name, _x, _y, _width, _height)
             end
         end
 
-        _isDrawn = true
-
         if not _ResizeRegistered then
             if Options.HandleBorders == true or Options.HandleBorders == "auto" then
                 registerAnonymousEventHandler("sysWindowResizeEvent", "VyzorResize")
@@ -575,8 +573,6 @@ local function new (_, _name, _x, _y, _width, _height)
             end
         end
 
-        _isDrawn = true
-
         if _children:count() > 0 then
             for frame in _children:each() do
                 frame:Draw()
@@ -596,6 +592,8 @@ local function new (_, _name, _x, _y, _width, _height)
         elseif _isFirst then
             drawHUD()
         end
+
+        _isDrawn = true
     end
 
     --[[
