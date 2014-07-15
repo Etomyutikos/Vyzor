@@ -48,16 +48,16 @@ local function new (_, _subtype, _optionsTable)
 			of valid options where necessary.
 
 		Paramaters:
-			key - The option to be tested.
+			option - The option to be tested.
 
 		Returns:
 			A boolean value.
 	]]
-	function self:IsValid (key)
+	function self:IsValid (option)
 		local isValid = false
 
 		for index, value in pairs(_optionsTable) do
-			if ((key == value) or (key == index)) then
+			if ((option == value) or (option == index)) then
 				isValid = true
             end
 

@@ -5,6 +5,7 @@
 
 local Frame = require("vyzor.base.frame")
 local Options = require("vyzor.base.options")
+local VyzorBorder = require("vyzor.enum.vyzorborder")
 
 local _windowWidth, _windowHeight = getMainWindowSize()
 --[[
@@ -55,7 +56,7 @@ local function updateBorders ()
     -- dynamically.
     local function calculate (border, space)
         if not space then
-            if border == "Top" or border == "Bottom" then
+            if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
                 space = _windowHeight
             else
                 space = _windowWidth
@@ -73,7 +74,7 @@ local function updateBorders ()
     -- dynamically, it's simple math to get its size. If it is set dynamically,
     -- however, we must know how much space is remaining, which means we
     -- must know the size of the opposite Border.
-    for _, border in ipairs({"Top", "Bottom", "Left", "Right"}) do -- TODO: Should be an Enum.
+    for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
         if options[border] ~= "dynamic" then
             calculate(border)
         else
@@ -81,14 +82,14 @@ local function updateBorders ()
             local space
             local opposite
 
-            if border == "Top" or border == "Bottom" then
+            if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
                 box = _windowHeight
                 space = _windowHeight - _consoleHeight
-                opposite = (border == "Top" and "Bottom") or "Top"
+                opposite = (border == VyzorBorder.Top and VyzorBorder.Bottom) or VyzorBorder.Top
             else
                 box = _windowWidth
                 space = (_windowWidth - _consoleWidth) - 10
-                opposite = (border == "Left" and "Right") or "Left"
+                opposite = (border == VyzorBorder.Left and VyzorBorder.Right) or VyzorBorder.Left
             end
 
             -- Both Borders are dynamic. YaY! This makes it easy.
@@ -112,7 +113,7 @@ local function updateBorders ()
     end
 
     -- Here we actually tell Mudlet what size our Borders should be.
-    for _, border in ipairs({"Top", "Bottom", "Right", "Left"}) do
+    for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
         if newBorders[border] > 0 then
             _G["setBorder" .. border](newBorders[border])
         else
@@ -135,20 +136,25 @@ end
 -- the value set in the options).
 -- I think.
 
+local vyzorTop = "Vyzor" .. VyzorBorder.Top
+local vyzorLeft = "Vyzor" .. VyzorBorder.Left
+local vyzorBottom = "Vyzor" .. VyzorBorder.Bottom
+local vyzorRight = "Vyzor" .. VyzorBorder.Right
+
 -- Object: VyzorTop
 -- The Frame defined by Mudlet's top border.
-local top = Frame("VyzorTop",
+local top = Frame(vyzorTop,
     0,
     0,
     1.0,
-    (Options.Borders["Top"] == "dynamic" and _borders["Top"]) or Options.Borders["Top"])
+    (Options.Borders[VyzorBorder.Top] == "dynamic" and _borders[VyzorBorder.Top]) or Options.Borders[VyzorBorder.Top])
 
 -- Object: VyzorLeft
 -- The Frame defined by Mudlet's left border.
-local left = Frame("VyzorLeft",
+local left = Frame(vyzorLeft,
     0,
     0,
-    (Options.Borders["Left"] == "dynamic" and _borders["Left"]) or Options.Borders["Left"],
+    (Options.Borders[VyzorBorder.Left] == "dynamic" and _borders[VyzorBorder.Left]) or Options.Borders[VyzorBorder.Left],
     1.0)
 
 local bottom
@@ -168,18 +174,18 @@ do
 
     -- Object: VyzorBottom
     -- The Frame defined by Mudlet's bottom border.
-    bottom = Frame("VyzorBottom",
+    bottom = Frame(vyzorBottom,
         0,
-        calculateBorderPosition(_windowHeight, Options.Borders["Bottom"], _borders["Bottom"]),
+        calculateBorderPosition(_windowHeight, Options.Borders[VyzorBorder.Bottom], _borders[VyzorBorder.Bottom]),
         1.0,
-        (Options.Borders["Bottom"] == "dynamic" and _borders["Bottom"]) or Options.Borders["Bottom"])
+        (Options.Borders[VyzorBorder.Bottom] == "dynamic" and _borders[VyzorBorder.Bottom]) or Options.Borders[VyzorBorder.Bottom])
 
     -- Object: VyzorRight
     -- The Frame defined by Mudlet's right border.
-    right = Frame("VyzorRight",
-        calculateBorderPosition(_windowWidth, Options.Borders["Right"], _borders["Right"]),
+    right = Frame(vyzorRight,
+        calculateBorderPosition(_windowWidth, Options.Borders[VyzorBorder.Right], _borders[VyzorBorder.Right]),
         0,
-        (Options.Borders["Right"] == "dynamic" and _borders["Right"]) or Options.Borders["Right"],
+        (Options.Borders[VyzorBorder.Right] == "dynamic" and _borders[VyzorBorder.Right]) or Options.Borders[VyzorBorder.Right],
         1.0)
 end
 
@@ -216,14 +222,14 @@ function VyzorResize ()
         hudSize.Dimensions = { _windowWidth, _windowHeight }
 
         local hudFrames = HUD.Frames
-        if Options.Borders["Top"] == "dynamic" then
-            hudFrames["VyzorTop"].Size.Height = (_borders.Top <= 1 and 0) or _borders.Top
+        if Options.Borders[VyzorBorder.Top] == "dynamic" then
+            hudFrames[vyzorTop].Size.Height = (_borders.Top <= 1 and 0) or _borders.Top
         end
 
         do
-            local bottomBorder = hudFrames["VyzorBottom"]
+            local bottomBorder = hudFrames[vyzorBottom]
 
-            if Options.Borders["Bottom"] == "dynamic" then
+            if Options.Borders[VyzorBorder.Bottom] == "dynamic" then
                 bottomBorder.Size.Height = (_borders.Bottom <= 1 and 0) or _borders.Bottom
                 bottomBorder.Position.Y = _windowHeight - _borders.Bottom
             else
@@ -232,9 +238,9 @@ function VyzorResize ()
         end
 
         do
-            local rightBorder = hudFrames["VyzorRight"]
+            local rightBorder = hudFrames[vyzorRight]
 
-            if Options.Borders["Right"] == "dynamic" then
+            if Options.Borders[VyzorBorder.Right] == "dynamic" then
                 rightBorder.Size.Width = (_borders.Right <= 1 and 0) or _borders.Right
                 rightBorder.Position.X = _windowWidth - _borders.Right
             else
@@ -242,8 +248,8 @@ function VyzorResize ()
             end
         end
 
-        if Options.Borders["Left"] == "dynamic" then
-            hudFrames["VyzorLeft"].Size.Width = (_borders.Left <= 1 and 0) or _borders.Left
+        if Options.Borders[VyzorBorder.Left] == "dynamic" then
+            hudFrames[vyzorLeft].Size.Width = (_borders.Left <= 1 and 0) or _borders.Left
         end
 
         HUD:Resize(hudSize.ContentWidth, hudSize.ContentHeight)

@@ -15,6 +15,23 @@ local MiniConsole = Base("Component", "MiniConsole")
 -- Holds all MiniConsoles for consistent reference.
 local _MasterList = {}
 
+-- TODO: These are shared. Move to single location?
+local function calculateAbsolutePosition(axis, frameAxis, frameDimension)
+    if axis >= 0.0 and axis <= 1.0 then
+        return frameAxis + (axis * frameDimension)
+    else
+        return frameAxis + axis
+    end
+end
+
+local function calculateAbsoluteDimension(dimension, frameDimension)
+    if dimension >= 0.0 and dimension <= 1.0 then
+        return dimension * frameDimension
+    else
+        return dimension
+    end
+end
+
 --[[
     Constructor: new
 
@@ -99,23 +116,6 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
             using the parent Frame's Content.
     ]]
     local function updateAbsolutes ()
-        -- TODO: These are shared. Move to single location?
-        local function calculateAbsolutePosition(axis, frameAxis, frameDimension)
-            if axis >= 0.0 and axis <= 1.0 then
-                return frameAxis + (axis * frameDimension)
-            else
-                return frameAxis + axis
-            end
-        end
-
-        local function calculateAbsoluteDimension(dimension, frameDimension)
-            if dimension >= 0.0 and dimension <= 1.0 then
-                return dimension * frameDimension
-            else
-                return dimension
-            end
-        end
-
         if _container then
             _absoluteX = calculateAbsolutePosition(_x, _container.Position.ContentX, _container.Size.ContentWidth)
             _absoluteY = calculateAbsolutePosition(_y, _container.Position.ContentY, _container.Size.ContentHeight)

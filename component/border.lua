@@ -13,6 +13,21 @@ local BorderStyle = require("vyzor.enum.border_style")
 ]]
 local Border = Base("Component", "Border")
 
+local function getWidthString(width)
+    if type(width) == "table" then
+        local widthTable = {
+            string.format("border-top-width: %s", width[1]),
+            string.format("border-right-width: %s", width[2]),
+            string.format("border-bottom-width: %s", width[3]),
+            string.format("border-left-width: %s", width[4])
+        }
+
+        return table.concat(widthTable, "; ")
+    else
+        return string.format("border-width: %s", width)
+    end
+end
+
 --[[
     Constructor: new
 
@@ -73,13 +88,13 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
     ]]
     local function updateStylesheet ()
         local styleTable = {
-            string.format("border-width: %s", _width),
+            getWidthString(_width),
             string.format("border-style: %s", _style),
             string.format("border-radius: %s", _radius),
         }
 
         if _content then
-            styleTable[#styleTable +1] = string.format("border-%s",
+            styleTable[#styleTable + 1] = string.format("border-%s",
                 (_content.Subtype == "Brush" and _content.Stylesheet) or
                 (_content.Subtype == "Image" and string.format("image: %s", _content.Url)))
 

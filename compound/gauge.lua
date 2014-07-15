@@ -45,6 +45,23 @@ function VyzorInitializeGauges()
 end
 
 --[[
+    Function: getField
+        Retrieves the value of the given index.
+
+    Parameters:
+        field - The index of the value to be retrieved.
+]]
+local function getField(field)
+    local v = _G
+
+    for w in string.gfind(field, "[%w_]+") do
+        v = v[w]
+    end
+
+    return v
+end
+
+--[[
     Constructor: new
 
     Parameters:
@@ -237,109 +254,119 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         },
     }
 
-    --[[
-        Function: getField
-            Retrieves the value of the given index.
+    local function getOverflowScalars(currentScalar)
+        local scalar = currentScalar - 1
+        local overflowScalars = {}
 
-        Parameters:
-            field - The index of the value to be retrieved.
-    ]]
-    local function getField (field)
-        local v = _G
+        if _overflowFrames:count() > 0 then
+            local i = 1
 
-        for w in string.gfind(field, "[%w_]+") do
-            v = v[w]
+            while scalar > 1 do
+                overflowScalars[i] = 1
+                scalar = scalar - 1
+                i = i + 1
+            end
+
+            overflowScalars[i] = scalar
         end
 
-        return v
+        return overflowScalars
+    end
+
+    local function fillLeftRight (scalar, overflowScalars)
+        _foregroundFrame.Size.Width = scalar
+
+        if _overflowFrames:count() > 0 then
+            for frame in _overflowFrames:each() do
+                frame:Hide()
+            end
+        end
+
+        if #overflowScalars > 0 then
+            for index, frame in _overflowFrames:ipairs() do
+                local overage = overflowScalars[index]
+
+                if overage then
+                    frame:Show()
+                    frame.Size.Width = overage
+                end
+            end
+        end
+    end
+
+    local function fillRightLeft (scalar, overflowScalars)
+        _foregroundFrame.Size.Width = scalar
+        _foregroundFrame.Position.X = 1.0 - scalar
+
+        if #overflowScalars > 0 then
+            for index, frame in _overflowFrames:ipairs() do
+                local overage = overflowScalars[index]
+
+                if overage then
+                    frame:Show()
+                    frame.Size.Width = overflowScalars[index]
+                    frame.Position.X = 1.0 - overflowScalars[index]
+                end
+            end
+        end
+    end
+
+    local function fillTopBottom (scalar, overflowScalars)
+        _foregroundFrame.Size.Height = scalar
+
+        if #overflowScalars > 0 then
+            for index, frame in _overflowFrames:ipairs() do
+                local overage = overflowScalars[index]
+
+                if overage then
+                    frame:Show()
+                    frame.Size.Height = overflowScalars[index]
+                end
+            end
+        end
+    end
+
+    local function fillBottomTop (scalar, overflowScalars)
+        _foregroundFrame.Size.Height = scalar
+        _foregroundFrame.Position.Y = 1.0 - scalar
+
+        if #overflowScalars > 0 then
+            for index, frame in _overflowFrames:ipairs() do
+                frame.Size.Height = overflowScalars[index] or 0
+                frame.Position.Y = 1.0 - overflowScalars[index] or 0
+            end
+        end
+    end
+
+    local function fillGauge (scalar, overflowScalars)
+        if _fillMode == GaugeFill.LeftRight then
+            fillLeftRight(scalar, overflowScalars)
+        elseif _fillMode == GaugeFill.RightLeft then
+            fillRightLeft(scalar, overflowScalars)
+        elseif _fillMode == GaugeFill.TopBottom then
+            fillTopBottom(scalar, overflowScalars)
+        elseif _fillMode == GaugeFill.BottomTop then
+            fillBottomTop(scalar, overflowScalars)
+        end
     end
 
     --[[
         Function: Update
             Updates the Gauge.
     ]]
-    function self:Update () -- TODO: Break this up.
+    function self:Update ()
         _currentValue = getField(_currentValueAddress) or 1
         _maximumValue = getField(_maximumValueAddress) or 1
 
         local scalar = _currentValue / _maximumValue
+
         local overflowScalars = {}
-
         if scalar > 1 then
-            local currentScalar = scalar - 1
+            overflowScalars = getOverflowScalars(scalar)
             scalar = 1
-
-            if _overflowFrames:count() > 0 then
-                local i = 1
-
-                while currentScalar > 1 do
-                    overflowScalars[i] = 1
-                    currentScalar = currentScalar - 1
-                    i = i + 1
-                end
-
-                overflowScalars[i] = currentScalar
-            end
         end
 
-        if _fillMode == GaugeFill.LeftRight then
-            _foregroundFrame.Size.Width = scalar
-
-            if _overflowFrames:count() > 0 then
-                for frame in _overflowFrames:each() do
-                    frame:Hide()
-                end
-            end
-
-            if #overflowScalars > 0 then
-                for index, frame in _overflowFrames:ipairs() do
-                    local overage = overflowScalars[index]
-
-                    if overage then
-                        frame:Show()
-                        frame.Size.Width = overage
-                    end
-                end
-            end
-        elseif _fillMode == GaugeFill.RightLeft then
-            _foregroundFrame.Size.Width = scalar
-            _foregroundFrame.Position.X = 1.0 - scalar
-
-            if #overflowScalars > 0 then
-                for index, frame in _overflowFrames:ipairs() do
-                    local overage = overflowScalars[index]
-
-                    if overage then
-                        frame:Show()
-                        frame.Size.Width = overflowScalars[index]
-                        frame.Position.X = 1.0 - overflowScalars[index]
-                    end
-                end
-            end
-        elseif _fillMode == GaugeFill.TopBottom then
-            _foregroundFrame.Size.Height = scalar
-
-            if #overflowScalars > 0 then
-                for index, frame in _overflowFrames:ipairs() do
-                    local overage = overflowScalars[index]
-
-                    if overage then
-                        frame:Show()
-                        frame.Size.Height = overflowScalars[index]
-                    end
-                end
-            end
-        elseif _fillMode == GaugeFill.BottomTop then
-            _foregroundFrame.Size.Height = scalar
-            _foregroundFrame.Position.Y = 1.0 - scalar
-
-            if #overflowScalars > 0 then
-                for index, frame in _overflowFrames:ipairs() do
-                    frame.Size.Height = overflowScalars[index] or 0
-                    frame.Position.Y = 1.0 - overflowScalars[index] or 0
-                end
-            end
-        end
+        fillGauge(scalar, overflowScalars)
 
         _foregroundFrame:Resize()
         _foregroundFrame:Move()

@@ -12,6 +12,28 @@ local BoundingMode = require("vyzor.enum.bounding_mode")
 ]]
 local Position = Base("Supercomponent", "Position")
 
+local function calculateAbsoluteCoordinate(rawAxis, containerAxis, dimension)
+    if rawAxis > 1 then
+        return containerAxis + rawAxis
+    elseif rawAxis > 0 then
+        return containerAxis + (dimension * rawAxis)
+    elseif rawAxis < 0 then
+        return containerAxis + (dimension + rawAxis)
+    else
+        return containerAxis
+    end
+end
+
+local function setBoundedCoordinate(absoluteAxis, minimum, maximum, dimension)
+    if absoluteAxis < minimum then
+        return minimum
+    elseif (absoluteAxis + dimension) > maximum then
+        return maximum - dimension
+    else
+        return absoluteAxis
+    end
+end
+
 --[[
     Constructor: new
 
@@ -64,7 +86,6 @@ local function new (_, _frame, initialX, initialY, _isFirst)
                     x = x + border.Left.Width
                     y = y + border.Top.Width
                 else
-                    -- TODO: This is internal detail that introduces extra complexity at the call site.
                     if type(border.Width) == "table" then
                         x = x + border.Width[4]
                         y = y + border.Width[1]
@@ -110,18 +131,6 @@ local function new (_, _frame, initialX, initialY, _isFirst)
 
         assert(_frame.Container, "Vyzor: Frame must have container before Position can be determined.")
 
-        local function calculateAbsoluteCoordinate (rawAxis, containerAxis, dimension)
-            if rawAxis > 1 then
-                return containerAxis + rawAxis
-            elseif rawAxis > 0 then
-                return containerAxis + (dimension * rawAxis)
-            elseif rawAxis < 0 then
-                return containerAxis + (dimension + rawAxis)
-            else
-                return containerAxis
-            end
-        end
-
         local container = _frame.Container
         local containerPosition = container.Position.Content
         local containerSize = container.Size.Content
@@ -130,20 +139,10 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         _absoluteCoordinates.Y = calculateAbsoluteCoordinate(_coordinates.Y, containerPosition.Y, containerSize.Height)
 
         if container.IsBounding and _frame.BoundingMode == BoundingMode.Position then
-            local function setBoundedCoordinate (absoluteAxis, minimum, maximum, dimension)
-                if absoluteAxis < minimum then
-                    return minimum
-                elseif (absoluteAxis + dimension) > maximum then
-                    return maximum - dimension
-                else
-                    return absoluteAxis
-                end
-            end
-
             _absoluteCoordinates.X = setBoundedCoordinate(
                 _absoluteCoordinates.X,
                 containerPosition.X,
-                containerPosition.X + containerSize.Width, -- TODO: Edge calculation should be an internal detail.
+                containerPosition.X + containerSize.Width,
                 _frame.Size.AbsoluteWidth)
 
             _absoluteCoordinates.Y = setBoundedCoordinate(

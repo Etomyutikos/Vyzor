@@ -4,6 +4,7 @@
 --    http://www.opensource.org/licenses/MIT
 
 local Lib = require("vyzor.lib")
+local VyzorBorder = require("vyzor.enum.vyzorborder")
 
 --[[
 	Structure: Options
@@ -13,7 +14,7 @@ local Options = {}
 
 -- Array: DEFAULT_DRAW_ORDER
 -- Default draw order for Border Frames.
-local DEFAULT_DRAW_ORDER = {"top", "bottom", "left", "right"}
+local DEFAULT_DRAW_ORDER = { VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }
 
 -- Array: _drawOrder
 -- Determines layering for Border Frames.
@@ -79,10 +80,10 @@ local properties = {
 			local previousBorders = _borders
 
 			_borders = {
-				Top = value["Top"] or previousBorders["Top"],
-				Right = value["Right"] or previousBorders["Right"],
-				Bottom = value["Bottom"] or previousBorders["Bottom"],
-				Left = value["Left"] or previousBorders["Left"]
+				Top = value[VyzorBorder.Top] or previousBorders[VyzorBorder.Top],
+				Right = value[VyzorBorder.Right] or previousBorders[VyzorBorder.Right],
+				Bottom = value[VyzorBorder.Bottom] or previousBorders[VyzorBorder.Bottom],
+				Left = value[VyzorBorder.Left] or previousBorders[VyzorBorder.Left]
 			}
 
 			-- We really only want to waste time updating changed
@@ -95,29 +96,31 @@ local properties = {
 
 			if #changedBorders > 0 then
 				for _, border in ipairs(changedBorders) do
-					-- Recalculate all these values. This bit of numeric magic,
+                    -- Recalculate all these values. This bit of numeric magic,
 					-- reused as often as it is, should probably be outsourced to
 					-- an independent function.
 					if _borders[border] ~= "dynamic" then
-						if border == "Top" or border == "Bottom" then
-							Vyzor.HUD.Frames["Vyzor" .. border].Size.Height = _borders[border]
+                        local vyzorBorder = "Vyzor" .. border
 
-							if border == "Bottom" then
+						if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
+							Vyzor.HUD.Frames[vyzorBorder].Size.Height = _borders[border]
+
+							if border == VyzorBorder.Bottom then
 								local contentHeight = Vyzor.HUD.Size.ContentHeight
 
-								Vyzor.HUD.Frames["VyzorBottom"].Position.Y =
-									(((_borders["Bottom"] > 0 and _borders["Bottom"] <= 1.0) and 1.0) or contentHeight) -
-										_borders["Bottom"]
+								Vyzor.HUD.Frames[vyzorBorder].Position.Y =
+									(((_borders[VyzorBorder.Bottom] > 0 and _borders[VyzorBorder.Bottom] <= 1.0) and 1.0) or contentHeight) -
+										_borders[VyzorBorder.Bottom]
 							end
 						else
-							Vyzor.HUD.Frames["Vyzor" .. border].Size.Width = _borders[border]
+							Vyzor.HUD.Frames[vyzorBorder].Size.Width = _borders[border]
 
-							if border == "Right" then
+							if border == VyzorBorder.Right then
 								local contentWidth = Vyzor.HUD.Size.ContentWidth
 
-								Vyzor.HUD.Frames["VyzorRight"].Position.X =
-									(((_borders["Right"] > 0 and _borders["Right"] <= 1.0) and 1.0) or contentWidth) -
-										_borders["Right"]
+								Vyzor.HUD.Frames[vyzorBorder].Position.X =
+									(((_borders[VyzorBorder.Right] > 0 and _borders[VyzorBorder.Right] <= 1.0) and 1.0) or contentWidth) -
+										_borders[VyzorBorder.Right]
 							end
 						end
 					end

@@ -764,7 +764,7 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    setmetatable(self, { -- TODO: It should be possible to generify this.
+    setmetatable(self, {
         __index = function (_, key)
             return (properties[key] and properties[key].get()) or Frame[key]
         end,
@@ -775,8 +775,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end,
         __tostring = function (_)
             return _name
-        end,
-        })
+        end
+    })
 
     _MasterList[_name] = self
     return self

@@ -12,6 +12,26 @@ local BoundingMode = require("vyzor.enum.bounding_mode")
 ]]
 local Size = Base("Supercomponent", "Size")
 
+local function calculateAbsoluteDimension(rawDimension, containerDimension)
+    if rawDimension <= 1 and rawDimension > 0 then
+        return containerDimension * rawDimension
+    elseif rawDimension < 0 then
+        return containerDimension + rawDimension
+    else
+        return rawDimension
+    end
+end
+
+local function setBoundedDimension(absoluteDimension, maximum, edge, containerEdge)
+    if absoluteDimension > maximum then
+        return maximum
+    elseif edge > containerEdge then
+        return absoluteDimension - (edge - containerEdge)
+    else
+        return absoluteDimension
+    end
+end
+
 --[[
     Constructor: new
 
@@ -67,7 +87,6 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
                     top = top + border.Top.Width
                     bottom = bottom + border.Bottom.Width
                 else
-                    -- TODO: This is internal detail that introduces extra complexity at the call site.
                     if type(border.Width) == "table" then
                         right = right + border.Width[2]
                         left = left + border.Width[4]
@@ -125,16 +144,6 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
 
         assert(_frame.Container, "Vyzor: Frame must have container before Size can be determined.")
 
-        local function calculateAbsoluteDimension (rawDimension, containerDimension)
-            if rawDimension <= 1 and rawDimension > 0 then
-                return containerDimension * rawDimension
-            elseif rawDimension < 0 then
-                return containerDimension + rawDimension
-            else
-                return rawDimension
-            end
-        end
-
         local frameContainer = _frame.Container
         local containerPosition = frameContainer.Position.Content
         local containerSize = frameContainer.Size.Content
@@ -143,20 +152,10 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         _absoluteDimensions.Height = calculateAbsoluteDimension(_dimensions.Height, containerSize.Height)
 
         if frameContainer.IsBounding and _frame.BoundingMode == BoundingMode.Size then
-            local function setBoundedDimension (absoluteDimension, maximum, edge, containerEdge)
-                if absoluteDimension > maximum then
-                    return maximum
-                elseif edge > containerEdge then
-                    return absoluteDimension - (edge - containerEdge)
-                else
-                    return absoluteDimension
-                end
-            end
-
             _absoluteDimensions.Width = setBoundedDimension(
                 _absoluteDimensions.Width,
                 containerSize.Width,
-                _frame.Position.AbsoluteX + _absoluteDimensions.Width, -- TODO: Edge calculation should be an internal detail.
+                _frame.Position.AbsoluteX + _absoluteDimensions.Width,
                 containerPosition.X + containerSize.Width)
 
             _absoluteDimensions.Height = setBoundedDimension(_absoluteDimensions.Height,
