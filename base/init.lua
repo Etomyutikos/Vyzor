@@ -1,44 +1,33 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- The base object from which all other Vyzor objects are derived.
+--- Defines type handling.
+--- Internal.
+--- @classmod Base
 
---[[
-    Class: Base
-        This is the Base object from which all other objects
-        are derived. It defines type handling. Only used
-        internally. Should not be exposed.
-]]
 local Base = {}
 
---[[
-    Constructor: new
-
-    Parameters:
-        _type - The new object's type.
-        _subtype - The new object's subtype.
-
-    Returns:
-        A new type-defined object.
-]]
+--- Base constructor.
+--- @function Base
+--- @string _type The new object's type.
+--- @string _subtype The new object's subtype.
+--- #treturn Base
 local function new (_, _type, _subtype)
-    -- Structure: New Base
-    -- A new Base object.
+    --- @type Base
     local self = {}
 
-    --[[
-        Properties: Base Properties
-            Type - Returns the object's type.
-            Subtype - Returns the object's subtype.
-    ]]
     local properties = {
         Type = {
+            --- Returns the object's type.
+            --- @function self.Type.get
+            --- @treturn string
             get = function ()
                 return _type
             end
         },
 
         Subtype = {
+            --- Returns the object's subtype.
+            --- @function self.Subtype.get
+            --- @treturn string
             get = function ()
                 return _subtype
             end

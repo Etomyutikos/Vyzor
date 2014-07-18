@@ -1,62 +1,30 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Component defining certain text manipulations.
+--- @classmod Font
 
 local Base = require("vyzor.base")
 local FontDecoration = require("vyzor.enum.font_decoration")
 local FontStyle = require("vyzor.enum.font_style")
 local FontWeight = require("vyzor.enum.font_weight")
 
---[[
-    Class: Font
-        Defines the Font Component.
-]]
 local Font = Base("Component", "Font")
 
---[[
-    Constructor: new
-
-    Parameters:
-        initialSize - The Font Component's initial size. Valid sizes are defined by QT, but I can only seem to get numbers to work.
-        initialFamily - The font family for this Font Component.
-        initialStyle - The Font Component's initial style. Optional. Must be a FontStyle or FontWeight Component.
-        initialDecoration - The Font Component's initial FontDecoration. Optional.
-
-    Returns:
-        A new Font Component.
-]]
+--- Font constructor.
+--- @function Font
+--- @tparam number|string initialSize The Font Component's initial size. Valid sizes are defined by QT, but I can only seem to get numbers to work.
+--- @string initialFamily The font family for this Font Component.
+--- @tparam[opt=FontStyle.Normal] FontStyle|FontWeight initialStyle The Font Component's initial style.
+--- @tparam[opt] FontDecoration initialDecoration The Font Component's initial FontDecoration.
+--- @treturn Font
 local function new (_, initialSize, initialFamily, initialStyle, initialDecoration)
-    --[[
-        Structure: New Font
-            A Component defining certain text manipulations.
-    ]]
+    --- @type Font
     local self = {}
 
-    -- Double: _size
-    -- The Font's initial size.
     local _size = initialSize
-
-    -- String: _family
-    -- The font family for this Font Component.
     local _family = initialFamily or "Bitsteam Vera Sans Mono"
-
-    -- Object: _style
-    -- The Font's initial <FontStyle>.
     local _style = initialStyle or FontStyle.Normal
-
-    -- Object: _decoration
-    -- The Font's initial <FontDecoration>.
     local _decoration = initialDecoration
-
-    -- String: stylesheet
-    -- The Font Component's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Font Component's <stylesheet>.
-    ]]
     local function updateStylesheet ()
         _stylesheet = string.format("font-size: %s; font-family: %s; %s: %s; text-decoration: %s",
             (type(_size) == "number" and tostring(_size) .. "px") or _size,
@@ -67,56 +35,75 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
             _decoration or FontDecoration.None)
     end
 
-    --[[
-        Properties: Font Properties
-            Size - Gets and sets the Font's size. Can be a number, or a number string
-                            ending in "px" or "pt".
-            Family - Gets and sets the Font's family. Must be a string.
-            Style - Gets and sets the Font's <FontStyle>.
-                            Removes the Font's <FontWeight> if set.
-            Weight - Gets and sets the Font's <FontWeight>.
-                            Removes the Font's <FontStyle> if set.
-            Decoration - Gets and sets the Font's <FontDecoration>.
-            Stylesheet - Updates and returns the Font Component's <stylesheet>.
-    ]]
     local properties = {
         Size = {
+            --- Returns the Font's size.
+            --- @function self.Size.get
+            --- @treturn number|string
             get = function ()
                 return _size
             end,
+
+            --- Sets the Font's size.
+            --- @function self.Size.set
+            --- @tparam number|string value If a string is passed, it must end in "px" or "pt".
             set = function (value)
                 _size = value
             end,
         },
 
         Family = {
+            --- Returns the Font's family.
+            --- @function self.Family.get
+            --- @treturn string
             get = function ()
                 return _family
             end,
+
+            --- Sets the Font's family.
+            --- @function self.Family.set
+            --- @tparam string value
             set = function (value)
                 _family = value
             end,
         },
 
         Style = {
+            --- Returns the Font's FontStyle.
+            --- @function self.Style.get
+            --- @treturn FontStyle
             get = function ()
                 return _style
             end,
+
+            --- Sets the Font's FontStyle
+            --- @function self.Style.set
+            --- @tparam FontStyle value
             set = function (value)
                 _style = value
             end,
         },
 
         Decoration = {
+            --- Returns the Font's FontDecoration.
+            --- @function self.Decoration.get
+            --- @treturn FontDecoration
             get = function ()
                 return _decoration
             end,
+
+            --- Sets the Font's FontDecoration.
+            --- @function self.Decoration.set
+            --- @tparam FontDecoration value
             set = function (value)
                 _decoration = value
             end,
         },
 
         Stylesheet = {
+            --- Updates and returns the Font's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 updateStylesheet()
                 return _stylesheet

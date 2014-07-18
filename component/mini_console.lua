@@ -1,26 +1,17 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Mudlet text container that mimicks the main console.
+--- @classmod MiniConsole
 
 local Base = require("vyzor.base")
 
---[[
-    Class: MiniConsole
-        Defines the MiniConsole Component.
-]]
 local MiniConsole = Base("Component", "MiniConsole")
 
--- Array: master_list
--- Holds all MiniConsoles for consistent reference.
 local _MasterList = {}
 
--- TODO: These are shared. Move to single location?
-local function calculateAbsolutePosition(axis, frameAxis, frameDimension)
-    if axis >= 0.0 and axis <= 1.0 then
-        return frameAxis + (axis * frameDimension)
+local function calculateAbsolutePosition(axisValue, frameAxis, frameDimension)
+    if axisValue >= 0.0 and axisValue <= 1.0 then
+        return frameAxis + (axisValue * frameDimension)
     else
-        return frameAxis + axis
+        return frameAxis + axisValue
     end
 end
 
@@ -32,89 +23,42 @@ local function calculateAbsoluteDimension(dimension, frameDimension)
     end
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        _name - Used for echoing and other Mudlet referencing.
-        initialX - X coordinate position.
-        initialY - Y coordinate position.
-        initialWidth - Width of the MiniConsole.
-        initialHeight - Height of the MiniConsole.
-        initialWordWrap - Sets the MiniConsole's word wrap in characters. Default is dynamic or 80 if <initialFontSize> is dynamic.
-        initialFontSize - Sets the MiniConsole's font size. Default is dynamic or 8 if <initialWordWrap> is dynamic.
-]]
+--- MiniConsole constructor.
+--- @function MiniConsole
+--- @string _name Used for echoing and other Mudlet referencing.
+--- @number[opt=0] initialX X coordinate position.
+--- @number[opt=0] initialY Y coordinate position.
+--- @number[opt=1.0] initialWidth Width of the MiniConsole.
+--- @number[opt=1.0] initialHeight Height of the MiniConsole.
+--- @tparam[opt] number|string initialWordWrap Sets the MiniConsole's word wrap in characters. Default is dynamic or 80
+--- if initialFontSize is dynamic.
+--- @tparam[opt] number|string initialFontSize Sets the MiniConsole's font size. Default is dynamic or 8 if
+--- initialWordWrap is dynamic.
+--- @treturn MiniConsole
 local function new (_, _name, initialX, initialY, initialWidth, initialHeight, initialWordWrap, initialFontSize)
     assert(_name, "Vyzor: New MiniConsole must have a name.")
 
-    --[[
-        Structure: New MiniConsole
-            A Mudlet text container allowing that mimicks the
-            main console.
-    ]]
+    --- @type MiniConsole
     local self = {}
 
-    -- Object: _container
-    -- The MiniConsole's parent frame. Usually set automatically when added to a Frame.
     local _container
-
-    -- Number: _x
-    -- User-defined X coordinate of the MiniConsole.
     local _x = initialX or 0
-
-    -- Number: _absoluteX
-    -- Actual X coordinate of the MiniConsole.
     local _absoluteX
-
-    -- Number: _y
-    -- User-defined Y Coordinate of the MiniConsole.
     local _y = initialY or 0
-
-    -- Number: _absoluteY
-    -- Actual Y Coordinate of the MiniConsole.
     local _absoluteY
-
-    -- Number: _width
-    -- User-defined Width of the MiniConsole.
     local _width = initialWidth or 1.0
-
-    -- Number: _absoluteWidth
-    -- Actual Width of the MiniConsole.
     local _absoluteWidth
-
-    -- Number: _height
-    -- User-defined Height of the MiniConsole.
     local _height = initialHeight or 1.0
-
-    -- Number: _absoluteHeight
-    -- Actual Height of the MiniConsole.
     local _absoluteHeight
-
-    -- Variable: _wordWrap
-    -- Number of characters at which the MiniConsole will wrap.
     local _wordWrap = initialWordWrap or "dynamic"
-
-    -- Number: _absoluteWordWrap
-    -- Actual word wrap of the MiniConsole.
     local _absoluteWordWrap
-
-    -- Variable: _fontSize
-    -- Font size of the text in MiniConsole.
     local _fontSize = initialFontSize or ((_wordWrap == "dynamic" and 8) or "dynamic")
-
-    -- Number: _absoluteFontSize
-    -- Actual font size of the MiniConsole.
     local _absoluteFontSize
 
     if _fontSize == "dynamic" and _wordWrap == "dynamic" then
         _wordWrap = 80
     end
 
-    --[[
-        Function: updateAbsolutes
-            Sets the actual size and position of the MiniConsole
-            using the parent Frame's Content.
-    ]]
     local function updateAbsolutes ()
         if _container then
             _absoluteX = calculateAbsolutePosition(_x, _container.Position.ContentX, _container.Size.ContentWidth)
@@ -146,34 +90,27 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         end
     end
 
-    --[[
-        Properties: MiniConsole Properties
-            Name - Returns the MiniConsole's name.
-            Container - Gets and sets the MiniConsole's parent Frame.
-            X - Gets and sets the MiniConsole's relative X coordinate.
-            AbsoluteX - Returns the MiniConsole's actual X coordinate.
-            Y - Gets and sets the MiniConsole's relative Y coordinate.
-            AbsoluteY - Returns the MiniConsole's actual Y coordinate.
-            Width - Gets and sets the MiniConsole's relative width.
-            AbsoluteWidth - Returns the MiniConsole's actual width.
-            Height - Gets and sets the MiniConsole's relative height.
-            AbsoluteHeight - Returns the MiniConsole's actual height.
-            WordWrap - Gets and sets the MiniConsole's word wrap. If <size> is dynamic, <size> is set to 8.
-            AbsoluteWrap - Returns the actual word <wrap> of the MiniConsole.
-            FontSize - Gets and sets the MiniConsole's font size. If <wrap> is dynamic, <wrap> is set to 80.
-            AbsoluteSize - Returns the actual <size> of the MiniConsole's text.
-    ]]
     local properties = {
         Name = {
+            --- Returns the MiniConsole's name.
+            --- @function self.Name.get
+            --- @treturn string
             get = function ()
                 return _name
             end
         },
 
         Container = {
+            --- Returns the MiniConsole's parent Frame.
+            --- @function self.Container.get
+            --- @treturn Frame
             get = function ()
                 return _container
             end,
+
+            --- Sets the MiniConsole's parent Frame.
+            --- @function self.Container.set
+            --- @tparam Frame value
             set = function (value)
                 if value.Type == "Frame" then
                     _container = value
@@ -182,9 +119,16 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         X = {
+            --- Returns the MiniConsole's user-defined X coordinate.
+            --- @function self.X.get
+            --- @treturn number
             get = function ()
                 return _x
             end,
+
+            --- Sets the MiniConsole's user-defined X coordinate.
+            --- @function self.X.set
+            --- @tparam number value
             set = function (value)
                 _x = value
                 updateAbsolutes()
@@ -192,15 +136,25 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteX = {
+            --- Returns the MiniConsole's actual X coordinate.
+            --- @function self.AbsoluteX.get
+            --- @treturn number
             get = function ()
                 return _absoluteX
             end
         },
 
         Y = {
+            --- Returns the MiniConsole's user-defined Y coordinate.
+            --- @function self.Y.get
+            --- @treturn number
             get = function ()
                 return _y
             end,
+
+            --- Sets the MiniConsole's user-defined Y coordinate.
+            --- @function self.Y.set
+            --- @tparam number value
             set = function (value)
                 _y = value
                 updateAbsolutes()
@@ -208,15 +162,25 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteY = {
+            --- Returns the MiniConsole's actual Y coordinate.
+            --- @function self.AbsoluteY.get
+            --- @treturn number
             get = function ()
                 return _absoluteY
             end
         },
 
         Width = {
+            --- Returns the MiniConsole's user-defined width.
+            --- @function self.Width.get
+            --- @treturn number
             get = function ()
                 return _width
             end,
+
+            --- Sets the MiniConsole's user-defined width.
+            --- @function self.Width.set
+            --- @tparam number value
             set = function (value)
                 _width = value
                 updateAbsolutes()
@@ -224,15 +188,25 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteWidth = {
+            --- Returns the MiniConsole's actual width.
+            --- @function self.AbsoluteWidth.get
+            --- @treturn number
             get = function ()
                 return _absoluteWidth
             end
         },
 
         Height = {
+            --- Returns the MiniConsole's user-defined height.
+            --- @function self.Height.get
+            --- @treturn number
             get = function ()
                 return _height
             end,
+
+            --- Sets the MiniConsole's user-defined height.
+            --- @function self.Height.set
+            --- @tparam number value
             set = function (value)
                 _height = value
                 updateAbsolutes()
@@ -240,15 +214,25 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteHeight = {
+            --- Returns the MiniConsole's actual height.
+            --- @function self.AbsoluteHeight.get
+            --- @treturn number
             get = function ()
                 return _absoluteHeight
             end
         },
 
         WordWrap = {
+            --- Returns the MiniConsole's word wrap.
+            --- @function self.WordWrap.get
+            --- @treturn number|string
             get = function ()
                 return _wordWrap
             end,
+
+            --- Sets the MiniConsole's word wrap.
+            --- @function self.WordWrap.set
+            --- @tparam number|string value Only acceptable string is "dynamic".
             set = function (value)
                 _wordWrap = value
 
@@ -264,15 +248,25 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteWrap = {
+            --- Returns the MiniConsole's actual word wrap.
+            --- @function self.AbsoluteWrap.get
+            --- @treturn number
             get = function ()
                 return _absoluteWordWrap
             end
         },
 
         FontSize = {
+            --- Returns the MiniConsole's font size.
+            --- @function self.FontSize.get
+            --- @treturn number|string
             get = function ()
                 return _fontSize
             end,
+
+            --- Sets the MiniConsole's font size.
+            --- @function self.FontSize.set
+            --- @tparam number|string value Only acceptable string is "dynamic".
             set = function (value)
                 _fontSize = value
 
@@ -288,16 +282,17 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         AbsoluteSize = {
+            --- Returns the MiniConsole's actual font size.
+            --- @function self.AbsoluteSize.get
+            --- @treturn number
             get = function ()
                 return _absoluteFontSize
             end
         }
     }
 
-    --[[
-        Function: Draw
-            Draws the MiniConsole. Should only be called internally.
-    ]]
+    --- Draws the MiniConsole.
+    --- Should only be called internally.
     function self:Draw ()
         if not _container then
             error(string.format("Vyzor: Tried to Draw a MiniConsole (%s) without a parent Frame.", _name), 2)
@@ -310,13 +305,9 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         setWindowWrap(_name, _absoluteWordWrap)
     end
 
-    --[[
-        Function: Resize
-
-        Parameters:
-            width - New relative width of the MiniConsole.
-            height - New relative height of the MiniConsole.
-    ]]
+    --- Changes the MiniConsole's size.
+    --- @number width New width of the MiniConsole.
+    --- @number height New height of the MiniConsole.
     function self:Resize (width, height)
         _width = width or _width
         _height = height or _height
@@ -328,13 +319,9 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         setMiniConsoleFontSize(_name, _absoluteFontSize)
     end
 
-    --[[
-        Function: Move
-
-        Parameters:
-            x - New relative X coordinate of the MiniConsole.
-            y - New relative Y coordinate of the MiniConsole.
-    ]]
+    --- Moves the MiniConsole.
+    --- @number x New relative X coordinate of the MiniConsole.
+    --- @number y New relative Y coordinate of the MiniConsole.
     function self:Move (x, y)
         _x = x or _x
         _y = y or _y
@@ -344,79 +331,50 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         moveWindow(_name, _absoluteX, _absoluteY)
     end
 
-    --[[
-        Function: Hide
-    ]]
+    --- Hides the MiniConsole.
     function self:Hide ()
         hideWindow(_name)
     end
 
-    --[[
-        Function: Show
-    ]]
+    --- Shows the MiniConsole.
     function self:Show ()
         showWindow(_name)
     end
 
-    --[[
-        Function: Echo
-            Displays text on a MiniConsole. Starts where the last
-            line left off.
-
-        Parameters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on a MiniConsole.
+    --- Starts where the last line left off.
+    --- @string text
     function self:Echo (text)
         echo(_name, text)
     end
 
-    --[[
-        Function: HEcho
-            Displays text on a MiniConsole with Hex color formatting.
-
-        Paramaters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on a MiniConsole with Hex color formatting.
+    --- @string text
     function self:HEcho (text)
         hecho(_name, text)
     end
 
-    --[[
-        Function: CEcho
-            Displays text on a MiniConsole with colour tags.
-
-        Paramaters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on a MiniConsole with colour tags.
+    --- @string text
     function self:CEcho (text)
         cecho(_name, text)
     end
 
-    --[[
-        Function: DEcho
-            Displays text on a MiniConsole with some crazy-ass formatting.
-
-        Paramaters:
-            text - The text to be displayed.
-            foregroundColor - The foreground color of the text.
-            backgroundColor - The background color of the text.
-            useInsertText - If true, uses InsertText() instead of echo().
-    ]]
+    --- Displays text on a MiniConsole with some crazy-ass formatting.
+    --- @string text
+    --- @param foregroundColor The foreground color of the text.
+    --- @param backgroundColor The background color of the text.
+    --- @bool useInsertText If true, uses InsertText() instead of echo().
     function self:DEcho (text, foregroundColor, backgroundColor, useInsertText)
         decho(text, foregroundColor, backgroundColor, useInsertText, _name)
     end
 
-    --[[
-        Function: EchoLink
-            Displays a clickable line of text in a MiniConsole.
-
-        Parameters:
-            text - The text to be displayed.
-            command - Script to be executed when clicked.
-            tooltipText - Tooltip text.
-            keepFormat - If true, uses Frame text formatting.
-            useInsertText - If true, uses InsertText() instead of Echo()
-    ]]
+    --- Displays a clickable line of text in a MiniConsole.
+    --- @string text
+    --- @tparam function|string command Script to be executed when clicked.
+    --- @string tooltipText
+    --- @bool keepFormat If true, uses Frame text formatting.
+    --- @bool useInsertText If true, uses InsertText() instead of Echo()
     function self:EchoLink (text, command, tooltipText, keepFormat, useInsertText)
         if not useInsertText then
             echoLink(_name, text, command, tooltipText, keepFormat)
@@ -425,17 +383,12 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         end
     end
 
-    --[[
-        Function: EchoPopup
-            Clickable text that expands out to a menu.
-
-        Parameters:
-            text - The text to be displayed.
-            commands - A table of scripts to be executed.
-            tooltipTexts - A table of tooltips.
-            keepFormat - If true, uses MiniConsole text formatting.
-            useInsertText - If true, uses InsertText() insead of Echo().
-    ]]
+    --- Clickable text that expands out to a menu.
+    --- @string text
+    --- @tparam table commands A table of scripts to be executed.
+    --- @tparam table tooltipTexts A table of tooltips.
+    --- @bool keepFormat If true, uses MiniConsole text formatting.
+    --- @bool useInsertText If true, uses InsertText() instead of Echo()
     function self:EchoPopup (text, commands, tooltipTexts, keepFormat, useInsertText)
         if not useInsertText then
             echoPopup(_name, text, commands, tooltipTexts, keepFormat)
@@ -444,33 +397,23 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         end
     end
 
-    --[[
-        Function: Paste
-            Copies text to the MiniConsole from the clipboard (via copy()).
-            Clears the window first.
-    ]]
+    --- Copies text to the MiniConsole from the clipboard (via copy()).
+    --- Clears the window first.
     function self:Paste ()
         selectCurrentLine()
         copy()
         paste(_name)
     end
 
-    --[[
-        Function: Append
-            Copies text to the MiniConsole from a buffer or
-            the clipboard (via copy()).
-            Adds the text beginning at a new line.
-    ]]
+    --- Copies text to the MiniConsole from a buffer or the clipboard (via copy()).
+    --- Adds the text beginning at a new line.
     function self:Append ()
         selectCurrentLine()
         copy()
         appendBuffer(_name)
     end
 
-    --[[
-        Function: Clear
-            Clears all text from the MiniConsole.
-    ]]
+    --- Clears all text from the MiniConsole
     function self:Clear ()
         clearWindow(_name)
     end

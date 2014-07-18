@@ -1,58 +1,27 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- Defines a Frame's Background.
+--- @classmod Background
 
 local Base = require("vyzor.base")
 local Alignment = require("vyzor.enum.alignment")
 local Repeat = require("vyzor.enum.repeat")
 
---[[
-    Class: Background
-        Defines a Background Component.
-]]
 local Background = Base("Component", "Background")
 
---[[
-    Constructor: new
-
-    Parameters:
-        initialContent - Either a <Brush> or <Image> Component.
-        initialAlignment - Initial <Alignment> of the Background content. Default is top-left.
-        initialRepeatMode - Initial <Repeat> rules for the Background content. Default is repeat-xy.
-
-    Returns:
-        A new Background Component.
-]]
+--- Background Constructor
+--- @function Background
+--- @tparam Brush|Image initialContent What the Background displays.
+--- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment Where the content sits in the Background.
+--- @tparam[opt=Repeat.RepeatXY] Repeat initialRepeatMode Tiling rules for the content.
+--- @treturn Background
 local function new (_, initialContent, initialAlignment, initialRepeatMode)
-    --[[
-        Structure: New Background
-            A Component defining a <Frame's> background.
-    ]]
+    --- @type Background
     local self = {}
 
-    -- Object: _content
-    -- Either an Image Component or a Brush Component.
     local _content = initialContent
-
-    -- Object: _alignment
-    -- An Alignment Enum. Defaults to TopLeft.
     local _alignment = (initialAlignment or Alignment.TopLeft)
-
-    -- Object: _repeatMode
-    -- A Repeat Enum. Defaults to RepeatXY.
     local _repeatMode = (initialRepeatMode or Repeat.RepeatXY)
-
-
-    -- String: _stylesheet
-    -- This Component's Stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Component's <stylesheet>.
-            Used by the containing <Frame>.
-    ]]
     local function updateStylesheet ()
         local styleTable = {
             string.format("background-position: %s", _alignment),
@@ -74,27 +43,34 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
         _stylesheet = table.concat(styleTable, "; ")
     end
 
-    --[[
-        Properties: Background Properties
-            Content - Gets and sets the <Image> or <Brush> used by the Background Component.
-            Alignment - Gets and sets the Background Component's content Alignment.
-            Repeat - Gets and sets the Background Component's Repeat rule.
-            Stylesheet - Updates and returns the Background Component's <stylesheet>.
-    ]]
     local properties = {
         Content = {
+            --- Returns the Image or Brush used in the Background.
+            --- @function self.Content.get
+            --- @treturn Image|Brush
             get = function ()
                 return _content
             end,
+
+            --- Sets the Image or Brush used in the Background.
+            --- @function self.Content.set
+            --- @tparam Image|Brush value
             set = function (value)
                 _content = value
             end,
         },
 
         Alignment = {
+            --- Returns the Background's content Alignment.
+            --- @function self.Alignment.get
+            --- @treturn Alignment
             get = function ()
                 return _alignment
             end,
+
+            --- Sets the Background's content Alignment.
+            --- @function self.Alignment.set
+            --- @tparam Alignment value
             set = function (value)
                 if Alignment:IsValid(value) then
                     _alignment = value
@@ -103,9 +79,16 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
         },
 
         Repeat = {
+            --- Returns the Background's content tiling rules.
+            --- @function self.Repeat.get
+            --- @treturn Repeat
             get = function ()
                 return _repeatMode
             end,
+
+            --- Sets the Background's content tiling rules.
+            --- @function self.Repeat.set
+            --- @tparam Repeat value
             set = function (value)
                 if Repeat:IsValid(value) then
                     _repeatMode = value
@@ -114,6 +97,9 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
         },
 
         Stylesheet = {
+            --- Updates and returns the Background's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()

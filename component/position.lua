@@ -1,15 +1,10 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Supercomponent, for use only with Frames.
+--- Responsible for managing the coordinate positioning of the Frame within its parent.
+--- @classmod Position
 
 local Base = require("vyzor.base")
 local BoundingMode = require("vyzor.enum.bounding_mode")
 
---[[
-    Class: Position
-        Defines a Position Supercomponent.
-]]
 local Position = Base("Supercomponent", "Position")
 
 local function calculateAbsoluteCoordinate(rawAxis, containerAxis, dimension)
@@ -34,41 +29,23 @@ local function setBoundedCoordinate(absoluteAxis, minimum, maximum, dimension)
     end
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        _frame - The <Frame> to which this Supercomponent belongs.
-        initialX - The initial x coordinate position.
-        initialY - The initial y coordinate position.
-        _isFirst - Determines whether or not the parent <Frame> is the <HUD>.
-
-    Returns:
-        A new Position Supercomponent.
-]]
+--- Position constructor.
+--- @function Position
+--- @tparam Frame _frame The Frame to which this Supercomponent belongs.
+--- @number[opt=0] initialX The initial x coordinate position.
+--- @number[opt=0] initialY The initial y coordinate position.
+--- @bool _isFirst Determines whether or not the parent Frame is the HUD.
+--- @treturn Position
 local function new (_, _frame, initialX, initialY, _isFirst)
-    --[[
-        Structure: New Position
-            A Supercomponent, for use only with <Frames>.
-            Responsible for managing the coordinate
-            positioning of the <Frame> within its parent.
-            This is only used internally. Not to be exposed.
-    ]]
+    --- @type Position
     local self = {}
 
-    -- Array: _coordinates
-    -- Contains the <Frame's> user-defined coordinates.
     local _coordinates = {
         X = (initialX or 0),
         Y = (initialY or 0),
     }
 
-    -- Array: _absoluteCoordinates
-    -- Contains the <Frame's> generated, window coordinates.
     local _absoluteCoordinates = {}
-
-    -- Array: _contentCoordinates
-    -- Contains the <Frame's> generated, Content Rectangle coordinates.
     local _contentCoordinates = {}
 
     local function updateContent()
@@ -115,12 +92,6 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         }
     end
 
-    --[[
-        Function: updateAbsolute
-            Generates the absolute coordinates (<abs_coords>) of
-            the <Frame>.
-            Also used to generate the content coordinates (<content_coords>).
-    ]]
     local function updateAbsolutes()
         -- The HUD.
         if _isFirst then
@@ -155,20 +126,11 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         updateContent()
     end
 
-    --[[
-        Properties: Position Properties
-            Coordinates - Gets and sets the relative (user-defined) coordinates (<coords>) of the <Frame>.
-            Absolute - Returns the coordinates of the <Frame> within the Mudlet window (<abs_coords>).
-            Content - Returns the coordinates of the Content Rectangle within the Mudlet window (<content_coords>).
-            X - Gets and sets the relative (user-defined) x value of the Frame.
-            Y - Gets and sets the relative (user-defined) y value of the Frame.
-            AbsoluteX - Returns the X value of the Frame within the Mudlet window.
-            AbsoluteY - Returns the Y value of the Frame within the Mudlet window.
-            ContentX - Returns the X value of the Content Rectangle within the Mudlet window.
-            ContentY - Returns the Y value of the Content Rectangle within the Mudlet window.
-    ]]
     local properties = {
         Coordinates = {
+            --- Returns the user-defined coordinates of the Frame.
+            --- @function self.Coordinates.get
+            --- @treturn table
             get = function ()
                 local copy = {}
 
@@ -178,6 +140,10 @@ local function new (_, _frame, initialX, initialY, _isFirst)
 
                 return copy
             end,
+
+            --- Sets the user-defined coordinates of the Frame.
+            --- @function self.Coordinates.set
+            --- @tparam table value
             set = function (value)
                 _coordinates.X = value.X or value[1]
                 _coordinates.Y = value.Y or value[2]
@@ -186,6 +152,9 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Absolute = {
+            --- Returns the actual coordinates of the Frame.
+            --- @function self.Absolute.get
+            --- @treturn table
             get = function ()
                 if not _absoluteCoordinates.X or not _absoluteCoordinates.Y then
                     updateAbsolutes()
@@ -202,6 +171,9 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Content = {
+            --- Returns the content coordinates of the Frame.
+            --- @function self.Content.get
+            --- @treturn table
             get = function ()
                 if not _contentCoordinates.X or not _contentCoordinates.Y then
                     updateAbsolutes()
@@ -218,9 +190,16 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         X = {
+            --- Returns the user-defined X coordinate of the Frame.
+            --- @function self.X.get
+            --- @treturn number
             get = function ()
                 return _coordinates.X
             end,
+
+            --- Sets the user-defined X coordinate of the Frame.
+            --- @function self.X.set
+            --- @tparam number value
             set = function (value)
                 _coordinates.X = value
 
@@ -231,9 +210,16 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Y = {
+            --- Returns the user-defined Y coordinate of the Frame.
+            --- @function self.Y.get
+            --- @treturn number
             get = function ()
                 return _coordinates.Y
             end,
+
+            --- Sets the user-defined Y coordinate of the Frame.
+            --- @function self.Y.set
+            --- @tparam number value
             set = function (value)
                 _coordinates.Y = value
 
@@ -244,6 +230,9 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         AbsoluteX = {
+            --- Returns the actual X coordinate of the Frame.
+            --- @function self.AbsoluteX.get
+            --- @treturn number
             get = function ()
                 if not _absoluteCoordinates.X then
                     updateAbsolutes()
@@ -251,7 +240,11 @@ local function new (_, _frame, initialX, initialY, _isFirst)
                 return _absoluteCoordinates.X
             end
         },
+
         AbsoluteY = {
+            --- Returns the actual Y coordinate of the Frame.
+            --- @function self.AbsoluteY.get
+            --- @treturn number
             get = function ()
                 if not _absoluteCoordinates.Y then
                     updateAbsolutes()
@@ -262,6 +255,9 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         ContentX = {
+            --- Returns the X coordinate of the Frame content.
+            --- @function self.ContentX.get
+            --- @treturn number
             get = function ()
                 if not _contentCoordinates.X then
                     updateAbsolutes()
@@ -272,6 +268,9 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         ContentY = {
+            --- Returns the Y coordinate of the Frame content.
+            --- @function self.ContentY.get
+            --- @treturn number
             get = function ()
                 if not _contentCoordinates.Y then
                     updateAbsolutes()

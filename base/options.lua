@@ -1,80 +1,66 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- Maintains option state for all of Vyzor.
+--- @module Options
 
 local Lib = require("vyzor.lib")
 local VyzorBorder = require("vyzor.enum.vyzorborder")
 
---[[
-	Structure: Options
-		This object maintains option state for Vyzor.
-]]
 local Options = {}
 
--- Array: DEFAULT_DRAW_ORDER
--- Default draw order for Border Frames.
 local DEFAULT_DRAW_ORDER = { VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }
-
--- Array: _drawOrder
--- Determines layering for Border Frames.
 local _drawOrder = DEFAULT_DRAW_ORDER
 
--- Array: DEFAULT_BORDERS
--- Default state for Border Frames.
 local DEFAULT_BORDERS = {
 	Top = "dynamic",
 	Bottom = "dynamic",
 	Right = "dynamic",
 	Left = "dynamic"
 }
-
--- Array: _borders
--- Determines Border Frame size.
 local _borders = DEFAULT_BORDERS
 
--- Boolean: DEFAULT_BORDER_HANDLING
--- Default setting for determing whether or not Vyzor handles
--- Mudlet's borders.
 local DEFAULT_BORDER_HANDLING = "auto"
-
--- Boolean: _borderHandling
--- Determines whether or not Vyzor handles Mudlet's borders.
 local _borderHandling = DEFAULT_BORDER_HANDLING
 
--- Double: DEFAULT_CONSOLE_HEIGHT
--- Default height of main console is window height.
 local _, DEFAULT_CONSOLE_HEIGHT = getMainWindowSize()
-
--- Double: _consoleHeight
--- User-defined height for main console.
 local _consoleHeight = DEFAULT_CONSOLE_HEIGHT
 
---[[
-	Properties: Option Properties
-		DrawOrder 		- Determines z-layer ordering for Border Frames.
-		Borders 		- Returns a table containing options.
-							Sets Border options via a table.
-		ConsoleHeight 	- Sets and gets a user-defined main console height.
-		HandleBorders	- Gets and sets a value that determines whether or not Vyzor
-							handles Mudlet's borders. If true, then Vyzor will always
-							resize Mudlet's borders. If auto, it will only assume control
-							after the Vyzor.HUD:Draw() has been called.
-]]
+--- Resets all option to their default values.
+function Options:Reset()
+    _drawOrder = DEFAULT_DRAW_ORDER
+    _borders = DEFAULT_BORDERS
+    _consoleHeight = DEFAULT_CONSOLE_HEIGHT
+    _borderHandling = DEFAULT_BORDER_HANDLING
+
+    raiseEvent("sysWindowResizeEvent")
+end
+
 local properties = {
 	DrawOrder = {
+        --- Returns the z-layer ordering for Border Frames.
+        --- @function DrawOrder.get
+        --- @treturn table
 		get = function ()
 			return _drawOrder
 		end,
+
+        --- Sets the z-layer ordering for Border Frames.
+        --- @function DrawOrder.set
+        --- @tparam table value A table containing VyzorBorder enums.
 		set = function (value)
 			_drawOrder = value
 		end,
 	},
 
 	Borders = {
+        --- Returns the options for Border Frame resizing.
+        --- @function Borders.get
+        --- @treturn table
 		get = function ()
 			return _borders
 		end,
+
+        --- Sets the options for Border Frame resizing.
+        --- @function Borders.set
+        --- @tparam table value A table containing VyzorBorder keys.
 		set = function (value)
 			local changedBorders = {}
 			local previousBorders = _borders
@@ -90,7 +76,7 @@ local properties = {
 			-- values.
 			for name, border in pairs(_borders) do
 				if border ~= previousBorders[name] then
-					changedBorders[#changedBorders +1] = name
+					changedBorders[#changedBorders + 1] = name
 				end
 			end
 
@@ -132,9 +118,16 @@ local properties = {
 	},
 
 	ConsoleHeight = {
+        --- Returns the console height as managed by Vyzor.
+        --- @function ConsoleHeight.get
+        --- @treturn number
 		get = function ()
 			return _consoleHeight
 		end,
+
+        --- Sets the console height to be managed by Vyzor.
+        --- @function ConsoleHeight.set
+        --- @number value The height of the main console.
 		set = function (value)
 			_consoleHeight = value
 			raiseEvent("sysWindowResizeEvent")
@@ -142,9 +135,17 @@ local properties = {
 	},
 
 	HandleBorders = {
+        --- Returns the method Vyzor is using to handle resizing Border Frames.
+        --- @function HandleBorders.get
+        --- @treturn string|bool
 		get = function ()
 			return _borderHandling
 		end,
+
+        --- Determines how Vyzor handles the resizing of Border Frames.
+        --- @function HandleBorders.set
+        --- @tparam string|bool value If true, then Vyzor will always resize Mudlet's borders.
+        --- If auto, it will only assume control after the Vyzor.HUD:Draw() has been called.
 		set = function (value)
 			_borderHandling = value
 
@@ -154,19 +155,6 @@ local properties = {
 		end
 	},
 }
-
---[[
-	Function: Reset
-		Resets all Options to default values.
-]]
-function Options:Reset ()
-	_drawOrder = DEFAULT_DRAW_ORDER
-	_borders = DEFAULT_BORDERS
-	_consoleHeight = DEFAULT_CONSOLE_HEIGHT
-	_borderHandling = DEFAULT_BORDER_HANDLING
-
-	raiseEvent("sysWindowResizeEvent")
-end
 
 setmetatable(Options, {
 	__index = function (_, key)

@@ -1,35 +1,19 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- Instantiates the HUD, the master @{Frame}.
+--- This Frame is virtual, and is not drawn.
+--- @script HUD
 
 local Frame = require("vyzor.base.frame")
 local Options = require("vyzor.base.options")
 local VyzorBorder = require("vyzor.enum.vyzorborder")
 
 local _windowWidth, _windowHeight = getMainWindowSize()
---[[
-    Structure: HUD
-        This is the primary Vyzor <Frame>, responsible for managing
-        all other Frames. The HUD itself is not a Label, but it
-        does create and maintain four Frames as Labels that give
-        shape to Mudlet's Borders.
-]]
+
 local HUD = Frame("Vyzor", 0, 0, _windowWidth, _windowHeight)
 HUD.IsBounding = true
 
--- Double: _consoleWidth
--- The width of the main console.
 local _consoleWidth = getMainConsoleWidth()
-
--- Double: _consoleHeight
--- The height of the main console.
--- Currently set manually via Vyzor.Options.
 local _consoleHeight = Options.ConsoleHeight
 
--- Array: _borders
--- Contains Vyzor's Border information. Used to manage
--- Mudlet's Borders.
 local _borders = {
     Top = 0,
     Right = 0,
@@ -37,15 +21,6 @@ local _borders = {
     Left = 0
 }
 
---[[
-    Function: updateBorders
-        Updates Mudlet's Borders.
-        This uses values defined in options.lua. The default is dynamic,
-        which uses all available space surrounding the main console.
-        This means that there is no top or bottom by default, but
-        that can easily be changed. This is called every time the Mudlet
-        window is resized.
-]]
 local function updateBorders ()
     local options = Options.Borders
     local newBorders = {}
@@ -141,16 +116,12 @@ local vyzorLeft = "Vyzor" .. VyzorBorder.Left
 local vyzorBottom = "Vyzor" .. VyzorBorder.Bottom
 local vyzorRight = "Vyzor" .. VyzorBorder.Right
 
--- Object: VyzorTop
--- The Frame defined by Mudlet's top border.
 local top = Frame(vyzorTop,
     0,
     0,
     1.0,
     (Options.Borders[VyzorBorder.Top] == "dynamic" and _borders[VyzorBorder.Top]) or Options.Borders[VyzorBorder.Top])
 
--- Object: VyzorLeft
--- The Frame defined by Mudlet's left border.
 local left = Frame(vyzorLeft,
     0,
     0,
@@ -172,16 +143,12 @@ do
         end
     end
 
-    -- Object: VyzorBottom
-    -- The Frame defined by Mudlet's bottom border.
     bottom = Frame(vyzorBottom,
         0,
         calculateBorderPosition(_windowHeight, Options.Borders[VyzorBorder.Bottom], _borders[VyzorBorder.Bottom]),
         1.0,
         (Options.Borders[VyzorBorder.Bottom] == "dynamic" and _borders[VyzorBorder.Bottom]) or Options.Borders[VyzorBorder.Bottom])
 
-    -- Object: VyzorRight
-    -- The Frame defined by Mudlet's right border.
     right = Frame(vyzorRight,
         calculateBorderPosition(_windowWidth, Options.Borders[VyzorBorder.Right], _borders[VyzorBorder.Right]),
         0,
@@ -198,12 +165,8 @@ HUD:Add(left)
 -- I hate to do this, but must make a global function to handle resize. =\
 local _Resizing
 
---[[
-    Event: VyzorResize
-        Handles Mudlet's window resizing via anonymous Event.
-        This is called whenever Mudlet is resizes. Also used to
-        readjust Frames after options are changed.
-]]
+--- Handler for Mudlet's sysWindowResizeEvent.
+--- Also updates Vyzor's state after option have been changed.
 function VyzorResize ()
     -- If this isn't here, it tries to resize while it's
     -- resizing, which caused some kind of infinite loop.

@@ -1,95 +1,49 @@
+--- Vyzor, UI Manager for Mudlet
+--- @module Vyzor
+
 -- TODO: Remove NaturalDocs comments. Replace with LuaDoc?
--- TODO: Do Size and Position need to be separated from Frames?
+-- TODO: GitHub license file?
 
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
-
---[[
-    Structure: Vyzor
-        The primary Vyzor module, which holds all other modules.
-]]
+--- The primary interface, exposing the Vyzor API.
+--- @table Vyzor
 local Vyzor = {
-    -- Object: Frame
-    -- See Frame.
-    Frame = require("vyzor.base.frame"),
+    Frame = require("vyzor.base.frame"), --- See @{Frame}.
 
-    --[[
-        Objects: Components
-            Background - See Background.
-            Border - See Border.
-            BorderSide - See BorderSide.
-            Brush - See Brush.
-            Color - See Color.
-            Font - See Font.
-            Gradient - See Gradient.
-            Hover - See Hover.
-            Image - See Image.
-            Map - See Map.
-            Margin - See Margin.
-            MiniConsole - See MiniConsole.
-            Padding - See Padding.
-    ]]
-    Background = require("vyzor.component.background"),
-    Border = require("vyzor.component.border"),
-    BorderSide = require("vyzor.component.border_side"),
-    Brush = require("vyzor.component.brush"),
-    Color = require("vyzor.component.color"),
-    Font = require("vyzor.component.font"),
-    Gradient = require("vyzor.component.gradient"),
-    Hover = require("vyzor.component.hover"),
-    Image = require("vyzor.component.image"),
-    Map = require("vyzor.component.map"),
-    Margin = require("vyzor.component.margin"),
-    MiniConsole = require("vyzor.component.mini_console"),
-    Padding = require("vyzor.component.padding"),
+    Background = require("vyzor.component.background"), --- See @{Background}.
+    Border = require("vyzor.component.border"), --- See @{Border}.
+    BorderSide = require("vyzor.component.border_side"), --- See @{BorderSide}.
+    Brush = require("vyzor.component.brush"), --- See @{Brush}.
+    Color = require("vyzor.component.color"), --- See @{Color}.
+    Font = require("vyzor.component.font"), --- See @{Font}.
+    Gradient = require("vyzor.component.gradient"), --- See @{Gradient}.
+    Hover = require("vyzor.component.hover"), --- See @{Hover}.
+    Image = require("vyzor.component.image"), --- See @{Image}.
+    Map = require("vyzor.component.map"), --- See @{Map}.
+    Margin = require("vyzor.component.margin"), --- See @{Margin}.
+    MiniConsole = require("vyzor.component.mini_console"), --- See @{MiniConsole}.
+    Padding = require("vyzor.component.padding"), --- See @{Padding}.
 
-    --[[
-        Objects: Enums
-            Alignment - See Alignment.
-            BorderStyle - See BorderStyle.
-            BoundingMode - See BoundingMode.
-            BoxMode - See BoxMode.
-            ColorMode - See ColorMode.
-            FontDecoration - See FontDecoration.
-            FontStyle - See FontStyle.
-            FontWeight - See FontWeight.
-            GaugeFill - See GaugeFill.
-            GradientMode - See GradientMode.
-            Repeat - See Repeat.
-            TabLocation - See TabLocation.
-    ]]
-    Alignment = require("vyzor.enum.alignment"),
-    BorderStyle = require("vyzor.enum.border_style"),
-    BoundingMode = require("vyzor.enum.bounding_mode"),
-    BoxMode = require("vyzor.enum.box_mode"),
-    ColorMode = require("vyzor.enum.color_mode"),
-    FontDecoration = require("vyzor.enum.font_decoration"),
-    FontStyle = require("vyzor.enum.font_style"),
-    FontWeight = require("vyzor.enum.font_weight"),
-    GaugeFill = require("vyzor.enum.gauge_fill"),
-    GradientMode = require("vyzor.enum.gradient_mode"),
-    Repeat = require("vyzor.enum.repeat"),
-    TabLocation = require("vyzor.enum.tab_location"),
+    Alignment = require("vyzor.enum.alignment"), --- See 2{Alignment}.
+    BorderStyle = require("vyzor.enum.border_style"), --- See 2{BorderStyle}.
+    BoundingMode = require("vyzor.enum.bounding_mode"), --- See 2{BoundingMode}.
+    BoxMode = require("vyzor.enum.box_mode"), --- See 2{BoxMode}.
+    ColorMode = require("vyzor.enum.color_mode"), --- See 2{ColorMode}.
+    FontDecoration = require("vyzor.enum.font_decoration"), --- See 2{FontDecoration}.
+    FontStyle = require("vyzor.enum.font_style"), --- See 2{FontStyle}.
+    FontWeight = require("vyzor.enum.font_weight"), --- See 2{FontWeight}.
+    GaugeFill = require("vyzor.enum.gauge_fill"), --- See 2{GaugeFill}.
+    GradientMode = require("vyzor.enum.gradient_mode"), --- See 2{GradientMode}.
+    Repeat = require("vyzor.enum.repeat"), --- See 2{Repeat}.
+    TabLocation = require("vyzor.enum.tab_location"), --- See 2{TabLocation}.
+    VyzorBorder = require("vyzor.enum.vyzorborder"), --- See 2{VyzorBorder}.
 
-    --[[
-        Objects: Compounds
-            Box - See Box.
-            Chat - See Chat.
-            Gauge - See Gauge.
-    ]]
-    Box = require("vyzor.compound.box"),
-    Chat = require("vyzor.compound.chat"),
-    Gauge = require("vyzor.compound.gauge"),
+    Box = require("vyzor.compound.box"), --- See 2{Box}.
+    Chat = require("vyzor.compound.chat"), --- See 2{Chat}.
+    Gauge = require("vyzor.compound.gauge"), --- See 2{Gauge}.
 
-    -- Object: Options
-    -- See Options.
-    Options = require("vyzor.base.options"),
+    Options = require("vyzor.base.options"), --- See @{Options}.
 
-    -- Object: HUD
-    -- See HUD.
-    HUD = require("vyzor.base.hud"),
+    HUD = require("vyzor.base.hud"), --- See @{HUD}.
 }
 
 if exists("vyzor", "alias") == 0 then
@@ -104,15 +58,14 @@ if openWebPage then
 else
     openUrl(getMudletHomeDir():gsub("\\", "/") .. "/vyzor/doc/index.html")
 end
-        ]]
-)
+        ]])
 end
 
 setmetatable(Vyzor, {
-    __index = function (_, key)
+    __index = function(_, key)
         return Vyzor.HUD.Frames["Vyzor" .. key]
     end,
-    __newindex = function (_, key, value)
+    __newindex = function(_, key, value)
         error("Vyzor: May not write directly to Vyzor table.", 2)
     end,
 })

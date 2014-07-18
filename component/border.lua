@@ -1,16 +1,10 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Component that defines a Frame's Border.
+--- @classmod Border
 
 local Base = require("vyzor.base")
 local BorderSide = require("vyzor.component.border_side")
 local BorderStyle = require("vyzor.enum.border_style")
 
---[[
-    Class: Border
-        Defines the Border Component.
-]]
 local Border = Base("Component", "Border")
 
 local function getWidthString(width)
@@ -28,44 +22,22 @@ local function getWidthString(width)
     end
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        initialWidth - The Border Component's initial width. May be a number or a table of numbers.
-        initialStyle - The Border Component's initial <BorderStyle>. Defaults to None.
-        initialContent - The Border Component's initial content. Can be an <Image>, <Brush>, or table of <Brushes>.
-        initialRadius - The Border Component's initial radius, for rounded corners. Can be a number or a table of numbers.
-        initialBorders - The Border Component's initial <BorderSide> Subcomponents. Must be a table containing one to four <BorderSides>.
-
-    Returns:
-        A new Border Component.
-]]
+--- Border constructor.
+--- @function Border
+--- @tparam number|table initialWidth The Border Component's initial width. May be a number or a table of numbers.
+--- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The Border Component's initial BorderStyle.
+--- @tparam Image|Brush|table initialContent The Border Component's initial content.
+--- @tparam[opt=0] number|table initialRadius The Border Component's initial radius, for rounded corners.
+--- @tparam table initialBorders The Border Component's initial BorderSide Subcomponents. Must be a table containing one to four BorderSides.
+--- @treturn Border
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius, initialBorders)
-    --[[
-        Structure: New Border
-            A Component that defines a <Frame's> Border.
-    ]]
+    --- @type Border
     local self = {}
 
-    -- Double: _width
-    -- The Border's width. Defaults to 0.
     local _width = initialWidth or 0
-
-    -- Object: _style
-    -- The Border's <BorderStyle>. Defaults to None.
     local _style = initialStyle or BorderStyle.None
-
-    -- Object: _content
-    -- The Border's Brush or Image Component.
     local _content = initialContent
-
-    -- Double: _radius
-    -- The Border's radius. Makes rounded corners. Defaults to 0.
     local _radius = initialRadius or 0
-
-    -- Array: _borders
-    -- A table holding <BorderSide> Subcomponents.
     local _borders
 
     if initialBorders and type(initialBorders) == "table" then
@@ -78,14 +50,8 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         _borders["left"] = initialBorders["left"] or initialBorders[4] or defaultSide
     end
 
-    -- String: _stylesheet
-    -- The Border's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Border Component's <stylesheet>.
-    ]]
     local function updateStylesheet ()
         local styleTable = {
             getWidthString(_width),
@@ -114,22 +80,18 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         _stylesheet = table.concat(styleTable, "; ")
     end
 
-    --[[
-        Properties: Border Properties
-            Style - Gets and sets the <BorderStyle> Component.
-            Width - Gets and sets the Border Component's width.
-            Content - Gets and sets the Border Component's Brush or Image Component.
-            Top - Gets and sets an individual <BorderSide> Subcomponent.
-            Right - Gets and sets an individual <BorderSide> Subcomponent.
-            Bottom - Gets and sets an individual <BorderSide> Subcomponent.
-            Left - Gets and sets an individual <BorderSide> Subcomponent.
-            Stylesheet - Updates and returns the Border Component's <stylesheet>.
-    ]]
     local properties = {
         Style = {
+            --- Returns the Border's BorderStyle.
+            --- @function self.Style.get
+            --- @treturn BorderStyle
             get = function ()
                 return _style
             end,
+
+            --- Sets the Border's BorderStyle.
+            --- @function self.Style.set
+            --- @tparam BorderStyle value
             set = function (value)
                 assert(BorderStyle:IsValid(value), "Vyzor: Invalid BorderStyle passed to Border.")
                 _style = value
@@ -137,6 +99,9 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Width = {
+            --- Returns the Border's width.
+            --- @function self.Width.get
+            --- @treturn number|table
             get = function ()
                 if type(_width) == "table" then
                     local copy = {}
@@ -150,12 +115,19 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
                     return _width
                 end
             end,
+
+            --- Sets the Border's width.
+            --- @function self.Width.set
+            --- @tparam number|table value
             set = function (value)
                 _width = value
             end,
         },
 
         Content = {
+            --- Returns the Border's content.
+            --- @function self.Content.get
+            --- @treturn Image|Brush|table
             get = function ()
                 if type(_content) ~= "table" then
                     return _content
@@ -169,48 +141,83 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
                     return copy
                 end
             end,
+
+            --- Sets the Border's content.
+            --- @function self.Content.set
+            --- @param Image|Brush|table value
             set = function (value)
                 _content = value
             end,
         },
 
         Top = {
+            --- Returns the Border's top BorderSide Component.
+            --- @function self.Top.get
+            --- @treturn table
             get = function ()
                 return (_borders and _borders["top"]) or nil
             end,
+
+            --- Sets the Border's top BorderSide Component.
+            --- @function self.Top.set
+            --- @tparam BorderSide value
             set = function (value)
                 _borders["top"] = value
             end
         },
 
         Right = {
+            --- Returns the Border's right BorderSide Component.
+            --- @function self.Right.get
+            --- @treturn table
             get = function ()
                 return (_borders and _borders["right"]) or nil
             end,
+
+            --- Sets the Border's right BorderSide Component.
+            --- @function self.Right.set
+            --- @tparam BorderSide value
             set = function (value)
                 _borders["right"] = value
             end
         },
 
         Bottom = {
+            --- Returns the Border's bottom BorderSide Component.
+            --- @function self.Bottom.get
+            --- @treturn table
             get = function ()
                 return (_borders and _borders["bottom"]) or nil
             end,
+
+            --- Sets the Border's bottom BorderSide Component.
+            --- @function self.Bottom.set
+            --- @tparam BorderSide value
             set = function (value)
                 _borders["bottom"] = value
             end
         },
 
         Left = {
+            --- Returns the Border's left BorderSide Component.
+            --- @function self.Left.get
+            --- @treturn table
             get = function ()
                 return (_borders and _borders["left"]) or nil
             end,
+
+            --- Sets the Border's left BorderSide Component.
+            --- @function self.Left.set
+            --- @tparam BorderSide value
             set = function (value)
                 _borders["left"] = value
             end
         },
 
         Stylesheet = {
+            --- Updates and returns the Border's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()

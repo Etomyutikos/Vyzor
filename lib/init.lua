@@ -1,8 +1,3 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
-
 --[[
     Structure: Lib
         A utility table, holding miscellaneous functions and

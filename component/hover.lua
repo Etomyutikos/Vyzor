@@ -1,36 +1,18 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- This Component defines Frame behaviour on mouse-over and may contain other Components.
+--- @classmod Hover
 
 local Base = require("vyzor.base")
 local Lib = require("vyzor.lib")
 
---[[
-    Class: Hover
-        Defines a Hover Component.
-]]
 local Hover = Base("Component", "Hover")
 
---[[
-    Constructor: new
-
-    Parameters:
-        initialComponents - A table of Components to be contained in this Hover Component. Optional.
-
-    Returns:
-        A new Hover Component.
-]]
+--- Hover constructor.
+--- @function Hover
+--- @tparam[opt] table initialComponents A table of Components to be contained in this Hover Component.
 local function new (_, initialComponents)
-    --[[
-        Structure: New Hover
-            This Component defines <Frame> behaviour on mouse-over,
-            and may contain other Components much like <Frames>.
-    ]]
+    --- @type Hover
     local self = {}
 
-    -- Array: _components
-    -- A table of Components.
     local _components = Lib.OrderedTable()
 
     if initialComponents then
@@ -42,16 +24,8 @@ local function new (_, initialComponents)
         end
     end
 
-    -- String: _stylesheet
-    -- Hover Component's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Hover Component's <stylesheet>.
-            The string generated is a combination of all Components'
-            stylesheets.
-    ]]
     local function updateStylesheet ()
         if _components:count() > 0 then
             local _styleTable = {}
@@ -67,13 +41,11 @@ local function new (_, initialComponents)
         end
     end
 
-    --[[
-        Properties: Hover Properties
-            Components - Returns a table copy of Hover Component's contained Components.
-            Stylesheet - Updates and returns the Hover Component's <stylesheet>.
-    ]]
     local properties = {
         Components = {
+            --- Returns the Hover Component's Components.
+            --- @function self.Components.get
+            --- @treturn table
             get = function ()
                 if _components:count() > 0 then
                     local copy = {}
@@ -88,6 +60,9 @@ local function new (_, initialComponents)
         },
 
         Stylesheet = {
+            --- Updates and returns the Hover Component's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()
@@ -98,39 +73,24 @@ local function new (_, initialComponents)
         },
     }
 
-    --[[
-        Function: Add
-            Adds a new Component to the Hover Component.
-
-        Parameters:
-            component - The Component to be added.
-    ]]
+    --- Adds a new Component.
+    --- @tparam Component component
     function self:Add (component)
         if not _components[component.Subtype] then
             _components[component.Subtype] = component
         end
     end
 
-    --[[
-        Function: Remove
-            Removes a Component from the Hover Component.
-
-        Paramaters:
-            subtype - The Subtype of the Component to be removed.
-    ]]
+    --- Removes a Component.
+    --- @string subtype The Subtype of the Component to be removed.
     function self:Remove (subtype)
         if _components[subtype] then
             _components[subtype] = nil
         end
     end
 
-    --[[
-        Function: Replace
-            Replaces a Component in the Hover Component.
-
-        Parameters:
-            component - The Component to be added.
-    ]]
+    --- Replaces a Component.
+    --- @tparam Component component The Component to be added.
     function self:Replace (component)
         _components[component.Subtype] = component
     end

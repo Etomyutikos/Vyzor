@@ -445,8 +445,6 @@ grad_green 	= Vyzor.Color( Vyzor.ColorMode.RGB, 0, &quot;100%&quot;, 0 )
 grad_white 	= Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, &quot;100%&quot;, &quot;100%&quot; )
 
 grad_what 	= Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
-
-
 local lin_grad = Vyzor.Gradient( Vyzor.GradientMode.Linear,
 	0.0, 0.0, 1.0, 1.0,
 	{0.2, grad_red}, {0.4, grad_blue}, {0.6, grad_green}, {0.8, grad_white}, {1.0, grad_what}

@@ -1,59 +1,37 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Component that defines gradiant data.
+--- Used primarily in a Brush Component.
+--- @classmod Gradient
 
 local Base = require("vyzor.base")
 local GradientMode = require("vyzor.enum.gradient_mode")
 
---[[
-    Class: Gradient
-        Defines a Gradient Component.
-]]
 local Gradient = Base("Component", "Gradient")
 
---[[
-    Constructor: new
-        Expected arguments differ depending on mode.
-
-        Linear mode expects a comma-separated list of
-        numbers (x1, y1, x2, y2) followed by any number of
-        stop, color (number, Color Component) pairs.
-
-        Radial mode expects a comma-separated list of
-        numbers (cx, cy, radius, fx, fy) following by any number of
-        stop, color (number, Color Component) pairs.
-
-        Conical mode expects a comma-separated list of
-        numbers (cx, cy, radius, angle) following by any number of
-        stop, color (number, Color Component) pairs.
-
-        All numeric values are expected to between 0.0 and 1.0,
-        to be understood as percentage of Frame size.
-
-        I wish Gradients were easier, but there it is. =p
-
-    Parameters:
-        _mode - The Gradient's mode. Must be a valid <GradientMode> Enum.
-        ... - Gradient data. See description.
-
-    Returns:
-        A new Gradient Component.
-]]
+--- Gradient constructor.
+--- Expected arguments differ depending on mode.
+---
+--- Linear mode expects a comma-separated list of numbers(x1, y1, x2, y2) followed by any number of stop,
+--- color(number, Color Component) pairs.
+---
+--- Radial mode expects a comma-separated list of numbers(cx, cy, radius, fx, fy) following by any number
+--- of stop, color(number, Color Component) pairs.
+---
+--- Conical mode expects a comma-separated list of numbers(cx, cy, radius, angle) following by any number
+--- of stop, color(number, Color Component) pairs.
+---
+--- All numeric values are expected to between 0.0 and 1.0, to be understood as percentage of Frame size.
+--- @function Gradient
+--- @tparam GradientMode _mode Determines Gradient data handling.
+--- @param ... Gradient data. See description.
+--- @treturn Gradient
 local function new (_, _mode, ...)
     local arg = { ... }
     assert(GradientMode:IsValid(_mode), "Vyzor: Invalid mode passed to Gradient.")
 
-    --[[
-        Structure: New Gradient
-            A Component that defines gradient data. Used
-            primarily in a <Brush> Component.
-    ]]
+    --- @type Gradient
     local self = {}
-
-    -- Array: gradient_data
-    -- Contains the Gradient's data.
     local _gradientData
+
     do
         local index
         if _mode:match(GradientMode.Linear) then
@@ -92,15 +70,8 @@ local function new (_, _mode, ...)
         end
     end
 
-    -- String: stylesheet
-    -- The Gradient Component's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Gradient's <stylesheet>.
-            Output is based on <GradientMode>.
-    ]]
     local function updateStylesheet ()
         local styleStops = {}
 
@@ -142,12 +113,18 @@ local function new (_, _mode, ...)
     ]]
     local properties = {
         Mode = {
+            --- Returns the Gradient's GradientMode.
+            --- @function self.Mode.get
+            --- @treturn GradientMode
             get = function ()
                 return _mode
             end,
         },
 
         Data = {
+            --- Returns the data used to construct the Gradient.
+            --- @function self.Data.get
+            --- @treturn table
             get = function ()
                 local copy = {}
 
@@ -160,6 +137,9 @@ local function new (_, _mode, ...)
         },
 
         Stylesheet = {
+            --- Updates and returns the Gradient's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()

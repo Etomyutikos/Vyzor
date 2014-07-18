@@ -1,46 +1,30 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Component that defines color information.
+--- Used primarily in a Brush Component.
+--- @classmod Color
 
 local Base = require("vyzor.base")
 local ColorMode = require("vyzor.enum.color_mode")
 
---[[
-    Class: Color
-        Defines the Brush Component.
-]]
 local Color = Base("Component", "Color")
 
---[[
-    Constructor: new
-        Expected arguments differ depending on mode.
-
-        RGB and HSV modes expect a comma-separated list of 3-4 numbers.
-
-        Name mode expects a single string.
-
-        Hex mode expects a single Hex string.
-
-    Parameters:
-        mode - A <ColorMode> enum, used to determine handling of color data.
-        ... - Color data. See description.
-
-    Returns:
-        A new Color Component.
-]]
+--- Color constructor.
+--- Expected arguments differ depending on mode.
+---
+--- RGB and HSV modes expect a comma-separated list of 3 - 4 numbers.
+---
+--- Name mode expects a single string.
+---
+--- Hex mode expects a single Hex string.
+--- @function Color
+--- @tparam ColorMode _mode Determines handling of color data.
+--- @param ... Color data. See description.
+--- @treturn Color
 local function new (_, _mode, ...)
     local arg = { ... }
 
-    --[[
-        Structure: New Color
-            A Component that defines color information. Used
-            primarily in a <Brush> Component.
-    ]]
+    --- @type Color
     local self = {}
 
-    -- Variable: color_data
-    -- Holds the Component's color data.
     local _colorData
 
     if _mode:find(ColorMode.RGB) then
@@ -67,15 +51,8 @@ local function new (_, _mode, ...)
         end
     end
 
-    -- String: stylesheet
-    -- The Color Component's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Color Component's <stylesheet>.
-            Actual output is dependent on ColorMode.
-    ]]
     local function updateStylesheet ()
         if _mode:find(ColorMode.RGB) then
             _stylesheet = string.format("color: rgba(%s, %s, %s, %s)",
@@ -96,20 +73,20 @@ local function new (_, _mode, ...)
         end
     end
 
-    --[[
-        Properties: Color Properties
-            Mode - Returns the Color Component's <ColorMode> Enum.
-            Data - Returns the <color_data> passed to the Color Component.
-            Stylesheet - Updates and returns the Color's <stylesheet>.
-    ]]
     local properties = {
         Mode = {
+            --- Returns the ColorMode of this Color.
+            --- @function self.Mode.get
+            --- @treturn ColorMode
             get = function ()
                 return _mode
             end
         },
 
         Data = {
+            --- Returns the color data used to construct this Color Component.
+            --- @function self.Data.get
+            --- @treturn string|table
             get = function ()
                 if type(_colorData) == "table" then
                     local copy = {}
@@ -126,6 +103,9 @@ local function new (_, _mode, ...)
         },
 
         Stylesheet = {
+            --- Updates and returns the stylesheet for this Color Component.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()

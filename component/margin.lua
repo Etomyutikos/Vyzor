@@ -1,68 +1,31 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- This Component defines the Margin of a Frame.
+--- The Margin is the exterior part of the Frame.
+--- @classmod Margin
+--- @see http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
 
 local Base = require("vyzor.base")
 
---[[
-    Class: Margin
-        Defines a Margin Component.
-]]
 local Margin = Base("Component", "Margin")
 
---[[
-    Constructor: new
-
-    Parameters:
-        ... - A list of numbers defining the size of each side of the Margin.
-
-    Returns:
-        A new Margin Component.
-]]
+--- Margin constructor.
+--- @function Margin
+--- @param ... A list of numbers defining the size of each side of the Margin.
+--- @treturn Margin
 local function new (_, ...)
     local arg = { ... }
     if not arg[1] then
         error("Vyzor: Must pass at least one size to new Margin.", 2)
     end
 
-    --[[
-        Structure: New Margin
-            This Component defines the Margin of a <Frame>.
-            The Margin is the exterior part of the <Frame>.
-
-        See Also:
-            <http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html>
-    ]]
+    --- @type Margin
     local self = {}
 
-    -- Double: _top
-    -- The size of the top of the Margin.
     local _top = arg[1]
-
-    -- Double: _right
-    -- The size of the right side of the Margin.
-    -- Defaults to <top>.
     local _right = arg[2] or _top
-
-    -- Double: _bottom
-    -- The size of the bottom of the Margin.
-    -- Defaults to <top>.
     local _bottom = arg[3] or _top
-
-    -- Double: _left
-    -- The size of the left side of the Margin.
-    -- Defaults to <right>.
     local _left = arg[4] or _right
-
-    -- String: stylesheet
-    -- The Margin Component's stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Updates the Margin Component's <stylesheet>.
-    ]]
     local function updateStylesheet ()
         _stylesheet = string.format("margin: %s", table.concat({ _top, _right, _bottom, _left }, " "))
     end
@@ -77,42 +40,73 @@ local function new (_, ...)
     ]]
     local properties = {
         Top = {
+            --- Returns the size of the Margin's top.
+            --- @function self.Top.get
+            --- @treturn number
             get = function ()
                 return _top
             end,
+
+            --- Sets the size of the Margin's top.
+            --- @function self.Top.set
+            --- @tparam number value
             set = function (value)
                 _top = value
             end,
         },
 
         Right = {
+            --- Returns the size of the Margin's right.
+            --- @function self.Right.get
+            --- @treturn number
             get = function ()
                 return _right
             end,
+
+            --- Sets the size of the Margin's right.
+            --- @function self.Right.set
+            --- @tparam number value
             set = function (value)
                 _right = value
             end,
         },
 
         Bottom = {
+            --- Returns the size of the Margin's bottom.
+            --- @function self.Bottom.get
+            --- @treturn number
             get = function ()
                 return _bottom
             end,
+
+            --- Sets the size of the Margin's bottom.
+            --- @function self.Bottom.set
+            --- @tparam number value
             set = function (value)
                 _bottom = value
             end,
         },
 
         Left = {
+            --- Returns the size of the Margin's left.
+            --- @function self.Left.get
+            --- @treturn number
             get = function ()
                 return _left
             end,
+
+            --- Sets the size of the Margin's left.
+            --- @function self.Left.set
+            --- @tparam number value
             set = function (value)
                 _left = value
             end,
         },
 
         Stylesheet = {
+            --- Updates and returns the Margin's stylesheet.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()

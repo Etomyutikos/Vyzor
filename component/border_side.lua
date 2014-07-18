@@ -1,67 +1,29 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A subcomponent that defines individual sides of a Border Component.
+--- @classmod BorderSide
 
 local Base = require("vyzor.base")
 local BorderStyle = require("vyzor.enum.border_style")
 
---[[
-    Class: BorderSide
-        Defines a BorderSide Component.
-]]
 local BorderSide = Base("Subcomponent", "BorderSide")
 
---[[
-    Constructor: new
-        Should only be used as an argument to a <Border> Component.
-
-    Parameters:
-        initialWidth - The BorderSide's initial width.
-        initialStyle - The BorderSide's initial <BorderStyle>. Defaults to None.
-        initialContent - The BorderSide's initial Brush or Image.
-        initialRadius - The radius of the BorderSide's corners. Only relevant for top and bottom BorderSides.
-
-    Returns:
-        A new BorderSide Subcomponent.
-]]
+--- Border constructor.
+--- @function Border
+--- @number initialWidth The BorderSide's initial width.
+--- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The BorderSide's initial BorderStyle.
+--- @tparam Brush|Image initialContent The BorderSide's initial Brush or Image.
+--- @number initialRadius The radius of the BorderSide's corners. Only relevant for top and bottom BorderSides.
+--- @treturn BorderSide
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius)
-    --[[
-        Structure: New BorderSide
-            A Subcomponent that defines individual sides of a <Border>
-            component.
-    ]]
+    --- @type BorderSide
     local self = {}
 
-    -- Boolean: _isSide
-    -- Is it a Left or Right? Only Top and Bottom use radius, as per QT.
     local _isSide = false
-
-    -- Double: _width
-    -- BorderSide's width.
     local _width = initialWidth or 0
-
-    -- Object: _style
-    -- BorderSide's <BorderStyle>. Defaults to None.
     local _style = initialStyle or BorderStyle.None
-
-    -- Object: _content
-    -- BorderSide's Brush Component.
     local _content = initialContent
-
-    -- Double: _radius
-    -- BorderSide's radius. Defaults to 0.
     local _radius = initialRadius or 0
-
-    -- Array: _styleTable
-    -- A table holding the Stylesheets of all Components.
-    -- This makes indexing easier for the <Border> Component.
     local _styleTable
 
-    --[[
-        Function: updateStyleTable
-            Updates the BorderSide's stylesheet table.
-    ]]
     local function updateStyleTable()
         _styleTable = {
             string.format("width: %s", _width),
@@ -88,29 +50,34 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         end
     end
 
-    --[[
-        Properties: BorderSide Properties
-            Width - Gets and sets the BorderSide Subcomponent's width.
-            Style - Gets and sets the BorderSide's <BorderStyle>.
-            Content - Gets and sets the BorderSide's Brush or Image Component.
-            Radius - Gets and sets the BorderSide's radius.
-            IsSide - Gets and sets the BorderSide's <is_side> value. Must be boolean.
-            Styletable - Updates and returns the BorderSide's stylesheet table.
-    ]]
     local properties = {
         Width = {
+            --- Returns the BorderSide's width.
+            --- @function self.Width.get
+            --- @treturn number
             get = function ()
                 return _width
             end,
+
+            --- Sets the BorderSide's width.
+            --- @function self.Width.set
+            --- @tparam number value
             set = function (value)
                 _width = value
             end,
         },
 
         Style = {
+            --- Returns the BorderSide's BorderStyle.
+            --- @function self.Style.get
+            --- @treturn BorderStyle
             get = function ()
                 return _style
             end,
+
+            --- Sets the BorderSide's BorderStyle.
+            --- @function self.Style.set
+            --- @tparam BorderStyle value
             set = function (value)
                 if BorderStyle:IsValid(value) then
                     _style = value
@@ -119,33 +86,57 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Content = {
+            --- Returns the BorderSide's content.
+            --- @function self.Content.get
+            --- @treturn Image|Brush
             get = function ()
                 return _content
             end,
+
+            --- Sets the BorderSide's content.
+            --- @function self.Content.set
+            --- @tparam Image|Brush value
             set = function (value)
                 _content = value
             end,
         },
 
         Radius = {
+            --- Returns the BorderSide's corner radius.
+            --- @function self.Radius.get
+            --- @treturn number
             get = function ()
                 return _radius
             end,
+
+            --- Sets the BorderSide's corner radius. Only useful for top and bottom BorderSides.
+            --- @function self.Radius.set
+            --- @tparam number value
             set = function (value)
                 _radius = value
             end,
         },
 
         IsSide = {
+            --- If true, this is a left or right BorderSide. If false, it is a top or bottom BorderSide.
+            --- @function self.IsSide.get
+            --- @treturn bool
             get = function ()
                 return _isSide
             end,
+
+            --- Sets a flag determining whether this is a left or right BorderSide, or a top or bottom.
+            --- @function self.IsSide.set
+            --- @tparam bool value
             set = function (value)
                 _isSide = value
             end,
         },
 
         Styletable = {
+            --- Updates and returns the BorderSide's styletable.
+            --- @function self.Styletable.get
+            --- @treturn table
             get = function ()
                 if not _styleTable then
                     updateStyleTable()

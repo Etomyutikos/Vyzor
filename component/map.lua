@@ -1,22 +1,15 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A container for Mudlet's built-in Map display.
+--- @classmod Map
 
 local Base = require("vyzor.base")
 
---[[
-    Class: Map
-        Defines the Map Component.
-]]
 local Map = Base("Component", "Map")
 
--- TODO: These are shared. Move to single location?
-local function calculateAbsolutePosition(axis, frameAxis, frameDimension)
-    if axis >= 0.0 and axis <= 1.0 then
-        return frameAxis + (axis * frameDimension)
+local function calculateAbsolutePosition(axisValue, frameAxis, frameDimension)
+    if axisValue >= 0.0 and axisValue <= 1.0 then
+        return frameAxis + (axisValue * frameDimension)
     else
-        return frameAxis + axis
+        return frameAxis + axisValue
     end
 end
 
@@ -28,79 +21,40 @@ local function calculateAbsoluteDimension(dimension, frameDimension)
     end
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        initialX - Mapper's initial X coordinate.
-        initialY - Mapper's initial Y coordinate.
-        initialWidth - Mapper's initial Width.
-        initialHeight - Mapper's initial Height.
-]]
+--- Map constructor.
+--- @function Map
+--- @number[opt=0] initialX The Map's initial X coordinate.
+--- @number[opt=0] initialY The Map's initial Y coordinate.
+--- @number[opt=1.0] initialWidth The Map's initial Width.
+--- @number[opt=1.0] initialHeight The Map's initial Height.
+--- @treturn Map
 local function new (_, initialX, initialY, initialWidth, initialHeight)
-    --[[
-        Structure: New Map
-            A container for Mudlet's built-in Map display.
-    ]]
+    --- @type Map
     local self = {}
 
-    -- Object: _container
-    -- Parent Frame.
     local _container
-
-    -- Boolean: _isHidden
-    -- Special handling for special Map hiding.
     local _isHidden = false
-
-    -- Number: _x
-    -- User-defined X coordinate.
     local _x = initialX or 0
-
-    -- Number: _absoluteX
-    -- Actual X coordinate.
     local _absoluteX
-
-    -- Number: _y
-    -- User-defined Y coordinate.
     local _y = initialY or 0
-
-    -- Number: _absoluteY
-    -- Actual Y coordinate.
     local _absoluteY
-
-    -- Number: _width
-    -- User-defined width.
     local _width = initialWidth or 1.0
-
-    -- Number: _absoluteWidth
-    -- Actual width.
     local _absoluteWidth
-
-    -- Number: _height
-    -- User-defined height.
     local _height = initialHeight or 1.0
-
-    -- Number: _absoluteHeight
-    -- Actual height.
     local _absoluteHeight
 
-    --[[
-        Properties: Map Properties
-            Container - Gets and sets the Map's parent Frame.
-            X - Gets and sets the user-defined X coordinate.
-            AbsoluteX - Returns the actual X coordinate.
-            Y - Gets and sets the user-defined Y coordinate.
-            AbsoluteY - Returns the actual Y coordinate.
-            Width - Gets and sets the user-defined width.
-            AbsoluteWidth - Returns the actual width.
-            Height - Gets and sets the user-defined height.
-            AbsoluteHeight - Returns the actual height.
-    ]]
     local properties = {
         Container = {
+            --- Returns the Map's parent Frame.
+            --- @function self.Container.get
+            --- @treturn Frame
             get = function ()
                 return _container
             end,
+
+            --- Sets the Map's parent Frame.
+            --- @function self.Container.set
+            --- @tparam Frame value
             set = function (value)
                 if value.Type == "Frame" then
                     _container = value
@@ -109,9 +63,16 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         },
 
         X = {
+            --- Returns the Map's user-defined X coordinate.
+            --- @function self.X.get
+            --- @treturn number
             get = function ()
                 return _x
             end,
+
+            --- Sets the Map's user-defined X coordinate.
+            --- @function self.X.set
+            --- @tparam number value
             set = function (value)
                 _x = value
                 updateAbsolutes()
@@ -119,15 +80,25 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         },
 
         AbsoluteX = {
+            --- Returns the Map's actual X coordinate.
+            --- @function self.AbsoluteX.get
+            --- @treturn number
             get = function ()
                 return _absoluteX
             end
         },
 
         Y = {
+            --- Returns the Map's user-defined Y coordinate.
+            --- @function self.Y.get
+            --- @treturn number
             get = function ()
                 return _y
             end,
+
+            --- Sets the Map's user-defined Y coordinate.
+            --- @function self.Y.set
+            --- @tparam number value
             set = function (value)
                 _y = value
                 updateAbsolutes()
@@ -135,15 +106,25 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         },
 
         AbsoluteY = {
+            --- Returns the Map's actual Y coordinate.
+            --- @function self.AbsoluteY.get
+            --- @treturn number
             get = function ()
                 return _absoluteY
             end
         },
 
         Width = {
+            --- Returns the Map's user-defined width.
+            --- @function self.Width.get
+            --- @treturn number
             get = function ()
                 return _width
             end,
+
+            --- Sets the Map's user-defined width.
+            --- @function self.Width.set
+            --- @tparam number value
             set = function (value)
                 _width = value
                 updateAbsolutes()
@@ -151,15 +132,25 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         },
 
         AbsoluteWidth = {
+            --- Returns the Map's actual width.
+            --- @function self.AbsoluteWidth.get
+            --- @treturn number
             get = function ()
                 return _absoluteWidth
             end
         },
 
         Height = {
+            --- Returns the Map's user-defined height.
+            --- @function self.Height.get
+            --- @treturn number
             get = function ()
                 return _height
             end,
+
+            --- Sets the Map's user-defined height.
+            --- @function self.Height.set
+            --- @tparam number value
             set = function (value)
                 _height = value
                 updateAbsolutes()
@@ -167,17 +158,15 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         },
 
         AbsoluteHeight = {
+            --- Returns the Map's actual height.
+            --- @function self.AbsoluteHeight.get
+            --- @treturn number
             get = function ()
                 return _absoluteHeight
             end
         }
     }
 
-    --[[
-        Function: updateAbsolutes
-            Sets the actual size and position of the Map
-            using the parent Frame's Content.
-    ]]
     local function updateAbsolutes ()
         if _container then
             _absoluteX = calculateAbsolutePosition(_x, _container.Position.ContentX, _container.Size.ContentWidth)
@@ -188,25 +177,18 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         end
     end
 
-    --[[
-        Function: Draw
-            The map magically appears! Probably best used
-            internally only.
-    ]]
+    --- The map magically appears!
+    ---
+    --- Best used internally only.
     function self:Draw ()
         updateAbsolutes()
 
         createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)
     end
 
-    --[[
-        Function: Resize
-            Adjusts the Map's size.
-
-        Parameters:
-            width - Map's new width.
-            height - Map's new height.
-    ]]
+    --- Adjusts the Map's size.
+    --- @number[opt] width Map's new width.
+    --- @number[opt] height Map's new height.
     function self:Resize (width, height)
         _width = width or _width
         _height = height or _height
@@ -220,14 +202,9 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         end
     end
 
-    --[[
-        Function: Move
-            Moves the Map.
-
-        Parameters:
-            x - Map's new relative X coordinate.
-            y - Map's new relative Y coordinate.
-    ]]
+    --- Moves the Map.
+    --- @number x Map's new relative X coordinate.
+    --- @number y Map's new relative Y coordinate.
     function self:Move (x, y)
         _x = x or _x
         _y = y or _y
@@ -241,19 +218,15 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
         end
     end
 
-    --[[
-        Function: Hide
-            Hides the Map. Sort of. Makes it very, very tiny.
-    ]]
+    --- Hides the Map.
+    ---
+    --- Technically, it makes the Map very, very tiny.
     function self:Hide ()
         _isHidden = true
         createMapper(_absoluteX, _absoluteY, 0, 0)
     end
 
-    --[[
-        Function: Show
-            Returns the Map to its original size.
-    ]]
+    --- Returns the Map to its original size.
     function self:Show ()
         _isHidden = false
         createMapper(_absoluteX, _absoluteY, _absoluteWidth, _absoluteHeight)

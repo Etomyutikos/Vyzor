@@ -1,15 +1,9 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- A Supercomponent used only within Frames to manage space.
+--- @classmod Size
 
 local Base = require("vyzor.base")
 local BoundingMode = require("vyzor.enum.bounding_mode")
 
---[[
-    Class: Size
-        Defines the Size Supercomponent.
-]]
 local Size = Base("Supercomponent", "Size")
 
 local function calculateAbsoluteDimension(rawDimension, containerDimension)
@@ -32,40 +26,22 @@ local function setBoundedDimension(absoluteDimension, maximum, edge, containerEd
     end
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        _frame - The <Frame> to which this Size Supercomponent belongs.
-        initialWidth - Initial width of the <Frame>.
-        initialHeight - Initial height of the <Frame>.
-        _isFirst - Determines whether or not the parent <Frame> is the <HUD>.
-
-    Returns:
-        A new Size Supercomponent.
-]]
+--- Size constructor.
+--- @function Size
+--- @tparam Frame _frame The Frame to which this Size Supercomponent belongs.
+--- @number[opt=1.0] initialWidth Initial width of the Frame.
+--- @number[opt=1.0] initialHeight Initial height of the Frame.
+--- @bool _isFirst Determines whether or not the parent Frame is the HUD.
+--- @treturn Size
 local function new (_, _frame, initialWidth, initialHeight, _isFirst)
-    --[[
-        Structure: New Size
-            A Supercomponent used only within <Frames> to
-            manage space. Only used internally. Should not
-            be exposed.
-    ]]
+    --- @type Size
     local self = {}
 
-    -- Array: _dimensions
-    -- Contains the user-defined dimensions of the <Frame>.
     local _dimensions = {
         Width = (initialWidth or 1),
         Height = (initialHeight or 1),
     }
-
-    -- Array: _absoluteDimensions
-    -- Contains the <Frame's> generated, window dimensions.
     local _absoluteDimensions = {}
-
-    -- Array: _contentDimensions
-    -- Contains the <Frame's> generated, Content Rectangle dimensions.
     local _contentDimensions = {}
 
     local function updateContent ()
@@ -128,12 +104,6 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         }
     end
 
-    --[[
-        Function: updateAbsolute
-            Generates the absolute dimensions (<abs_dims>) of
-            the <Frame>.
-            Also generates content dimensions <content_dims>.
-    ]]
     local function updateAbsolute ()
         -- Is HUD.
         if _isFirst then
@@ -167,23 +137,11 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         updateContent()
     end
 
-    --[[
-        Properties: Size Properties
-            Dimensions - Gets and sets the relative (user-defined) dimensions
-                                (<dims>) of the <Frame>.
-            Absolute - Returns the absolute dimensions (<abs_dims>) of the
-                                <Frame>.
-            Content - Returns dimensions of the Content Rectangle
-                                (<content_dims>).
-            Width - Gets and sets the relative width of the <Frame>.
-            Height - Gets and sets the relative height of the <Frame>.
-            AbsoluteWidth - Returns the absolute width of the <Frame>.
-            AbsoluteHeight - Returns the absolute height of the <Frame>.
-            ContentWidth - Returns the width of the Content Rectangle.
-            ContentHeight - Returns the height of the Content Rectangle.
-    ]]
     local properties = {
         Dimensions = {
+            --- Returns the user-defined dimensions of the Frame.
+            --- @function self.Dimensions.get
+            --- @treturn table
             get = function ()
                 local copy = {}
 
@@ -193,6 +151,10 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
 
                 return copy
             end,
+
+            --- Sets the user-defined dimensions of the Frame.
+            --- @function self.Dimensions.set
+            --- @tparam table value
             set = function (value)
                 _dimensions.Width = value.Width or value[1]
                 _dimensions.Height = value.Height or value[2]
@@ -201,6 +163,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Absolute = {
+            --- Returns the actual dimensions of the Frame.
+            --- @function self.Absolute.get
+            --- @treturn table
             get = function ()
                 if not _absoluteDimensions.Width or not _absoluteDimensions.Height then
                     updateAbsolute()
@@ -217,6 +182,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Content = {
+            --- Returns the content dimensions of the Frame.
+            --- @function self.Content.get
+            --- @treturn table
             get = function ()
                 if not _contentDimensions.Width or not _contentDimensions.Height then
                     updateAbsolute()
@@ -233,9 +201,16 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Width = {
+            --- Returns the user-defined width of the Frame.
+            --- @function self.Width.get
+            --- @treturn number
             get = function ()
                 return _dimensions.Width
             end,
+
+            --- Sets the user-defined width of the Frame.
+            --- @function self.Width.set
+            --- @tparam number value
             set = function (value)
                 _dimensions.Width = value
 
@@ -246,9 +221,16 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Height = {
+            --- Returns the user-defined height of the Frame.
+            --- @function self.Height.get
+            --- @treturn number
             get = function ()
                 return _dimensions.Height
             end,
+
+            --- Sets the user-defined height of the Frame.
+            --- @function self.Height.set
+            --- @tparam number value
             set = function (value)
                 _dimensions.Height = value
 
@@ -259,6 +241,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         AbsoluteWidth = {
+            --- Returns the actual width of the Frame.
+            --- @function self.AbsoluteWidth.get
+            --- @treturn number
             get = function ()
                 if not _absoluteDimensions.Width then
                     updateAbsolute()
@@ -269,6 +254,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         AbsoluteHeight = {
+            --- Returns the actual height of the Frame.
+            --- @function self.AbsoluteHeight.get
+            --- @treturn number
             get = function ()
                 if not _absoluteDimensions.Height then
                     updateAbsolute()
@@ -279,6 +267,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         ContentWidth = {
+            --- Returns the width of the Frame's content.
+            --- @function self.ContentWidth.get
+            --- @treturn number
             get = function ()
                 if not _contentDimensions.Width then
                     updateAbsolute()
@@ -289,6 +280,9 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         ContentHeight = {
+            --- Returns the height of the Frame's content.
+            --- @function self.ContentHeight.get
+            --- @treturn number
             get = function ()
                 if not _contentDimensions.Height then
                     updateAbsolute()

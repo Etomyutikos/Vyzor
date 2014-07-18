@@ -1,7 +1,5 @@
--- Vyzor, UI Manager for Mudlet
--- Copyright (c) 2012 Erik Pettis
--- Licensed under the MIT license:
---    http://www.opensource.org/licenses/MIT
+--- The primary container for Vyzor Components.
+--- @classmod Frame
 
 local Base = require("vyzor.base")
 local Lib = require("vyzor.lib")
@@ -10,108 +8,41 @@ local Position = require("vyzor.component.position")
 local Size = require("vyzor.component.size")
 local BoundingMode = require("vyzor.enum.bounding_mode")
 
---[[
-    Class: Frame
-        Defines the primary container for
-        Vyzor Components. Frames are modified via Components,
-        and may hold other Frames.
-]]
 local Frame = Base("Frame")
 
--- Boolean: first_frame
--- Used for very specific handling of the master Vyzor HUD.
 local _FirstFrame = true
-
--- Boolean: resize_registered
--- Determines whether or not the resize function has been registered
--- as an event handler.
 local _ResizeRegistered = false
-
--- Array: master_list
--- Holds all Frames for reference.
 local _MasterList = {}
 
---[[
-    Constructor: new
-
-    Parameters:
-        name - The name of the Frame, used for addressing.
-        x - Initial X position of the Frame. Defaults to 0.
-        y - Initial Y position of the Frame. Defaults to 0.
-        width - Initial width of the Frame. Defaults to 1.
-        height - Initial height of the Frame. Defaults to 1.
-
-    Returns:
-        A new Frame.
-]]
+--- Frame constructor.
+--- @function Frame
+--- @string _name The name of the Frame, used for addressing.
+--- @number _x Initial X position of the Frame. Defaults to 0.
+--- @number _y Initial Y position of the Frame. Defaults to 0.
+--- @number _width Initial width of the Frame. Defaults to 1.
+--- @number _height Initial height of the Frame. Defaults to 1.
+--- @treturn Frame
 local function new (_, _name, _x, _y, _width, _height)
-    -- Structure: New Frame
-    -- A new Frame object.
+    --- @type Frame
     local self = {}
 
-    -- Boolean: _isFirst
-    -- Is this the HUD?
     local _isFirst = _FirstFrame
     _FirstFrame = false
 
-    -- Boolean: _isDrawn
-    -- Has this Frame been drawn?
     local _isDrawn = false
-
-    -- Boolean: _isBounding
-    -- Does this object obey bounding rules?
     local _isBounding = false
-
-    -- String: _boundingType
-    -- The <BoundingMode> rules to which this object adheres.
     local _boundingType = BoundingMode.Size
-
-    -- Object: _parent
-    -- The Frame that contains this one.
     local _parent
-
-    -- Array: _components
-    -- A list of Components this Frame contains.
     local _components = Lib.OrderedTable()
-
-    -- Array: _miniConsoles
-    -- Stores MiniConsole Components.
     local _miniConsoles = Lib.OrderedTable()
-
-    -- Array: _compounds
-    -- Stores Compounds.
     local _compounds = Lib.OrderedTable()
-
-    -- Array: _children
-    -- A list of Frames this Frame contains.
     local _children = Lib.OrderedTable()
-
-    -- String: _callback
-    -- The name of a function to be used as a Label callback.
     local _callback
-
-    -- Array: _callbackArguments
-    -- A table holding the arguments for a Label callback.
     local _callbackArguments
-
-    -- Object: _position
-    -- The Position Supercomponent managing this Frame's
-    -- location.
     local _position = Position(self, _x, _y, _isFirst)
-
-    -- Object: _size
-    -- The Size Supercomponent managing this Frame's space.
     local _size = Size(self, _width, _height, _isFirst)
-
-    -- String: stylesheet
-    -- This Frame's Stylesheet. Generated via <updateStylesheet>.
     local _stylesheet
 
-    --[[
-        Function: updateStylesheet
-            Polls all Component's for their Stylesheets.
-            Constructs the final <stylesheet> applied by setLabelStyleSheet.
-    ]]
     local function updateStylesheet ()
         if _components:count() > 0 then
             local styleTable = {}
@@ -142,52 +73,60 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Properties: Frame Properties
-            Name - Return the Frame's name.
-            IsBounding - Gets and sets a boolean value.
-            BoundingMode - Gets and sets the BoundingMode for this Frame.
-            Container - Gets and sets the parent Frame for this Frame.
-            Components - Returns a copy of the Frame's Components.
-            MiniConsoles - Returns a copy of the Frame's MiniConsoles.
-            Compounds - Returns a copy of the Frame's Compounds.
-            Frames - Returns a copy of the Frame's child Frames.
-            Position - Returns this Frame's Position Supercomponent.
-            Size - Returns this Frame's Size Supercomponent.
-            Stylesheet - Updates and returns this Frame's Stylesheet.
-            Callback - Gets and sets a Callback for this Frame.
-            CallbackArguments - Gets and sets the arguments passed to the Callback. Should be a table.
-            IsDrawn - Has this Frame been drawn?
-    ]]
     local properties = {
         Name = {
+            --- Returns the Frame's name.
+            --- @function self.Name.get
+            --- @treturn string
             get = function ()
                 return _name
             end,
         },
 
         IsBounding = {
+            --- Returns whether or not the Frame is bounding.
+            --- @function self.IsBounding.get
+            --- @treturn bool
             get = function ()
                 return _isBounding
             end,
+
+            --- Sets whether or not the Frame is bounding.
+            --- @function self.IsBounding.set
+            --- @bool value
             set = function (value)
                 _isBounding = value
             end
         },
 
         BoundingMode = {
+            --- Returns the BoundingMode for the Frame.
+            --- @function self.BoundingMode.get
+            --- @treturn BoundingMode
             get = function ()
                 return _boundingType
             end,
+
+            --- Sets the BoundingMode for this Frame.
+            --- @function self.BoundingMode.set
+            --- @tparam BoundingMode value
             set = function (value)
                 _boundingType = value
             end
         },
 
         Container = {
+            --- Returns the parent Frame.
+            --- @function self.Container.get
+            --- @treturn Frame
             get = function ()
                 return _parent
             end,
+
+            --- Sets the parent Frame.
+            --- Raises the sysWindowResizeEvent upon completion.
+            --- @function self.Container.set
+            --- @tparam Frame value
             set = function (value)
                 if type(value) == "string" then
                     _parent = _MasterList[value]
@@ -206,6 +145,9 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Components = {
+            --- Returns the Components in the Frame.
+            --- @function self.Components.get
+            --- @treturn table
             get = function ()
                 if _components:count() > 0 then
                     local copy = {}
@@ -220,6 +162,9 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         MiniConsoles = {
+            --- Returns the MiniConsoles in the Frame.
+            --- @function self.MiniConsoles.get
+            --- @treturn table
             get = function ()
                 echo("_miniConsoles:count() = " .. _miniConsoles:count() .. "\n")
                 if _miniConsoles:count() > 0 then
@@ -235,6 +180,9 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Compounds = {
+            --- Returns the Compounds in the Frame.
+            --- @function self.Compounds.get
+            --- @treturn table
             get = function ()
                 if _compounds:count() > 0 then
                     local copy = {}
@@ -248,6 +196,9 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Frames = {
+            --- Returns the Frames in the Frame.
+            --- @function self.Frames.get
+            --- @treturn table
             get = function ()
                 if _children:count() > 0 then
                     local copy = {}
@@ -262,18 +213,27 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Position = {
+            --- Returns the Position supercomponent.
+            --- @function self.Position.get
+            --- @treturn Position
             get = function ()
                 return _position
             end
         },
 
         Size = {
+            --- Returns the Size supercomponent.
+            --- @function self.Size.get
+            --- @treturn Size
             get = function ()
                 return _size
             end
         },
 
         Stylesheet = {
+            --- Updates and returns the stylesheet for the Frame.
+            --- @function self.Stylesheet.get
+            --- @treturn string
             get = function ()
                 if not _stylesheet then
                     updateStylesheet()
@@ -284,9 +244,16 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Callback = {
+            --- Returns the callback for the Frame.
+            --- @function self.Callback.get
+            --- @treturn string
             get = function ()
                 return _callback
             end,
+
+            --- Sets the callback for the Frame to be used when clicked.
+            --- @function self.Callback.set
+            --- @string value The function identifier, globally indexed.
             set = function (value)
                 _callback = value
 
@@ -303,9 +270,16 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         CallbackArguments = {
+            --- Returns the callback arguments passed to the callback.
+            --- @function self.CallbackArguments.get
+            --- @treturn table|string
             get = function ()
                 return _callbackArguments
             end,
+
+            --- Sets the callback arguments to be passed to the callback.
+            --- @function self.CallbackArguments.set
+            --- @tparam table|string value A table of arguments or a single argument.
             set = function (value)
                 _callbackArguments = value
 
@@ -320,6 +294,9 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         IsDrawn = {
+            --- Returns a flag signalling whether or not the Frame has been drawn.
+            --- @function self.IsDrawn.get
+            --- @treturn bool
             get = function ()
                 return _isDrawn
             end,
@@ -367,15 +344,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Add
-            Adds a new object to this Frame.
-            Objects can be a string (must be a valid Frame name),
-            a Frame object, or a Component object.
-
-        Parameters:
-            object - A valid Frame name or object, or a Component.
-    ]]
+    --- Adds a new object.
+    --- @tparam string|Frame|Component|Compound object A valid Frame name or object, Component, or Compound.
     function self:Add (object)
         if type(object) == "string" then
             addFrameByName(object)
@@ -468,15 +438,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Remove
-            Removes an object from this Frame.
-            Objects must be a string (must be a valid Frame's name or
-            Component Subtype), a Frame object, or a Component object.
-
-        Parameters:
-            object - A valid Frame name or object, or a Component Subtype or object.
-    ]]
+    --- Removes an object.
+    --- @tparam string|Frame|Component|Compound object A valid Frame name or object, Component Subtype or object, or Compound.
     function self:Remove (object)
         if type(object) == "string" then
             removeObjectByName(object)
@@ -580,11 +543,9 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Draw
-            Draws this Frame. Is only called via Vyzor:Draw().
-            Should not be used directly on a Frame.
-    ]]
+    --- Draws this Frame.
+    --- Is only called Vyzor:Draw().
+    --- Should not be used directly on a Frame.
     function self:Draw ()
         if not _isFirst then
             drawFrame()
@@ -596,14 +557,9 @@ local function new (_, _name, _x, _y, _width, _height)
         _isDrawn = true
     end
 
-    --[[
-        Function: Resize
-            Resizes the Frame.
-
-        Parameters:
-            width - The Frame's new width.
-            height - The Frame's new height.
-    ]]
+    --- Resizes the Frame and its children.
+    --- @number width The Frame's new width.
+    --- @number height The Frame's new height.
     function self:Resize (width, height)
         _size.Dimensions = { width or _size.Width, height or _size.Height }
 
@@ -628,14 +584,9 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Move
-            Repositions the Frame.
-
-        Parameters:
-            x - The Frame's new X position.
-            y - The Frame's new Y position.
-    ]]
+    --- Repositions the Frame and its children.
+    --- @number x The Frame's new X position.
+    --- @number y The Frame's new Y position.
     function self:Move (x, y)
         _position.Coordinates = { x or _position.X, y or _position.Y }
 
@@ -660,15 +611,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Hide
-            Hides the Frame.
-            Iterates through the Frame's children first, hiding
-            each of them before hiding itself.
-
-        Parameters:
-            skipChildren - If true, this will not hide any of the Frame's children.
-    ]]
+    --- Hides the Frame and, optionally, its children.
+    --- @bool[opt=false] skipChildren If true, this will not hide any of the Frame's children.
     function self:Hide (skipChildren)
         if not skipChildren then
             if _children:count() > 0 then
@@ -693,15 +637,8 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Show
-            Reveals the Frame.
-            Reveals itself first, then iterates through each of its
-            children, revealing them.
-
-        Parameters:
-            skipChildren - If true, this will not show any of the Frame's children.
-    ]]
+    --- Reveals the Frame and, optionally, its children.
+    --- @bool[opt=false] skipChildren If true, this will not show any of the Frame's children.
     function self:Show (skipChildren)
         if not _isFirst then
             showWindow(_name)
@@ -726,34 +663,20 @@ local function new (_, _name, _x, _y, _width, _height)
         end
     end
 
-    --[[
-        Function: Echo
-            Displays text on a Frame.
-
-        Parameters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on the Frame.
+    --- @string text The text to be displayed.
     function self:Echo (text)
         echo(_name, text)
     end
 
-    --[[
-        Function: Echo
-            Displays text on a Frame.
-
-        Parameters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on the Frame.
+    --- @string text The text to be displayed.
     function self:CEcho (text)
         cecho(_name, text)
     end
-    --[[
-        Function: Clear
-            Clears all text from the Frame.
 
-        Paramaters:
-            clearChildren - Will call clear on child Frames if true.
-    ]]
+    --- Clears all text from the Frame and, optionally, its children.
+    --- @bool[opt=false] clearChildren Will call clear on child Frames if true.
     function self:Clear (clearChildren)
         clearWindow(_name)
 
