@@ -43,16 +43,18 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
     local _height = initialHeight or 1.0
     local _absoluteHeight
 
+    --- Properties
+    --- @section
     local properties = {
         Container = {
-            --- Returns the Map's parent Frame.
+            --- Returns the Map's parent @{Frame}.
             --- @function self.Container.get
             --- @treturn Frame
             get = function ()
                 return _container
             end,
 
-            --- Sets the Map's parent Frame.
+            --- Sets the Map's parent @{Frame}.
             --- @function self.Container.set
             --- @tparam Frame value
             set = function (value)
@@ -166,6 +168,7 @@ local function new (_, initialX, initialY, initialWidth, initialHeight)
             end
         }
     }
+    --- @section end
 
     local function updateAbsolutes ()
         if _container then

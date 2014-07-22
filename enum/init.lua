@@ -1,53 +1,39 @@
+--- A base object for all Enum objects.
+--- @classmod Enum
+
 local Base = require("vyzor.base")
 
---[[
-	Class: Enum
-		Defines the Enum object.
-]]
 local Enum = Base("Enum")
 
---[[
-	Constructor: new
-
-	Parameters:
-		_subtype - A string identifying the Enum.
-		options_table - A table of valid options for the Enum.
-
-	Returns:
-		A new Enum object.
-]]
+--- Enum constructor.
+--- @function Enum
+--- @string _subtype A string identifying the Enum.
+--- @tparam table _optionsTable A table of valid options for the Enum.
+--- @treturn Enum
 local function new (_, _subtype, _optionsTable)
-	--[[
-		Structure: New Enum
-			A base object for all Enum objects.
-	]]
+	--- @type Enum
 	local self = {}
 
-	--[[
-		Properties:
-			Subtype - Returns the Enum's Subtype.
-	]]
+    --- Properties
+    --- @section
 	local properties = {
 		Subtype = {
+            --- Returns the subtype of the Enum.
+            --- @function self.Subtype.get
+            --- @treturn string
 			get = function ()
 				return _subtype
 			end
-			}
-		}
+        }
+    }
+    --- @section end
 
-	--[[
-		Function: IsValid
-			Verifies the Enum.
-			Searches for matching key or value within
-			the options_table to guarantee the passing
-			of valid options where necessary.
-
-		Paramaters:
-			option - The option to be tested.
-
-		Returns:
-			A boolean value.
-	]]
+    --- Verifies the Enum.
+    ---
+    --- Searches for matching key or value within the options table to guarantee the passing of valid options
+    --- where necessary.
+    --- @string option
+    --- @treturn bool
 	function self:IsValid (option)
 		local isValid = false
 

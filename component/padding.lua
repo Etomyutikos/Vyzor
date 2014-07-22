@@ -1,7 +1,8 @@
---- This Component defines the Padding of a Frame.
---- The Padding is between the Content and the Border.
+--- This Component defines the Padding of a @{Frame}.
+--- The Padding is between the Content and the @{Border}.
+---
+--- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
 --- @classmod Padding
---- @see http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
 
 local Base = require("vyzor.base")
 
@@ -30,6 +31,8 @@ local function new (_, ...)
         _stylesheet = string.format("padding: %s", table.concat({ _top, _right, _bottom, _left }, " "))
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Top = {
             --- Returns the size of the top of the Padding Component.
@@ -106,8 +109,9 @@ local function new (_, ...)
 
                 return _stylesheet
             end,
-            },
-        }
+        },
+    }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

@@ -1,4 +1,4 @@
---- A Supercomponent used only within Frames to manage space.
+--- A Supercomponent used only within @{Frame}s to manage space.
 --- @classmod Size
 
 local Base = require("vyzor.base")
@@ -28,10 +28,10 @@ end
 
 --- Size constructor.
 --- @function Size
---- @tparam Frame _frame The Frame to which this Size Supercomponent belongs.
---- @number[opt=1.0] initialWidth Initial width of the Frame.
---- @number[opt=1.0] initialHeight Initial height of the Frame.
---- @bool _isFirst Determines whether or not the parent Frame is the HUD.
+--- @tparam Frame _frame The @{Frame} to which this Size Supercomponent belongs.
+--- @number[opt=1.0] initialWidth Initial width of the @{Frame}.
+--- @number[opt=1.0] initialHeight Initial height of the @{Frame}.
+--- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
 --- @treturn Size
 local function new (_, _frame, initialWidth, initialHeight, _isFirst)
     --- @type Size
@@ -137,9 +137,11 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         updateContent()
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Dimensions = {
-            --- Returns the user-defined dimensions of the Frame.
+            --- Returns the user-defined dimensions of the @{Frame}.
             --- @function self.Dimensions.get
             --- @treturn table
             get = function ()
@@ -152,7 +154,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
                 return copy
             end,
 
-            --- Sets the user-defined dimensions of the Frame.
+            --- Sets the user-defined dimensions of the @{Frame}.
             --- @function self.Dimensions.set
             --- @tparam table value
             set = function (value)
@@ -163,7 +165,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Absolute = {
-            --- Returns the actual dimensions of the Frame.
+            --- Returns the actual dimensions of the @{Frame}.
             --- @function self.Absolute.get
             --- @treturn table
             get = function ()
@@ -182,7 +184,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Content = {
-            --- Returns the content dimensions of the Frame.
+            --- Returns the content dimensions of the @{Frame}.
             --- @function self.Content.get
             --- @treturn table
             get = function ()
@@ -201,14 +203,14 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Width = {
-            --- Returns the user-defined width of the Frame.
+            --- Returns the user-defined width of the @{Frame}.
             --- @function self.Width.get
             --- @treturn number
             get = function ()
                 return _dimensions.Width
             end,
 
-            --- Sets the user-defined width of the Frame.
+            --- Sets the user-defined width of the @{Frame}.
             --- @function self.Width.set
             --- @tparam number value
             set = function (value)
@@ -221,14 +223,14 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         Height = {
-            --- Returns the user-defined height of the Frame.
+            --- Returns the user-defined height of the @{Frame}.
             --- @function self.Height.get
             --- @treturn number
             get = function ()
                 return _dimensions.Height
             end,
 
-            --- Sets the user-defined height of the Frame.
+            --- Sets the user-defined height of the @{Frame}.
             --- @function self.Height.set
             --- @tparam number value
             set = function (value)
@@ -241,7 +243,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         AbsoluteWidth = {
-            --- Returns the actual width of the Frame.
+            --- Returns the actual width of the @{Frame}.
             --- @function self.AbsoluteWidth.get
             --- @treturn number
             get = function ()
@@ -254,7 +256,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         AbsoluteHeight = {
-            --- Returns the actual height of the Frame.
+            --- Returns the actual height of the @{Frame}.
             --- @function self.AbsoluteHeight.get
             --- @treturn number
             get = function ()
@@ -267,7 +269,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         ContentWidth = {
-            --- Returns the width of the Frame's content.
+            --- Returns the width of the @{Frame}'s content.
             --- @function self.ContentWidth.get
             --- @treturn number
             get = function ()
@@ -280,7 +282,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
         },
 
         ContentHeight = {
-            --- Returns the height of the Frame's content.
+            --- Returns the height of the @{Frame}'s content.
             --- @function self.ContentHeight.get
             --- @treturn number
             get = function ()
@@ -292,6 +294,7 @@ local function new (_, _frame, initialWidth, initialHeight, _isFirst)
             end
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

@@ -1,16 +1,10 @@
+--- Determines where the tabs will be placed within a @{Chat} Compound.
+--- @classmod TabLocation
+
 local Enum = require("vyzor.enum")
--- Title: TabLocation
 
---[[
-    Array: _enum
-        Defines the options for the TabLocation Enum.
-
-    Fields:
-        Top - Tabs will be placed on top of the Chat MiniConsoles.
-        Bottom - Tabs will be placed below the Chat MiniConsoles.
-        Right - Tabs will be placed along the rightside of the MiniConsoles.
-        Left - Tabs will be placed along the left side of the MiniConsoles.
-]]
+--- TabLocation options.
+--- @table TabLocation.
 local _enum = {
     Top = "top",
     Bottom = "bottom",
@@ -18,10 +12,6 @@ local _enum = {
     Left = "left",
 }
 
---[[
-    Enum: TabLocation
-        Determines where the tabs will be placed within a Chat Compound.
-]]
 local TabLocation = Enum("TabLocation", _enum)
 
 return TabLocation

@@ -1,3 +1,6 @@
+--- A lightweight container for @{Frame}s that will function as a dynamically resized bar.
+--- @classmod Gauge
+
 local Background = require("vyzor.component.background")
 local Base = require("vyzor.base")
 local Brush = require("vyzor.component.brush")
@@ -7,30 +10,18 @@ local Frame = require("vyzor.base.frame")
 local GaugeFill = require("vyzor.enum.gauge_fill")
 local Lib = require("vyzor.lib")
 
---[[
-    Class: Gauge
-        Defines a Gauge Compound.
-]]
 local Gauge = Base("Compound", "Gauge")
 
--- Array: master_list
--- A list of Gauges, used to update all Gauges.
 local _MasterList = {}
 
---[[
-    Function: VyzorGaugeUpdate
-        A dirty global function to update all Vyzor Gauges.
-]]
+--- A dirty global function to update all Vyzor Gauges.
 function VyzorGaugeUpdate ()
     for _, gauge in pairs(_MasterList) do
         gauge:Update()
     end
 end
 
---[[
-     Function: VyzorInitializeGauges
-         Calls update on each Gauge after Vyzor has been drawn.
- ]]
+--- Calls update on each Gauge after Vyzor has been drawn.
 function VyzorInitializeGauges()
     if #_MasterList > 0 then
         for _, gauge in ipairs(_MasterList) do
@@ -39,13 +30,6 @@ function VyzorInitializeGauges()
     end
 end
 
---[[
-    Function: getField
-        Retrieves the value of the given index.
-
-    Parameters:
-        field - The index of the value to be retrieved.
-]]
 local function getField(field)
     local v = _G
 
@@ -56,55 +40,30 @@ local function getField(field)
     return v
 end
 
---[[
-    Constructor: new
-
-    Parameters:
-        name - The name of the Gauge.
-        initialCurrentValueAddress - The string address of the current stat to track.
-        initialMaximumValueAddress - The string address of the current stat to track.
-        initialBackground - The Background Frame.
-        initialForeground - The Foreground Frame. Size and Position values will be overwritten.
-        initialFillMode - GaugeFill Enum. Determines direction Gauge fills.
-                        Defaults to LeftRight.
-        initialOverflowFrames - Numerically indexed table of Frames to be used for overflow.
-]]
+--- Gauge constructor.
+--- @function Gauge
+--- @string name The name of the Gauge.
+--- @string initialCurrentValueAddress The string address of the current stat to track.
+--- @string initialMaximumValueAddress The string address of the current stat to track.
+--- @tparam Frame initialBackground The Background @{Frame}.
+--- @tparam Frame initialForeground The Foreground @{Frame}. @{Size} and @{Position} values will be overwritten.
+--- @tparam[opt=GaugeFill.LeftRight] GaugeFill initialFillMode Determines direction Gauge fills.
+--- @tparam[opt] table initialOverflowFrames Numerically indexed table of @{Frame}s to be used for overflow.
+--- @treturn Gauge
 local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAddress, initialBackground, initialForeground, initialFillMode, initialOverflowFrames)
     assert(initialCurrentValueAddress and initialMaximumValueAddress, "Vyzor: A new Gauge must have both current and maximum addresses to track.")
 
-    --[[
-        Structure: New Gauge
-            A lightweight container for Frames that will function as
-            a dynamically resized bar.
-    ]]
+    --- @type Gauge
     local self = {}
 
-    -- String: _currentValueAddress
-    -- Index of current variable.
     local _currentValueAddress = initialCurrentValueAddress
-
-    -- Number: _currentValue
-    -- Numeric value of current variable.
     local _currentValue
 
-    -- String: _maximumValueAddress
-    -- Index of maximum variable.
     local _maximumValueAddress = initialMaximumValueAddress
-
-    -- Number: _maximumValue
-    -- Numeric value of maximum stat.
     local _maximumValue
 
-    -- Object: _backgroundFrame
-    -- Frame serving as Gauge's background.
     local _backgroundFrame = initialBackground
-
-    -- Object: _foregroundFrame
-    -- Frame serving as Gauge's foreground.
     local _foregroundFrame = initialForeground
-
-    -- Array: _overflowFrames
-    -- Contains the Gauge's overflow frames.
     local _overflowFrames = Lib.OrderedTable()
 
     if initialOverflowFrames and type(initialOverflowFrames) == "table" then
@@ -113,26 +72,18 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         end
     end
 
-    -- Object: _captionFrame
-    -- Generated frame that can be echoed to.
     local _captionFrame = Frame(_name .. "_caption")
     _captionFrame:Add(
         Background(
             Brush(
                 Color(ColorMode.RGBA, 0, 0, 0, 0)
-          )
-      )
-  )
+            )
+        )
+    )
 
-    -- Boolean: _autoEcho
-    -- Should this Gauge echo every update?
     local _autoEcho = true
-
-    -- String: _textFormat
-    -- Format used when auto_echo is true.
     local _textFormat = "<center>%s / %s</center>"
 
-    -- The foreground is a child of the background. Let's do that.
     _backgroundFrame:Add(_foregroundFrame)
 
     if _overflowFrames:count() > 0 then
@@ -143,102 +94,140 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
 
     _backgroundFrame:Add(_captionFrame)
 
-    -- Object: _fillMode
-    -- Determines direction Gauge fills.
     local _fillMode = initialFillMode or GaugeFill.LeftRight
 
-    --[[
-        Properties: Gauge Properties
-            Name - Returns the Gauge's name.
-            Container - Gets and sets the Gauge's container.
-            CurrentAddress - Gets and sets the Gauge's current variable index.
-            Current - Returns the numeric value of the current variable.
-            MaximumAddress - Gets and sets the Gauge's maximum variable index.
-            Maximum - Returns the numeric value of the maximum variable.
-            Background - Returns the Gauge's Background Frame.
-            Foreground - Returns the Gauge's Foreground Frame.
-            FillMode - Gets and sets the Gauge's fill direction.
-            AutoEcho - Gets and sets the Gauge's <auto_echo> property.
-            TextFormat - Gets and sets the format used by <auto_echo>. Must be compatible with string.format.
-            Overflow - Returns a copy of the Gauge's overflow Frames.
-    ]]
+    --- Properties
+    --- @section
     local properties = {
         Name = {
+            --- Returns the name of the Gauge.
+            --- @function self.Name.get
+            --- @treturn string
             get = function ()
                 return _name
             end
         },
 
         Container = {
+            --- Returns the Gauge's parent @{Frame}.
+            --- @function self.Container.get
+            --- @treturn Frame
             get = function ()
                 return _backgroundFrame.Container
             end,
+
+            --- Sets the Gauge's parent @{Frame}.
+            --- @function self.Container.set
+            --- @tparam Frame value
             set = function (value)
                 _backgroundFrame.Container = value
             end
         },
 
         CurrentAddress = {
+            --- Returns the address of the Gauge's current value variable.
+            --- @function self.CurrentAddress.get
+            --- @treturn string
             get = function ()
                 return _currentValueAddress
             end,
+
+            --- Sets the address of the Gauge's current value variable.
+            --- @function self.CurrentAddress.set
+            --- @tparam string value
             set = function (value)
                 _currentValueAddress = value
             end
         },
 
         Current = {
+            --- Returns the Gauge's current value.
+            --- @function self.Current.get
+            --- @treturn number
             get = function ()
                 return _currentValue
             end
         },
 
         MaximumAddress = {
+            --- Returns the address of the Gauge's maximum value variable.
+            --- @function self.MaximumAddress.get
+            --- @treturn string
             get = function ()
                 return _maximumValueAddress
             end,
+
+            --- Sets the address of the Gauge's maximum value variable.
+            --- @function self.MaximumAddress.set
+            --- @tparam string value
             set = function (value)
                 _maximumValueAddress = value
             end
         },
 
         Maximum = {
+            --- Returns the Gauge's maximum value.
+            --- @function self.Maximum.get
+            --- @treturn number
             get = function ()
                 return _maximumValue
             end
         },
 
         Background = {
+            --- Returns the background @{Frame} of the Gauge.
+            --- @function self.Background.get
+            --- @treturn Frame
             get = function ()
                 return _backgroundFrame
             end
         },
 
         Foreground = {
+            --- Returns the foreground @{Frame} of the Gauge.
+            --- @function self.Foreground.get
+            --- @treturn Frame
             get = function ()
                 return _foregroundFrame
             end
         },
 
         AutoEcho = {
+            --- Returns a flag determining whether or not the Gauge automatically echoes text on every update.
+            --- @function self.AutoEcho.get
+            --- @treturn bool
             get = function ()
                 return _autoEcho
             end,
+
+            --- Sets a flag determining whether or not the Gauge automatically echoes text on every update.
+            --- @function self.AutoEcho.set
+            --- @tparam bool value
             set = function (value)
                 _autoEcho = value
             end,
         },
 
         TextFormat = {
+            --- Returns the text passed to string.format if AutoEcho is true.
+            --- @function self.TextFormat.get
+            --- @treturn string
             get = function ()
                 return _textFormat
             end,
+
+            --- Sets the text passed to string.format if AutoEcho is true.
+            --- @function self.TextFormat.set
+            --- @tparam string value
             set = function (value)
                 _textFormat = value
             end,
         },
 
         Overflow = {
+            --- Returns the overflow @{Frame}s of the Gauge.
+            --- @function self.Overflow.get
+            --- @treturn table
             get = function ()
                 local copy = {}
                 for k, v in _overflowFrames:pairs() do
@@ -248,6 +237,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
             end
         },
     }
+    --- @section end
 
     local function getOverflowScalars(currentScalar)
         local scalar = currentScalar - 1
@@ -345,10 +335,7 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         end
     end
 
-    --[[
-        Function: Update
-            Updates the Gauge.
-    ]]
+    --- Updates the Gauge.
     function self:Update ()
         _currentValue = getField(_currentValueAddress) or 1
         _maximumValue = getField(_maximumValueAddress) or 1
@@ -378,14 +365,8 @@ local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAdd
         end
     end
 
-    --[[
-        Function: Echo
-            Displays text on the auto-generated caption
-            Frame.
-
-        Parameters:
-            text - The text to be displayed.
-    ]]
+    --- Displays text on the auto-generated caption @{Frame}.
+    --- @param text
     function self:Echo (text)
         if text then
             echo(_captionFrame.Name, text)

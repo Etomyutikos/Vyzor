@@ -1,3 +1,7 @@
+--- A Compound composed of @{MiniConsole}s and tabs that can be echoed to.
+--- One @{MiniConsole} is displayed at a time. The tabs are used to switch the active @{MiniConsole}.
+--- @classmod Chat
+
 local Background = require("vyzor.component.background")
 local Base = require("vyzor.base")
 local Box = require("vyzor.compound.box")
@@ -10,104 +14,59 @@ local Lib = require("vyzor.lib")
 local MiniConsole = require("vyzor.component.mini_console")
 local TabLocation = require("vyzor.enum.tab_location")
 
---[[
-	Class: Chat
-		Manages a number of MiniConsoles and tabs for a clean interface for text.
-]]
 local Chat = Base("Compound", "Chat")
 
---[[
-	Constructor: new
+--- A dirty global function used as a callback for tabs.
+--- Vyzor creates one of these functions for each Chat Compound.
+---
+--- Replace the underscore with the Chat Compound's name.
+--- @function _ChatSwitch
+--- @string channel The channel to be switched to.
 
-	Parameters:
-		_name - Name of the Chat Compound. Used to create unique event handler functions.
-		initialBackground - The Background Frame for this Chat Compound.
-		initialChannels - The names of the channels managed by this Compound. Passed as a table.
-		initialTabLocation - Optional. A TabLocation Enum that determines on which side of the consoles the tabs sit. Default is top.
-		initialSize - Optional. This is the size of the unmanaged portion of the tabs. Must be between 0.0 and 1.0. Default is 0.05.
-		initialWordWrap - Optional. This is the word wrap of the MiniConsole text. Default is "dynamic".
-		initialFont - Optional. This is the font size of the MiniConsole text. Default is 10. Can be "dynamic"
-		initialComponents - Optional. A table of Components. These are used to decorate the tabs.
-]]
+--- A global function, registered as an event handler for the VyzorDrawnEvent.
+--- Makes sure the proper consoles are visible.
+---
+--- Replace the underscore with the Chat Compound's name.
+--- @function _InitializeChat
+
+--- Chat constructor.
+--- @function Chat
+--- @string _name Name of the Chat Compound. Used to create unique event handler functions.
+--- @tparam Frame initialBackground The Background @{Frame} for this Chat Compound.
+--- @tparam table initialChannels The names of the channels managed by this Compound. Passed as a table.
+--- @tparam[opt=TabLocation.Top] TabLocation initialTabLocation A @{TabLocation} @{Enum} that determines on which side of the consoles the tabs sit.
+--- @number[opt=0.05] initialSize This is the size of the unmanaged portion of the tabs. Must be between 0.0 and 1.0.
+--- @tparam[opt="dynamic"] number|string initialWordWrap This is the word wrap of the @{MiniConsole} text.
+--- @tparam[opt=10] number|string initialFont This is the font size of the @{MiniConsole} text.
+--- @tparam[opt] table initialComponents A table of Components. These are used to decorate the tabs.
+--- @treturn Chat
 local function new (_, _name, initialBackground, initialChannels, initialTabLocation, initialTabSize, initialWordWrap, initialFont, initialComponents)
-	--[[
-		Structure: New Chat
-			A Compound composed of MiniConsoles and tabs that can be echoed to,
-			displaying one MiniConsole at a time, with tabs to switch between the
-			active MiniConsole.
-	]]
+	--- @type Chat
 	local self = {}
 
-	-- Object: _background
-	-- The background Frame that houses the Chat Compound.
 	local _background = initialBackground
 
-	-- List: _channelList
-	-- A string list of channel names. There will be one tab and MiniConsole
-	-- per name.
 	local _channelList = {}
 	for _, channel in ipairs(initialChannels) do
 		_channelList[#_channelList + 1] = channel
 	end
 
-	-- List: _miniConsoles
-	-- The MiniConsoles managed by this Chat Compound.
 	local _miniConsoles = {}
-
-	-- Number: _tabSize
-	-- The size of the unmanaged portion of the tabs. If TabLocation is Top or
-	-- Bottom, then this is height. Otherwise, width.
 	local _tabSize = initialTabSize or 0.05
-
-	-- Number: _fontSize
-	-- The font size of the MiniConsole text. Can be "dynamic" if word wrap is static.
 	local _fontSize = initialFont or 10
-
-	-- Number: _wordWrap
-	-- The word wrap of the MiniConsole text. Can be "dynamic" if font size is static.
 	local _wordWrap = initialWordWrap or "dynamic"
-
-	-- Variable: _tabLocation
-	-- Determines on which side of the MiniConsoles the tabs will sit.
 	local _tabLocation = initialTabLocation or TabLocation.Top
-
-	-- List: _tabs
-	-- The tab Frames managed by this Chat Compound.
 	local _tabs = Lib.OrderedTable()
-
-	-- Object: _tabContainer
-	-- A Frame that holds the tabs' Box Compound.
 	local _tabContainer
-
-	-- List: _components
-	-- A table of Components that all tabs will share.
 	local _components = initialComponents
-
-	-- Object: _activeBackground
-	-- The default background color of the active tab. If a Background
-	-- component exists in the components passed, it will override this.
 	local _activeBackground = Background(Brush(Color(ColorMode.RGB, 130, 130, 130)))
-
-	-- Object: _inactiveBackground
-	-- The default background color of tabs when they're not the active tab.
 	local _inactiveBackground = Background(Brush(Color(ColorMode.RGB, 50, 50, 50)))
-
-	-- Object: _pendingBackground
-	-- The default background color of a tab when there's a message waiting to be viewed.
 	local _pendingBackground = Background(Brush(Color(ColorMode.RGB, 200, 200, 200)))
-
-	-- String: _currentChannel
-	-- The channel currently active.
 	local _currentChannel = _channelList["All"] or _channelList[1]
-
-	-- List: _pendingChannels
-	-- Channels with text to be viewed, waiting to be clicked on.
 	local _pendingChannels = {}
 
-	-- String: _switchFunction
-	-- The name of the global function that will be used to switch MiniConsoles
-	-- when the tab is clicked.
 	local _switchFunction = _name .. "ChatSwitch"
+    local _initializeFunction = _name .. "InitializeChat"
 
 	-- Here we set up the parent->child hierarchy that makes the Chat Compound work.
 	do
@@ -205,47 +164,47 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		_background:Add(tabBox)
 	end
 
-	--[[
-		Properties: Chat Properties
-			Name - Returns the Chat Compound's name.
-			Background - Returns the background Frame of the Chat Compound.
-			Container - Gets and sets the Chat Compound's parent Frame.
-			Channels - Returns a copied list of the channels this Compound covers.
-			TabSize - Gets and sets the size of the un-managed dimension of the tabs.
-			FontSize - Gets and sets the size of the font in the MiniConsoles.
-			WordWrap - Gets and sets the word wrap of the MiniConsoles.
-			TabLocation - Gets and sets the location of the tabs surrouding the MiniConsoles.
-			Components - Returns a copied list of the Compound's Tab's Components.
-			ActiveBackground - Gets and sets the Background Component of the tab currently active.
-			InactiveBackground - Gets and sets the Background Component of the tabs that are currently inactive.
-			PendingBackground - Gets and sets the Background Component of any tabs with text waiting to be read.
-			CurrentChannel - Returns the current channel of the Chat Compound.
-			MiniConsoles - Returns a copied list of the MiniConsoles in the Compound.
-			Tabs - Returns a copied list of the Tabs in the Compound.
-	]]
+    --- Properties
+    --- @section
 	local properties = {
 		Name = {
+			--- Returns the name of the Chat Compound.
+			--- @function self.Name.get
+			--- @treturn string
 			get = function ()
 				return _name
 			end,
 		},
 
 		Background = {
+			--- Returns the background @{Frame} of the Chat Compound.
+			--- @function self.Background.get
+			--- @treturn Frame
 			get = function ()
 				return _background
 			end,
 		},
 
 		Container = {
+			--- Returns the parent @{Frame} of the Chat Compound.
+			--- @function self.Container.get
+			--- @treturn Frame
 			get = function ()
 				return _background.Container
 			end,
+
+			--- Sets the parent @{Frame} of the Chat Compound.
+			--- @function self.Container.set
+			--- @tparam Frame value
 			set = function (value)
 				_background.Container = value
 			end
 		},
 
 		Channels = {
+			--- Returns the channels this Chat Compound manages.
+			--- @function self.Channels.get
+			--- @treturn table
 			get = function ()
 				local copy = {}
 
@@ -258,9 +217,16 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		TabSize = {
+			--- Returns the size of the Chat Compound's tabs.
+			--- @function self.TabSize.get
+			--- @treturn number
 			get = function ()
 				return _tabSize
 			end,
+
+			--- Sets the size of the Chat Compound's tabs.
+			--- @function self.TabSize.set
+			--- @tparam number value
 			set = function (value)
 				_tabSize = value
 
@@ -275,9 +241,16 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		FontSize = {
+			--- Returns the font size of the Chat Compound's @{MiniConsole}s.
+			--- @function self.FontSize.get
+			--- @treturn number
 			get = function ()
 				return _fontSize
 			end,
+
+			--- Sets the font size of the Chat Compound's @{MiniConsole}s.
+			--- @function self.FontSize.set
+			--- @tparam number value
 			set = function (value)
 				_fontSize = value
 
@@ -288,9 +261,16 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		WordWrap = {
+			--- Returns the word wrap of the Chat Compound's @{MiniConsole}s.
+			--- @function self.WordWrap.get
+			--- @treturn number
 			get = function ()
 				return _wordWrap
 			end,
+
+			--- Sets the word wrap of the Chat Compoound's @{MiniConsole}s.
+			--- @function self.WordWrap.set
+			--- @tparam number value
 			set = function (value)
 				_wordWrap = value
 
@@ -301,15 +281,25 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		TabLocation = {
+			--- Returns the Chat Compound's @{TabLocation}.
+			--- @function self.TabLocation.get
+			--- @treturn TabLocation
 			get = function ()
 				return _tabLocation
 			end,
+
+			--- Sets the Chat Compound's @{TabLocation}.
+			--- @function self.TabLocation.set
+			--- @tparam TabLocation value
 			set = function (value)
 				_tabLocation = value
 			end
 		},
 
 		Components = {
+			--- Returns the Components used to decorate the Chat Compound's tabs.
+			--- @function self.Components.get
+			--- @treturn table
 			get = function ()
 				local copy = {}
 
@@ -322,39 +312,66 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		ActiveBackground = {
+			--- Returns the @{Background} used to style the active tab.
+			--- @function self.ActiveBackground.get
+			--- @treturn Background
 			get = function ()
 				return _activeBackground
 			end,
+
+			--- Sets the @{Background} used to style the active tab.
+			--- @function self.ActiveBackground.set
+			--- @tparam Background value
 			set = function (value)
 				_activeBackground = value
 			end
 		},
 
 		InactiveBackground = {
+			--- Returns the @{Background} used to style inactive tabs.
+			--- @function self.InactiveBackgrounds.get
+			--- @treturn Background
 			get = function ()
 				return _inactiveBackground
 			end,
+
+			--- Sets the @{Background} used to style style inactive tabs.
+			--- @function self.InactiveBackground.set
+			--- @tparam Background value
 			set = function (value)
 				_inactiveBackground = value
 			end
 		},
 
 		PendingBackground = {
+			--- Returns the @{Background} used to style a tab with new text.
+			--- @function self.PendingBackground.get
+			--- @treturn Background
 			get = function ()
 				return _pendingBackground
 			end,
+
+			--- Sets the @{Background} used to style a tab with new text.
+			--- @function self.PendingBackground.set
+			--- @tparam Background value
 			set = function (value)
 				_pendingBackground = value
 			end
 		},
 
 		CurrentChannel = {
+			--- Returns the channel of the active @{MiniConsole}.
+			--- @function self.CurrentChannel.get
+			--- @treturn string
 			get = function ()
 				return _currentChannel
 			end
 		},
 
 		MiniConsoles = {
+			--- Returns the @{MiniConsole}s the Chat Compound manages.
+			--- @function self.MiniConsoles.get
+			--- @treturn table
 			get = function ()
 				local copy = {}
 				local index = 1
@@ -369,6 +386,9 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		},
 
 		Tabs = {
+			--- Returns the tabs the Chat Compound manages.
+			--- @function self.Tabs.get
+			--- @treturn table
 			get = function ()
 				local copy = {}
 
@@ -379,16 +399,12 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 				return copy
 			end
 		},
-	}
+    }
+    --- @section end
 
-	--[[
-		Function: Echo
-			Echos any kind of text into a specific channel.
-
-		Parameters:
-			channel - The channel into which to echo.
-			text - The text to be echoed.
-	]]
+    --- Echos any kind of text into a specific channel.
+    --- @string channel The channel into which to echo.
+    --- @string text
 	function self:Echo (channel, text)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Echo(text)
@@ -408,13 +424,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-	--[[
-		Function: Append
-			Appends text to a channel from the buffer.
-
-		Parameters:
-			channel - The into which the text should be appended.
-	]]
+    --- Appends text to a channel from the buffer.
+    --- @string channel The channel into which the text should be appended.
 	function self:Append (channel)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Append()
@@ -434,13 +445,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-	--[[
-		Function: Paste
-			Pastes copy()'d text into a channel.
-
-		Parameters:
-			channel - The channel into which the text should be pasted.
-	]]
+    --- Pastes copy()'d text into a channel.
+    --- @string channel The channel into which the text should be pasted.
 	function self:Paste (channel)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Paste()
@@ -460,13 +466,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-	--[[
-		Function: Clear
-			Removes all text from a channel.
-
-		Parameters:
-			channel - The channel to be cleared.
-	]]
+    --- Removes all text from a channel.
+    --- @string[opt="All"] channel The channel to be cleared.
 	function self:Clear (channel)
 		if channel and channel ~= "All" then
 			_miniConsoles[channel]:Clear()
@@ -477,14 +478,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-	--[[
-		Function: <name>ChatSwitch
-			A dirty global function used as a callback for tabs. Vyzor creates
-			one of these functions for each Chat Compound.
-
-		Parameters:
-			channel - The channel to be switched to.
-	]]
+    -- Documented above.
 	_G[_switchFunction] = function (channel)
 		if channel == _currentChannel then
 			return
@@ -523,18 +517,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		_currentChannel = channel
 	end
 
-	--[[
-		Function: <name>InitializeChat
-			A global function, registered as an event handler for
-			the VyzorDrawnEvent. Makes sure the proper consoles
-			are visible.
-
-			Vyzor creates one of these for each Chat Compound.
-	]]
-	-- String: _initializeFunction
-	-- The name of the global initialization function for this Chat Compound.
-	local _initializeFunction = _name .. "InitializeChat"
-
+    -- Documented above.
 	_G[_initializeFunction] = function ()
 		for name, console in pairs(_miniConsoles) do
 			if name == _currentChannel then

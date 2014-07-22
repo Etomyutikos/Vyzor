@@ -1,5 +1,5 @@
---- A Supercomponent, for use only with Frames.
---- Responsible for managing the coordinate positioning of the Frame within its parent.
+--- A Supercomponent, for use only with @{Frame}s.
+--- Responsible for managing the coordinate positioning of the @{Frame} within its parent.
 --- @classmod Position
 
 local Base = require("vyzor.base")
@@ -31,10 +31,10 @@ end
 
 --- Position constructor.
 --- @function Position
---- @tparam Frame _frame The Frame to which this Supercomponent belongs.
+--- @tparam Frame _frame The @{Frame} to which this Supercomponent belongs.
 --- @number[opt=0] initialX The initial x coordinate position.
 --- @number[opt=0] initialY The initial y coordinate position.
---- @bool _isFirst Determines whether or not the parent Frame is the HUD.
+--- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
 --- @treturn Position
 local function new (_, _frame, initialX, initialY, _isFirst)
     --- @type Position
@@ -126,9 +126,11 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         updateContent()
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Coordinates = {
-            --- Returns the user-defined coordinates of the Frame.
+            --- Returns the user-defined coordinates of the @{Frame}.
             --- @function self.Coordinates.get
             --- @treturn table
             get = function ()
@@ -141,7 +143,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
                 return copy
             end,
 
-            --- Sets the user-defined coordinates of the Frame.
+            --- Sets the user-defined coordinates of the @{Frame}.
             --- @function self.Coordinates.set
             --- @tparam table value
             set = function (value)
@@ -152,7 +154,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Absolute = {
-            --- Returns the actual coordinates of the Frame.
+            --- Returns the actual coordinates of the @{Frame}.
             --- @function self.Absolute.get
             --- @treturn table
             get = function ()
@@ -171,7 +173,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Content = {
-            --- Returns the content coordinates of the Frame.
+            --- Returns the content coordinates of the @{Frame}.
             --- @function self.Content.get
             --- @treturn table
             get = function ()
@@ -190,14 +192,14 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         X = {
-            --- Returns the user-defined X coordinate of the Frame.
+            --- Returns the user-defined X coordinate of the @{Frame}.
             --- @function self.X.get
             --- @treturn number
             get = function ()
                 return _coordinates.X
             end,
 
-            --- Sets the user-defined X coordinate of the Frame.
+            --- Sets the user-defined X coordinate of the @{Frame}.
             --- @function self.X.set
             --- @tparam number value
             set = function (value)
@@ -210,14 +212,14 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         Y = {
-            --- Returns the user-defined Y coordinate of the Frame.
+            --- Returns the user-defined Y coordinate of the @{Frame}.
             --- @function self.Y.get
             --- @treturn number
             get = function ()
                 return _coordinates.Y
             end,
 
-            --- Sets the user-defined Y coordinate of the Frame.
+            --- Sets the user-defined Y coordinate of the @{Frame}.
             --- @function self.Y.set
             --- @tparam number value
             set = function (value)
@@ -230,7 +232,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         AbsoluteX = {
-            --- Returns the actual X coordinate of the Frame.
+            --- Returns the actual X coordinate of the @{Frame}.
             --- @function self.AbsoluteX.get
             --- @treturn number
             get = function ()
@@ -242,7 +244,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         AbsoluteY = {
-            --- Returns the actual Y coordinate of the Frame.
+            --- Returns the actual Y coordinate of the @{Frame}.
             --- @function self.AbsoluteY.get
             --- @treturn number
             get = function ()
@@ -255,7 +257,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         ContentX = {
-            --- Returns the X coordinate of the Frame content.
+            --- Returns the X coordinate of the @{Frame} content.
             --- @function self.ContentX.get
             --- @treturn number
             get = function ()
@@ -268,7 +270,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
         },
 
         ContentY = {
-            --- Returns the Y coordinate of the Frame content.
+            --- Returns the Y coordinate of the @{Frame} content.
             --- @function self.ContentY.get
             --- @treturn number
             get = function ()
@@ -280,6 +282,7 @@ local function new (_, _frame, initialX, initialY, _isFirst)
             end
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

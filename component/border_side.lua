@@ -1,4 +1,4 @@
---- A subcomponent that defines individual sides of a Border Component.
+--- A subcomponent that defines individual sides of a @{Border} Component.
 --- @classmod BorderSide
 
 local Base = require("vyzor.base")
@@ -9,8 +9,8 @@ local BorderSide = Base("Subcomponent", "BorderSide")
 --- Border constructor.
 --- @function Border
 --- @number initialWidth The BorderSide's initial width.
---- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The BorderSide's initial BorderStyle.
---- @tparam Brush|Image initialContent The BorderSide's initial Brush or Image.
+--- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The BorderSide's initial @{BorderStyle}.
+--- @tparam Brush|Image initialContent The BorderSide's initial @{Brush} or @{Image}.
 --- @number initialRadius The radius of the BorderSide's corners. Only relevant for top and bottom BorderSides.
 --- @treturn BorderSide
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius)
@@ -50,6 +50,8 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         end
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Width = {
             --- Returns the BorderSide's width.
@@ -68,14 +70,14 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Style = {
-            --- Returns the BorderSide's BorderStyle.
+            --- Returns the BorderSide's @{BorderStyle}.
             --- @function self.Style.get
             --- @treturn BorderStyle
             get = function ()
                 return _style
             end,
 
-            --- Sets the BorderSide's BorderStyle.
+            --- Sets the BorderSide's @{BorderStyle}.
             --- @function self.Style.set
             --- @tparam BorderStyle value
             set = function (value)
@@ -146,6 +148,7 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

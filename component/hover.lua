@@ -1,4 +1,4 @@
---- This Component defines Frame behaviour on mouse-over and may contain other Components.
+--- This Component defines @{Frame} behaviour on mouse-over and may contain other Components.
 --- @classmod Hover
 
 local Base = require("vyzor.base")
@@ -41,6 +41,8 @@ local function new (_, initialComponents)
         end
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Components = {
             --- Returns the Hover Component's Components.
@@ -72,6 +74,7 @@ local function new (_, initialComponents)
             end,
         },
     }
+    --- @section end
 
     --- Adds a new Component.
     --- @tparam Component component

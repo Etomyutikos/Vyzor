@@ -1,5 +1,5 @@
---- A Component that defines gradiant data.
---- Used primarily in a Brush Component.
+--- A Component that defines gradient data.
+--- Used primarily in a @{Brush} Component.
 --- @classmod Gradient
 
 local Base = require("vyzor.base")
@@ -105,15 +105,11 @@ local function new (_, _mode, ...)
         end
     end
 
-    --[[
-        Properties: Gradient Properties
-            Mode - Returns the Gradient's <GradientMode> Enum.
-            Data - Returns a copy of the Gradient's <gradient_data>.
-            Stylesheet - Updates and returns the Gradient Component's <stylesheet>.
-    ]]
+    --- Properties
+    --- @section
     local properties = {
         Mode = {
-            --- Returns the Gradient's GradientMode.
+            --- Returns the Gradient's @{GradientMode}.
             --- @function self.Mode.get
             --- @treturn GradientMode
             get = function ()
@@ -149,6 +145,7 @@ local function new (_, _mode, ...)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

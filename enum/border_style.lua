@@ -1,23 +1,10 @@
+--- Specifies option for @{Border} and @{BorderSide} Components.
+--- @classmod BorderStyle
+
 local Enum = require("vyzor.enum")
--- Title: BorderStyle
 
---[[
-    Array: _enum
-        Defines options for BorderStyle.
-
-    Fields:
-        Dashed - A series of dashes.
-        DotDash - Alternating series of dots and dashes.
-        DotDotDash - A repeating series of two dots followed by a dash.
-        Dotted - A series of dots.
-        Double - No clue.
-        Groove - Applies a small groove to the corners.
-        Inset - No clue.
-        Outset - No clue.
-        Ridge - No clue.
-        Solid - A solid line.
-        None - Applies no style to the <Border>.
-]]
+--- BorderStyle options.
+--- @table BorderStyle
 local _enum = {
     Dashed = "dashed",
     DotDash = "dot-dash",
@@ -32,10 +19,6 @@ local _enum = {
     None = "none",
 }
 
---[[
-    Enum: BorderStyle
-        Specifies options for <Border> and <BorderSide>.
-]]
 local BorderStyle = Enum("BorderStyle", _enum)
 
 return BorderStyle

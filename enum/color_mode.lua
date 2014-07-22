@@ -1,18 +1,10 @@
+--- Specifies modes for @{Color} Components.
+--- @classmod ColorMode
+
 local Enum = require("vyzor.enum")
--- Title: ColorMode
 
---[[
-    Array: _enum
-        Defines options for ColorMode.
-
-    Fields:
-        RGB - Red, green, and blue.
-        RGBA - Red, green, blue, and alpha.
-        HSV - Hue, saturation, and value.
-        HSVA - Hue, saturation, and value.
-        Hex - Color in hexadecimal format.
-        Name - The name of a color.
-]]
+--- ColorMode options.
+--- @table ColorMode
 local _enum = {
     RGB = "rgb",
     RGBA = "rgba",
@@ -22,10 +14,6 @@ local _enum = {
     Name = "name",
 }
 
---[[
-    Enum: ColorMode
-        Specifies modes for <Color> Components.
-]]
 local ColorMode = Enum("ColorMode", _enum)
 
 return ColorMode

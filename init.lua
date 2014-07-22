@@ -1,9 +1,6 @@
 --- Vyzor, UI Manager for Mudlet
 --- @module Vyzor
 
--- TODO: Remove NaturalDocs comments. Replace with LuaDoc?
--- TODO: GitHub license file?
-
 --- The primary interface, exposing the Vyzor API.
 --- @table Vyzor
 local Vyzor = {
@@ -23,23 +20,23 @@ local Vyzor = {
     MiniConsole = require("vyzor.component.mini_console"), --- See @{MiniConsole}.
     Padding = require("vyzor.component.padding"), --- See @{Padding}.
 
-    Alignment = require("vyzor.enum.alignment"), --- See 2{Alignment}.
-    BorderStyle = require("vyzor.enum.border_style"), --- See 2{BorderStyle}.
-    BoundingMode = require("vyzor.enum.bounding_mode"), --- See 2{BoundingMode}.
-    BoxMode = require("vyzor.enum.box_mode"), --- See 2{BoxMode}.
-    ColorMode = require("vyzor.enum.color_mode"), --- See 2{ColorMode}.
-    FontDecoration = require("vyzor.enum.font_decoration"), --- See 2{FontDecoration}.
-    FontStyle = require("vyzor.enum.font_style"), --- See 2{FontStyle}.
-    FontWeight = require("vyzor.enum.font_weight"), --- See 2{FontWeight}.
-    GaugeFill = require("vyzor.enum.gauge_fill"), --- See 2{GaugeFill}.
-    GradientMode = require("vyzor.enum.gradient_mode"), --- See 2{GradientMode}.
-    Repeat = require("vyzor.enum.repeat"), --- See 2{Repeat}.
-    TabLocation = require("vyzor.enum.tab_location"), --- See 2{TabLocation}.
-    VyzorBorder = require("vyzor.enum.vyzorborder"), --- See 2{VyzorBorder}.
+    Alignment = require("vyzor.enum.alignment"), --- See @{Alignment}.
+    BorderStyle = require("vyzor.enum.border_style"), --- See @{BorderStyle}.
+    BoundingMode = require("vyzor.enum.bounding_mode"), --- See @{BoundingMode}.
+    BoxMode = require("vyzor.enum.box_mode"), --- See @{BoxMode}.
+    ColorMode = require("vyzor.enum.color_mode"), --- See @{ColorMode}.
+    FontDecoration = require("vyzor.enum.font_decoration"), --- See @{FontDecoration}.
+    FontStyle = require("vyzor.enum.font_style"), --- See @{FontStyle}.
+    FontWeight = require("vyzor.enum.font_weight"), --- See @{FontWeight}.
+    GaugeFill = require("vyzor.enum.gauge_fill"), --- See @{GaugeFill}.
+    GradientMode = require("vyzor.enum.gradient_mode"), --- See @{GradientMode}.
+    Repeat = require("vyzor.enum.repeat"), --- See @{Repeat}.
+    TabLocation = require("vyzor.enum.tab_location"), --- See @{TabLocation}.
+    VyzorBorder = require("vyzor.enum.vyzorborder"), --- See @{VyzorBorder}.
 
-    Box = require("vyzor.compound.box"), --- See 2{Box}.
-    Chat = require("vyzor.compound.chat"), --- See 2{Chat}.
-    Gauge = require("vyzor.compound.gauge"), --- See 2{Gauge}.
+    Box = require("vyzor.compound.box"), --- See @{Box}.
+    Chat = require("vyzor.compound.chat"), --- See @{Chat}.
+    Gauge = require("vyzor.compound.gauge"), --- See @{Gauge}.
 
     Options = require("vyzor.base.options"), --- See @{Options}.
 

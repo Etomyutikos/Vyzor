@@ -9,7 +9,7 @@ local Base = {}
 --- @function Base
 --- @string _type The new object's type.
 --- @string _subtype The new object's subtype.
---- #treturn Base
+--- @treturn Base
 local function new (_, _type, _subtype)
     --- @type Base
     local self = {}

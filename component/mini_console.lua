@@ -90,6 +90,8 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         end
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Name = {
             --- Returns the MiniConsole's name.
@@ -101,14 +103,14 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
         },
 
         Container = {
-            --- Returns the MiniConsole's parent Frame.
+            --- Returns the MiniConsole's parent @{Frame}.
             --- @function self.Container.get
             --- @treturn Frame
             get = function ()
                 return _container
             end,
 
-            --- Sets the MiniConsole's parent Frame.
+            --- Sets the MiniConsole's parent @{Frame}.
             --- @function self.Container.set
             --- @tparam Frame value
             set = function (value)
@@ -290,6 +292,7 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
             end
         }
     }
+    --- @section end
 
     --- Draws the MiniConsole.
     --- Should only be called internally.

@@ -100,14 +100,14 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         BoundingMode = {
-            --- Returns the BoundingMode for the Frame.
+            --- Returns the @{BoundingMode} for the Frame.
             --- @function self.BoundingMode.get
             --- @treturn BoundingMode
             get = function ()
                 return _boundingType
             end,
 
-            --- Sets the BoundingMode for this Frame.
+            --- Sets the @{BoundingMode} for this Frame.
             --- @function self.BoundingMode.set
             --- @tparam BoundingMode value
             set = function (value)
@@ -213,7 +213,7 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Position = {
-            --- Returns the Position supercomponent.
+            --- Returns the @{Position} supercomponent.
             --- @function self.Position.get
             --- @treturn Position
             get = function ()
@@ -222,7 +222,7 @@ local function new (_, _name, _x, _y, _width, _height)
         },
 
         Size = {
-            --- Returns the Size supercomponent.
+            --- Returns the @{Size} supercomponent.
             --- @function self.Size.get
             --- @treturn Size
             get = function ()

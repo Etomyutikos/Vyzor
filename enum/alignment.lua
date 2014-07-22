@@ -1,25 +1,10 @@
+--- Defines options for aligning content within various Components.
+--- @classmod Alignment
+
 local Enum = require("vyzor.enum")
--- Title: Alignment
 
---[[
-    Array: _enum
-        Defines the options for Alignment.
-
-    Fields:
-        Top - Up top somewhere.
-        TopLeft - Top left corner.
-        TopRight - Top right corner.
-        TopCenter - In the middle of the top.
-        Bottom - Somewhere down below.
-        BottomLeft - Bottom left corner.
-        BottomRight - Bottom right corner.
-        BottomCenter - Right where the split would be.
-        Left - Somewhere leftward.
-        LeftCenter - Middle of the left side.
-        Right - Yonder rightward.
-        RightCenter - Middle of the right side.
-        Center - Smack-dab in the middle.
-]]
+--- Alignment options.
+--- @table Alignment
 local _enum = {
     Top = "top",
     TopLeft = "top left",
@@ -36,10 +21,6 @@ local _enum = {
     Center = "center",
 }
 
---[[
-    Enum: Alignment
-        Specifies options for Component alignments.
-]]
 local Alignment = Enum("Alignment", _enum)
 
 return Alignment

@@ -1,39 +1,26 @@
+--- A container that holds and maintains a dynamically arranged collection of @{Frame}s.
+--- @classmod Box
+
 local Base = require("vyzor.base")
 local BoxMode = require("vyzor.enum.box_mode")
 local Lib = require("vyzor.lib")
 
---[[
-    Class: Box
-        Defines a dynamically arranged collection
-        of Frames.
-]]
 local Box = Base("Compound", "Box")
 
---[[
-    Constructor: new
-
-    Parameters:
-        _name - The name of the Box and the automatically generated container Frame.
-        initialMode - Alignment of Frames. Defaults to Horizontal.
-        initialBackground - The background Frame for this Box.
-        initialFrames - A numerically indexed table holding the Frames this Box contains.
-]]
+--- Box constructor.
+--- @function Box
+--- @string _name The name of the Box and the automatically generated container @{Frame}.
+--- @tparam[opt=BoxMode.Horizontal] BoxMode initialMode Alignment of @{Frame}s.
+--- @tparam Frame initialBackground The background @{Frame} for this Box.
+--- @tparam table initialFrames A numerically indexed table holding the @{Frame}s this Box contains.
+--- @treturn Box
 local function new (_, _name, initialMode, initialBackground, initialFrames)
     assert(_name, "Vyzor: New Box must be supplied with a name")
 
-    --[[
-        Structure: New Box
-            A container that holds and maintains a dynamically
-            arranged collection of Frames.
-    ]]
+    --- @type Box
     local self = {}
 
-    -- Variable: mode
-    -- The alignment of the Frames within the Box.
     local _mode = initialMode or BoxMode.Horizontal
-
-    -- Array: frames
-    -- Holds this Box's Frames.
     local _frames = Lib.OrderedTable()
 
     if initialFrames and type(initialFrames) == "table" then
@@ -42,8 +29,6 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
         end
     end
 
-    -- Object: background_frame
-    -- The Frame containing all other Frames.
     local _backgroundFrame = initialBackground
     if _frames:count() > 0 then
         for frame in _frames:each() do
@@ -51,10 +36,6 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
         end
     end
 
-    --[[
-        Function: updateFrames()
-            Updates the Box's Frames based on BoxMode.
-    ]]
     local function updateFrames()
         if _mode == BoxMode.Horizontal then
             for index, frame in _frames:ipairs() do
@@ -93,28 +74,31 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
         end
     end
 
-    --[[
-        Properties: Box Properties
-            Name - Returns the Box's name.
-            Background - Exposes the Box's background Frame.
-            Frames - Returns a copy of the Box's Frames.
-            Container - Gets and sets the parent Frame of this Box.
-            Mode - Gets and sets the Box's BoxMode.
-    ]]
+    --- Properties
+    --- @section
     local properties = {
         Name = {
+            --- Returns the name of the Box.
+            --- @function self.Name.get
+            --- @treturn string
             get = function ()
                 return _name
             end,
         },
 
         Background = {
+            --- Returns the background @{Frame} of the Box.
+            --- @function self.Background.get
+            --- @treturn Frame
             get = function ()
                 return _backgroundFrame
             end,
         },
 
         Frames = {
+            --- Returns the @{Frame}s the Box contains.
+            --- @function self.Frames.get
+            --- @treturn table
             get = function ()
                 if _frames:count() > 0 then
                     local copy = {}
@@ -131,18 +115,32 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
         },
 
         Container = {
+            --- Returns the parent @{Frame} of the Box.
+            --- @function self.Container.get
+            --- @treturn Frame
             get = function ()
                 return _backgroundFrame.Container
             end,
+
+            --- Sets the parent @{Frame} of the Box.
+            --- @function self.Container.set
+            --- @tparam Frame value
             set = function (value)
                 _backgroundFrame.Container = value
             end
         },
 
         Mode = {
+            --- Returns the @{BoxMode} of the Box.
+            --- @function self.Mode.get
+            --- @treturn BoxMode
             get = function ()
                 return _mode
             end,
+
+            --- Sets the @{BoxMode} of the Box.
+            --- @function self.Mode.set
+            --- @tparam BoxMode value
             set = function (value)
                 if BoxMode:IsValid(value) then
                     _mode = value
@@ -153,6 +151,7 @@ local function new (_, _name, initialMode, initialBackground, initialFrames)
             end
         },
     }
+    --- @section end
 
     updateFrames()
     setmetatable(self, {

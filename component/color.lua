@@ -1,5 +1,5 @@
 --- A Component that defines color information.
---- Used primarily in a Brush Component.
+--- Used primarily in a @{Brush} Component.
 --- @classmod Color
 
 local Base = require("vyzor.base")
@@ -73,9 +73,11 @@ local function new (_, _mode, ...)
         end
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Mode = {
-            --- Returns the ColorMode of this Color.
+            --- Returns the @{ColorMode} of this Color.
             --- @function self.Mode.get
             --- @treturn ColorMode
             get = function ()
@@ -115,6 +117,7 @@ local function new (_, _mode, ...)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

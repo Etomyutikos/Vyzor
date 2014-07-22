@@ -1,16 +1,10 @@
+--- Specifies @{Font} markup options.
+--- @classmod FontDecoration
+
 local Enum = require("vyzor.enum")
--- Title: FontDecoration
 
---[[
-    Array: _enum
-        Defines options for FontDecoration.
-
-    Fields:
-        None - Does nothing to the text.
-        Underline - Draws a line beneath the text.
-        Overline - Draws a line over the text.
-        LineThrough - Draws a line through the text.
-]]
+--- FontDecoration options.
+--- @table FontDecoration
 local _enum = {
     None = "none",
     Underline = "underline",
@@ -18,10 +12,6 @@ local _enum = {
     LineThrough = "line-through",
 }
 
---[[
-    Enum: FontDecoration
-        Specifices <Font> markup options.
-]]
 local FontDecoration = Enum("FontDecoration", _enum)
 
 return FontDecoration

@@ -1,4 +1,4 @@
---- A Component that defines a Frame's Border.
+--- A Component that defines a @{Frame}'s Border.
 --- @classmod Border
 
 local Base = require("vyzor.base")
@@ -25,10 +25,10 @@ end
 --- Border constructor.
 --- @function Border
 --- @tparam number|table initialWidth The Border Component's initial width. May be a number or a table of numbers.
---- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The Border Component's initial BorderStyle.
+--- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The Border Component's initial @{BorderStyle}.
 --- @tparam Image|Brush|table initialContent The Border Component's initial content.
 --- @tparam[opt=0] number|table initialRadius The Border Component's initial radius, for rounded corners.
---- @tparam table initialBorders The Border Component's initial BorderSide Subcomponents. Must be a table containing one to four BorderSides.
+--- @tparam table initialBorders The Border Component's initial @{BorderSide} Subcomponents. Must be a table containing one to four @{BorderSide}s.
 --- @treturn Border
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius, initialBorders)
     --- @type Border
@@ -80,16 +80,18 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         _stylesheet = table.concat(styleTable, "; ")
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Style = {
-            --- Returns the Border's BorderStyle.
+            --- Returns the Border's @{BorderStyle}.
             --- @function self.Style.get
             --- @treturn BorderStyle
             get = function ()
                 return _style
             end,
 
-            --- Sets the Border's BorderStyle.
+            --- Sets the Border's @{BorderStyle}.
             --- @function self.Style.set
             --- @tparam BorderStyle value
             set = function (value)
@@ -151,14 +153,14 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Top = {
-            --- Returns the Border's top BorderSide Component.
+            --- Returns the Border's top @{BorderSide} Component.
             --- @function self.Top.get
             --- @treturn table
             get = function ()
                 return (_borders and _borders["top"]) or nil
             end,
 
-            --- Sets the Border's top BorderSide Component.
+            --- Sets the Border's top @{BorderSide} Component.
             --- @function self.Top.set
             --- @tparam BorderSide value
             set = function (value)
@@ -167,14 +169,14 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Right = {
-            --- Returns the Border's right BorderSide Component.
+            --- Returns the Border's right @{BorderSide} Component.
             --- @function self.Right.get
             --- @treturn table
             get = function ()
                 return (_borders and _borders["right"]) or nil
             end,
 
-            --- Sets the Border's right BorderSide Component.
+            --- Sets the Border's right @{BorderSide} Component.
             --- @function self.Right.set
             --- @tparam BorderSide value
             set = function (value)
@@ -183,14 +185,14 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Bottom = {
-            --- Returns the Border's bottom BorderSide Component.
+            --- Returns the Border's bottom @{BorderSide} Component.
             --- @function self.Bottom.get
             --- @treturn table
             get = function ()
                 return (_borders and _borders["bottom"]) or nil
             end,
 
-            --- Sets the Border's bottom BorderSide Component.
+            --- Sets the Border's bottom @{BorderSide} Component.
             --- @function self.Bottom.set
             --- @tparam BorderSide value
             set = function (value)
@@ -199,14 +201,14 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
         },
 
         Left = {
-            --- Returns the Border's left BorderSide Component.
+            --- Returns the Border's left @{BorderSide} Component.
             --- @function self.Left.get
             --- @treturn table
             get = function ()
                 return (_borders and _borders["left"]) or nil
             end,
 
-            --- Sets the Border's left BorderSide Component.
+            --- Sets the Border's left @{BorderSide} Component.
             --- @function self.Left.set
             --- @tparam BorderSide value
             set = function (value)
@@ -227,6 +229,7 @@ local function new (_, initialWidth, initialStyle, initialContent, initialRadius
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

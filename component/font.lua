@@ -13,7 +13,7 @@ local Font = Base("Component", "Font")
 --- @tparam number|string initialSize The Font Component's initial size. Valid sizes are defined by QT, but I can only seem to get numbers to work.
 --- @string initialFamily The font family for this Font Component.
 --- @tparam[opt=FontStyle.Normal] FontStyle|FontWeight initialStyle The Font Component's initial style.
---- @tparam[opt] FontDecoration initialDecoration The Font Component's initial FontDecoration.
+--- @tparam[opt] FontDecoration initialDecoration The Font Component's initial @{FontDecoration}.
 --- @treturn Font
 local function new (_, initialSize, initialFamily, initialStyle, initialDecoration)
     --- @type Font
@@ -35,6 +35,8 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
             _decoration or FontDecoration.None)
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Size = {
             --- Returns the Font's size.
@@ -69,14 +71,14 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
         },
 
         Style = {
-            --- Returns the Font's FontStyle.
+            --- Returns the Font's @{FontStyle}.
             --- @function self.Style.get
             --- @treturn FontStyle
             get = function ()
                 return _style
             end,
 
-            --- Sets the Font's FontStyle
+            --- Sets the Font's @{FontStyle}.
             --- @function self.Style.set
             --- @tparam FontStyle value
             set = function (value)
@@ -85,14 +87,14 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
         },
 
         Decoration = {
-            --- Returns the Font's FontDecoration.
+            --- Returns the Font's @{FontDecoration}.
             --- @function self.Decoration.get
             --- @treturn FontDecoration
             get = function ()
                 return _decoration
             end,
 
-            --- Sets the Font's FontDecoration.
+            --- Sets the Font's @{FontDecoration}.
             --- @function self.Decoration.set
             --- @tparam FontDecoration value
             set = function (value)
@@ -110,6 +112,7 @@ local function new (_, initialSize, initialFamily, initialStyle, initialDecorati
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

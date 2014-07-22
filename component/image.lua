@@ -9,7 +9,7 @@ local Image = Base("Component", "Image")
 --- Image constructor.
 --- @function Image
 --- @string _url The filepath of the image used by the Image Component.
---- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment The Alignment of the Image within the Frame.
+--- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment The @{Alignment} of the Image within the @{Frame}.
 --- @treturn Image
 local function new (_, _url, initialAlignment)
     assert(type(_url) == "string", "Vyzor: Url's must be strings.")
@@ -25,6 +25,8 @@ local function new (_, _url, initialAlignment)
         _stylesheet = string.format("image: url(%s); image-position: %s", _url, _alignment)
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Url = {
             --- Returns the Image's filepath, made stylesheet appropriate.
@@ -47,14 +49,14 @@ local function new (_, _url, initialAlignment)
         },
 
         Alignment = {
-            --- Returns the Image's Alignment.
+            --- Returns the Image's @{Alignment}.
             --- @function self.Alignment.get
             --- @treturn Alignment
             get = function ()
                 return _alignment
             end,
 
-            --- Sets the Image's Alignment.
+            --- Sets the Image's @{Alignment}.
             --- @function self.Alignment.set
             --- @tparam Alignment value
             set = function (value)
@@ -77,6 +79,7 @@ local function new (_, _url, initialAlignment)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

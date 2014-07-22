@@ -1,4 +1,4 @@
---- A Component container that holds either a Color or Gradient Component.
+--- A Component container that holds either a @{Color} or @{Gradient} Component.
 --- @classmod Brush
 
 local Base = require("vyzor.base")
@@ -15,6 +15,8 @@ local function new ( _, initialContent)
 
     local _content = initialContent
 
+    --- Properties
+    --- @section
     local properties = {
         Content = {
             --- Returns the content this Brush contains.
@@ -41,6 +43,7 @@ local function new ( _, initialContent)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

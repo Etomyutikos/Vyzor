@@ -1,7 +1,8 @@
---- This Component defines the Margin of a Frame.
---- The Margin is the exterior part of the Frame.
+--- This Component defines the Margin of a @{Frame}.
+--- The Margin is the exterior part of the @{Frame}.
+---
+--- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
 --- @classmod Margin
---- @see http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html
 
 local Base = require("vyzor.base")
 
@@ -30,14 +31,8 @@ local function new (_, ...)
         _stylesheet = string.format("margin: %s", table.concat({ _top, _right, _bottom, _left }, " "))
     end
 
-    --[[
-        Properties: Margin Properties
-            Top - Gets and sets the size of a side of the Margin Component.
-            Right - Gets and sets the size of a side of the Margin Component.
-            Bottom - Gets and sets the size of a side of the Margin Component.
-            Left - Gets and sets the size of a side of the Margin Component.
-            Stylesheet - Updates and returns the Margin Component's <stylesheet>.
-    ]]
+    --- Properties
+    --- @section
     local properties = {
         Top = {
             --- Returns the size of the Margin's top.
@@ -116,6 +111,7 @@ local function new (_, ...)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)

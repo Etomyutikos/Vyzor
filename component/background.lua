@@ -1,4 +1,4 @@
---- Defines a Frame's Background.
+--- Defines a @{Frame}'s Background.
 --- @classmod Background
 
 local Base = require("vyzor.base")
@@ -43,16 +43,18 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
         _stylesheet = table.concat(styleTable, "; ")
     end
 
+    --- Properties
+    --- @section
     local properties = {
         Content = {
-            --- Returns the Image or Brush used in the Background.
+            --- Returns the @{Image} or @{Brush} used in the Background.
             --- @function self.Content.get
             --- @treturn Image|Brush
             get = function ()
                 return _content
             end,
 
-            --- Sets the Image or Brush used in the Background.
+            --- Sets the @{Image} or @{Brush} used in the Background.
             --- @function self.Content.set
             --- @tparam Image|Brush value
             set = function (value)
@@ -61,14 +63,14 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
         },
 
         Alignment = {
-            --- Returns the Background's content Alignment.
+            --- Returns the Background's content @{Alignment}.
             --- @function self.Alignment.get
             --- @treturn Alignment
             get = function ()
                 return _alignment
             end,
 
-            --- Sets the Background's content Alignment.
+            --- Sets the Background's content @{Alignment}.
             --- @function self.Alignment.set
             --- @tparam Alignment value
             set = function (value)
@@ -108,6 +110,7 @@ local function new (_, initialContent, initialAlignment, initialRepeatMode)
             end,
         },
     }
+    --- @section end
 
     setmetatable(self, {
         __index = function (_, key)
