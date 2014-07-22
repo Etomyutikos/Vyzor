@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Vyzor</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Properties">Properties </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../classes/Frame.html">Frame</a></li>
+  <li><a href="../classes/Base.html">Base</a></li>
+  <li><a href="../classes/Background.html">Background</a></li>
+  <li><a href="../classes/Border.html">Border</a></li>
+  <li><a href="../classes/BorderSide.html">BorderSide</a></li>
+  <li><a href="../classes/Brush.html">Brush</a></li>
+  <li><a href="../classes/Color.html">Color</a></li>
+  <li><a href="../classes/Font.html">Font</a></li>
+  <li><a href="../classes/Gradient.html">Gradient</a></li>
+  <li><a href="../classes/Hover.html">Hover</a></li>
+  <li><a href="../classes/Image.html">Image</a></li>
+  <li><a href="../classes/Map.html">Map</a></li>
+  <li><a href="../classes/Margin.html">Margin</a></li>
+  <li><a href="../classes/MiniConsole.html">MiniConsole</a></li>
+  <li><a href="../classes/Padding.html">Padding</a></li>
+  <li><a href="../classes/Position.html">Position</a></li>
+  <li><a href="../classes/Size.html">Size</a></li>
+  <li><a href="../classes/Box.html">Box</a></li>
+  <li><a href="../classes/Chat.html">Chat</a></li>
+  <li><strong>Gauge</strong></li>
+  <li><a href="../classes/Alignment.html">Alignment</a></li>
+  <li><a href="../classes/BorderStyle.html">BorderStyle</a></li>
+  <li><a href="../classes/BoundingMode.html">BoundingMode</a></li>
+  <li><a href="../classes/BoxMode.html">BoxMode</a></li>
+  <li><a href="../classes/ColorMode.html">ColorMode</a></li>
+  <li><a href="../classes/FontDecoration.html">FontDecoration</a></li>
+  <li><a href="../classes/FontStyle.html">FontStyle</a></li>
+  <li><a href="../classes/FontWeight.html">FontWeight</a></li>
+  <li><a href="../classes/GaugeFill.html">GaugeFill</a></li>
+  <li><a href="../classes/GradientMode.html">GradientMode</a></li>
+  <li><a href="../classes/Enum.html">Enum</a></li>
+  <li><a href="../classes/Repeat.html">Repeat</a></li>
+  <li><a href="../classes/TabLocation.html">TabLocation</a></li>
+  <li><a href="../classes/VyzorBorder.html">VyzorBorder</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/Options.html">Options</a></li>
+  <li><a href="../modules/Vyzor.html">Vyzor</a></li>
+  <li><a href="../modules/Lib.html">Lib</a></li>
+</ul>
+<h2>Scripts</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../scripts/HUD.html">HUD</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Gauge</code></h1>
+<p>A lightweight container for <a href="../classes/Frame.html#">Frame</a>s that will function as a dynamically resized bar.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self:Update">self:Update ()</a></td>
+	<td class="summary">Updates the Gauge.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Echo">self:Echo (text)</a></td>
+	<td class="summary">Displays text on the auto-generated caption <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+</table>
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Gauge:VyzorGaugeUpdate">Gauge:VyzorGaugeUpdate ()</a></td>
+	<td class="summary">A dirty global function to update all Vyzor Gauges.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Gauge:VyzorInitializeGauges">Gauge:VyzorInitializeGauges ()</a></td>
+	<td class="summary">Calls update on each Gauge after Vyzor has been drawn.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Gauge:Gauge">Gauge:Gauge (name, initialCurrentValueAddress, initialMaximumValueAddress, initialBackground, initialForeground[, initialFillMode=GaugeFill.LeftRight[, initialOverflowFrames]])</a></td>
+	<td class="summary">Gauge constructor.</td>
+	</tr>
+</table>
+<h2><a href="#Properties">Properties </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.Name.get">self.Name.get ()</a></td>
+	<td class="summary">Returns the name of the Gauge.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.get">self.Container.get ()</a></td>
+	<td class="summary">Returns the Gauge's parent <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.set">self.Container.set (value)</a></td>
+	<td class="summary">Sets the Gauge's parent <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.CurrentAddress.get">self.CurrentAddress.get ()</a></td>
+	<td class="summary">Returns the address of the Gauge's current value variable.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.CurrentAddress.set">self.CurrentAddress.set (value)</a></td>
+	<td class="summary">Sets the address of the Gauge's current value variable.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Current.get">self.Current.get ()</a></td>
+	<td class="summary">Returns the Gauge's current value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.MaximumAddress.get">self.MaximumAddress.get ()</a></td>
+	<td class="summary">Returns the address of the Gauge's maximum value variable.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.MaximumAddress.set">self.MaximumAddress.set (value)</a></td>
+	<td class="summary">Sets the address of the Gauge's maximum value variable.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Maximum.get">self.Maximum.get ()</a></td>
+	<td class="summary">Returns the Gauge's maximum value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Background.get">self.Background.get ()</a></td>
+	<td class="summary">Returns the background <a href="../classes/Frame.html#">Frame</a> of the Gauge.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Foreground.get">self.Foreground.get ()</a></td>
+	<td class="summary">Returns the foreground <a href="../classes/Frame.html#">Frame</a> of the Gauge.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AutoEcho.get">self.AutoEcho.get ()</a></td>
+	<td class="summary">Returns a flag determining whether or not the Gauge automatically echoes text on every update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AutoEcho.set">self.AutoEcho.set (value)</a></td>
+	<td class="summary">Sets a flag determining whether or not the Gauge automatically echoes text on every update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TextFormat.get">self.TextFormat.get ()</a></td>
+	<td class="summary">Returns the text passed to string.format if AutoEcho is true.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TextFormat.set">self.TextFormat.set (value)</a></td>
+	<td class="summary">Sets the text passed to string.format if AutoEcho is true.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Overflow.get">self.Overflow.get ()</a></td>
+	<td class="summary">Returns the overflow <a href="../classes/Frame.html#">Frame</a>s of the Gauge.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "self:Update"></a>
+    <strong>self:Update ()</strong>
+    </dt>
+    <dd>
+    Updates the Gauge.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Echo"></a>
+    <strong>self:Echo (text)</strong>
+    </dt>
+    <dd>
+    Displays text on the auto-generated caption <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Methods"></a>Methods</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Gauge:VyzorGaugeUpdate"></a>
+    <strong>Gauge:VyzorGaugeUpdate ()</strong>
+    </dt>
+    <dd>
+    A dirty global function to update all Vyzor Gauges.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Gauge:VyzorInitializeGauges"></a>
+    <strong>Gauge:VyzorInitializeGauges ()</strong>
+    </dt>
+    <dd>
+    Calls update on each Gauge after Vyzor has been drawn.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Gauge:Gauge"></a>
+    <strong>Gauge:Gauge (name, initialCurrentValueAddress, initialMaximumValueAddress, initialBackground, initialForeground[, initialFillMode=GaugeFill.LeftRight[, initialOverflowFrames]])</strong>
+    </dt>
+    <dd>
+    Gauge constructor.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The name of the Gauge.
+        </li>
+        <li><span class="parameter">initialCurrentValueAddress</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string address of the current stat to track.
+        </li>
+        <li><span class="parameter">initialMaximumValueAddress</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string address of the current stat to track.
+        </li>
+        <li><span class="parameter">initialBackground</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+         The Background <a href="../classes/Frame.html#">Frame</a>.
+        </li>
+        <li><span class="parameter">initialForeground</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+         The Foreground <a href="../classes/Frame.html#">Frame</a>. <a href="../classes/Size.html#">Size</a> and <a href="../classes/Position.html#">Position</a> values will be overwritten.
+        </li>
+        <li><span class="parameter">initialFillMode</span>
+            <span class="types"><a class="type" href="../classes/GaugeFill.html#">GaugeFill</a></span>
+         Determines direction Gauge fills.
+         (<em>default</em> GaugeFill.LeftRight)
+        </li>
+        <li><span class="parameter">initialOverflowFrames</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Numerically indexed table of <a href="../classes/Frame.html#">Frame</a>s to be used for overflow.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Gauge.html#">Gauge</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Properties"></a>Properties </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.Name.get"></a>
+    <strong>self.Name.get ()</strong>
+    </dt>
+    <dd>
+    Returns the name of the Gauge.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.get"></a>
+    <strong>self.Container.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Gauge's parent <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.set"></a>
+    <strong>self.Container.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Gauge's parent <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.CurrentAddress.get"></a>
+    <strong>self.CurrentAddress.get ()</strong>
+    </dt>
+    <dd>
+    Returns the address of the Gauge's current value variable.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.CurrentAddress.set"></a>
+    <strong>self.CurrentAddress.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the address of the Gauge's current value variable.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Current.get"></a>
+    <strong>self.Current.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Gauge's current value.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.MaximumAddress.get"></a>
+    <strong>self.MaximumAddress.get ()</strong>
+    </dt>
+    <dd>
+    Returns the address of the Gauge's maximum value variable.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.MaximumAddress.set"></a>
+    <strong>self.MaximumAddress.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the address of the Gauge's maximum value variable.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Maximum.get"></a>
+    <strong>self.Maximum.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Gauge's maximum value.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Background.get"></a>
+    <strong>self.Background.get ()</strong>
+    </dt>
+    <dd>
+    Returns the background <a href="../classes/Frame.html#">Frame</a> of the Gauge.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Foreground.get"></a>
+    <strong>self.Foreground.get ()</strong>
+    </dt>
+    <dd>
+    Returns the foreground <a href="../classes/Frame.html#">Frame</a> of the Gauge.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AutoEcho.get"></a>
+    <strong>self.AutoEcho.get ()</strong>
+    </dt>
+    <dd>
+    Returns a flag determining whether or not the Gauge automatically echoes text on every update.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AutoEcho.set"></a>
+    <strong>self.AutoEcho.set (value)</strong>
+    </dt>
+    <dd>
+    Sets a flag determining whether or not the Gauge automatically echoes text on every update.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">bool</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TextFormat.get"></a>
+    <strong>self.TextFormat.get ()</strong>
+    </dt>
+    <dd>
+    Returns the text passed to string.format if AutoEcho is true.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TextFormat.set"></a>
+    <strong>self.TextFormat.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the text passed to string.format if AutoEcho is true.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Overflow.get"></a>
+    <strong>self.Overflow.get ()</strong>
+    </dt>
+    <dd>
+    Returns the overflow <a href="../classes/Frame.html#">Frame</a>s of the Gauge.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

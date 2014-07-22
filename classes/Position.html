@@ -1,0 +1,461 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Vyzor</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Properties">Properties </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../classes/Frame.html">Frame</a></li>
+  <li><a href="../classes/Base.html">Base</a></li>
+  <li><a href="../classes/Background.html">Background</a></li>
+  <li><a href="../classes/Border.html">Border</a></li>
+  <li><a href="../classes/BorderSide.html">BorderSide</a></li>
+  <li><a href="../classes/Brush.html">Brush</a></li>
+  <li><a href="../classes/Color.html">Color</a></li>
+  <li><a href="../classes/Font.html">Font</a></li>
+  <li><a href="../classes/Gradient.html">Gradient</a></li>
+  <li><a href="../classes/Hover.html">Hover</a></li>
+  <li><a href="../classes/Image.html">Image</a></li>
+  <li><a href="../classes/Map.html">Map</a></li>
+  <li><a href="../classes/Margin.html">Margin</a></li>
+  <li><a href="../classes/MiniConsole.html">MiniConsole</a></li>
+  <li><a href="../classes/Padding.html">Padding</a></li>
+  <li><strong>Position</strong></li>
+  <li><a href="../classes/Size.html">Size</a></li>
+  <li><a href="../classes/Box.html">Box</a></li>
+  <li><a href="../classes/Chat.html">Chat</a></li>
+  <li><a href="../classes/Gauge.html">Gauge</a></li>
+  <li><a href="../classes/Alignment.html">Alignment</a></li>
+  <li><a href="../classes/BorderStyle.html">BorderStyle</a></li>
+  <li><a href="../classes/BoundingMode.html">BoundingMode</a></li>
+  <li><a href="../classes/BoxMode.html">BoxMode</a></li>
+  <li><a href="../classes/ColorMode.html">ColorMode</a></li>
+  <li><a href="../classes/FontDecoration.html">FontDecoration</a></li>
+  <li><a href="../classes/FontStyle.html">FontStyle</a></li>
+  <li><a href="../classes/FontWeight.html">FontWeight</a></li>
+  <li><a href="../classes/GaugeFill.html">GaugeFill</a></li>
+  <li><a href="../classes/GradientMode.html">GradientMode</a></li>
+  <li><a href="../classes/Enum.html">Enum</a></li>
+  <li><a href="../classes/Repeat.html">Repeat</a></li>
+  <li><a href="../classes/TabLocation.html">TabLocation</a></li>
+  <li><a href="../classes/VyzorBorder.html">VyzorBorder</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/Options.html">Options</a></li>
+  <li><a href="../modules/Vyzor.html">Vyzor</a></li>
+  <li><a href="../modules/Lib.html">Lib</a></li>
+</ul>
+<h2>Scripts</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../scripts/HUD.html">HUD</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Position</code></h1>
+<p>A Supercomponent, for use only with <a href="../classes/Frame.html#">Frame</a>s.</p>
+<p>
+ Responsible for managing the coordinate positioning of the <a href="../classes/Frame.html#">Frame</a> within its parent.</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Position:Position">Position:Position (_frame[, initialX=0][, initialY=0], _isFirst)</a></td>
+	<td class="summary">Position constructor.</td>
+	</tr>
+</table>
+<h2><a href="#Properties">Properties </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.Coordinates.get">self.Coordinates.get ()</a></td>
+	<td class="summary">Returns the user-defined coordinates of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Coordinates.set">self.Coordinates.set (value)</a></td>
+	<td class="summary">Sets the user-defined coordinates of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Absolute.get">self.Absolute.get ()</a></td>
+	<td class="summary">Returns the actual coordinates of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Content.get">self.Content.get ()</a></td>
+	<td class="summary">Returns the content coordinates of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.X.get">self.X.get ()</a></td>
+	<td class="summary">Returns the user-defined X coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.X.set">self.X.set (value)</a></td>
+	<td class="summary">Sets the user-defined X coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Y.get">self.Y.get ()</a></td>
+	<td class="summary">Returns the user-defined Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Y.set">self.Y.set (value)</a></td>
+	<td class="summary">Sets the user-defined Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteX.get">self.AbsoluteX.get ()</a></td>
+	<td class="summary">Returns the actual X coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteY.get">self.AbsoluteY.get ()</a></td>
+	<td class="summary">Returns the actual Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.ContentX.get">self.ContentX.get ()</a></td>
+	<td class="summary">Returns the X coordinate of the <a href="../classes/Frame.html#">Frame</a> content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.ContentY.get">self.ContentY.get ()</a></td>
+	<td class="summary">Returns the Y coordinate of the <a href="../classes/Frame.html#">Frame</a> content.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Methods"></a>Methods</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Position:Position"></a>
+    <strong>Position:Position (_frame[, initialX=0][, initialY=0], _isFirst)</strong>
+    </dt>
+    <dd>
+    Position constructor.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_frame</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+         The <a href="../classes/Frame.html#">Frame</a> to which this Supercomponent belongs.
+        </li>
+        <li><span class="parameter">initialX</span>
+            <span class="types"><span class="type">number</span></span>
+         The initial x coordinate position.
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">initialY</span>
+            <span class="types"><span class="type">number</span></span>
+         The initial y coordinate position.
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">_isFirst</span>
+            <span class="types"><span class="type">bool</span></span>
+         Determines whether or not the parent <a href="../classes/Frame.html#">Frame</a> is the <a href="../scripts/HUD.html#">HUD</a>.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Position.html#">Position</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Properties"></a>Properties </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.Coordinates.get"></a>
+    <strong>self.Coordinates.get ()</strong>
+    </dt>
+    <dd>
+    Returns the user-defined coordinates of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Coordinates.set"></a>
+    <strong>self.Coordinates.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the user-defined coordinates of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Absolute.get"></a>
+    <strong>self.Absolute.get ()</strong>
+    </dt>
+    <dd>
+    Returns the actual coordinates of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Content.get"></a>
+    <strong>self.Content.get ()</strong>
+    </dt>
+    <dd>
+    Returns the content coordinates of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.X.get"></a>
+    <strong>self.X.get ()</strong>
+    </dt>
+    <dd>
+    Returns the user-defined X coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.X.set"></a>
+    <strong>self.X.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the user-defined X coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Y.get"></a>
+    <strong>self.Y.get ()</strong>
+    </dt>
+    <dd>
+    Returns the user-defined Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Y.set"></a>
+    <strong>self.Y.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the user-defined Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteX.get"></a>
+    <strong>self.AbsoluteX.get ()</strong>
+    </dt>
+    <dd>
+    Returns the actual X coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteY.get"></a>
+    <strong>self.AbsoluteY.get ()</strong>
+    </dt>
+    <dd>
+    Returns the actual Y coordinate of the <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.ContentX.get"></a>
+    <strong>self.ContentX.get ()</strong>
+    </dt>
+    <dd>
+    Returns the X coordinate of the <a href="../classes/Frame.html#">Frame</a> content.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.ContentY.get"></a>
+    <strong>self.ContentY.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Y coordinate of the <a href="../classes/Frame.html#">Frame</a> content.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

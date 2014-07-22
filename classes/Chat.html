@@ -1,0 +1,907 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Vyzor</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Properties">Properties </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../classes/Frame.html">Frame</a></li>
+  <li><a href="../classes/Base.html">Base</a></li>
+  <li><a href="../classes/Background.html">Background</a></li>
+  <li><a href="../classes/Border.html">Border</a></li>
+  <li><a href="../classes/BorderSide.html">BorderSide</a></li>
+  <li><a href="../classes/Brush.html">Brush</a></li>
+  <li><a href="../classes/Color.html">Color</a></li>
+  <li><a href="../classes/Font.html">Font</a></li>
+  <li><a href="../classes/Gradient.html">Gradient</a></li>
+  <li><a href="../classes/Hover.html">Hover</a></li>
+  <li><a href="../classes/Image.html">Image</a></li>
+  <li><a href="../classes/Map.html">Map</a></li>
+  <li><a href="../classes/Margin.html">Margin</a></li>
+  <li><a href="../classes/MiniConsole.html">MiniConsole</a></li>
+  <li><a href="../classes/Padding.html">Padding</a></li>
+  <li><a href="../classes/Position.html">Position</a></li>
+  <li><a href="../classes/Size.html">Size</a></li>
+  <li><a href="../classes/Box.html">Box</a></li>
+  <li><strong>Chat</strong></li>
+  <li><a href="../classes/Gauge.html">Gauge</a></li>
+  <li><a href="../classes/Alignment.html">Alignment</a></li>
+  <li><a href="../classes/BorderStyle.html">BorderStyle</a></li>
+  <li><a href="../classes/BoundingMode.html">BoundingMode</a></li>
+  <li><a href="../classes/BoxMode.html">BoxMode</a></li>
+  <li><a href="../classes/ColorMode.html">ColorMode</a></li>
+  <li><a href="../classes/FontDecoration.html">FontDecoration</a></li>
+  <li><a href="../classes/FontStyle.html">FontStyle</a></li>
+  <li><a href="../classes/FontWeight.html">FontWeight</a></li>
+  <li><a href="../classes/GaugeFill.html">GaugeFill</a></li>
+  <li><a href="../classes/GradientMode.html">GradientMode</a></li>
+  <li><a href="../classes/Enum.html">Enum</a></li>
+  <li><a href="../classes/Repeat.html">Repeat</a></li>
+  <li><a href="../classes/TabLocation.html">TabLocation</a></li>
+  <li><a href="../classes/VyzorBorder.html">VyzorBorder</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/Options.html">Options</a></li>
+  <li><a href="../modules/Vyzor.html">Vyzor</a></li>
+  <li><a href="../modules/Lib.html">Lib</a></li>
+</ul>
+<h2>Scripts</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../scripts/HUD.html">HUD</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Chat</code></h1>
+<p>A Compound composed of <a href="../classes/MiniConsole.html#">MiniConsole</a>s and tabs that can be echoed to.</p>
+<p>
+ One <a href="../classes/MiniConsole.html#">MiniConsole</a> is displayed at a time. The tabs are used to switch the active <a href="../classes/MiniConsole.html#">MiniConsole</a>.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self:Echo">self:Echo (channel, text)</a></td>
+	<td class="summary">Echos any kind of text into a specific channel.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Append">self:Append (channel)</a></td>
+	<td class="summary">Appends text to a channel from the buffer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Paste">self:Paste (channel)</a></td>
+	<td class="summary">Pastes copy()'d text into a channel.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Clear">self:Clear ([channel="All"])</a></td>
+	<td class="summary">Removes all text from a channel.</td>
+	</tr>
+</table>
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Chat:_ChatSwitch">Chat:_ChatSwitch (channel)</a></td>
+	<td class="summary">A dirty global function used as a callback for tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Chat:_InitializeChat">Chat:_InitializeChat ()</a></td>
+	<td class="summary">A global function, registered as an event handler for the VyzorDrawnEvent.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Chat:Chat">Chat:Chat (_name, initialBackground, initialChannels[, initialTabLocation=TabLocation.Top[, initialSize=0.05[, initialWordWrap="dynamic"[, initialFont=10[, initialComponents]]]]])</a></td>
+	<td class="summary">Chat constructor.</td>
+	</tr>
+</table>
+<h2><a href="#Properties">Properties </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.Name.get">self.Name.get ()</a></td>
+	<td class="summary">Returns the name of the Chat Compound.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Background.get">self.Background.get ()</a></td>
+	<td class="summary">Returns the background <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.get">self.Container.get ()</a></td>
+	<td class="summary">Returns the parent <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.set">self.Container.set (value)</a></td>
+	<td class="summary">Sets the parent <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Channels.get">self.Channels.get ()</a></td>
+	<td class="summary">Returns the channels this Chat Compound manages.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TabSize.get">self.TabSize.get ()</a></td>
+	<td class="summary">Returns the size of the Chat Compound's tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TabSize.set">self.TabSize.set (value)</a></td>
+	<td class="summary">Sets the size of the Chat Compound's tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.FontSize.get">self.FontSize.get ()</a></td>
+	<td class="summary">Returns the font size of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.FontSize.set">self.FontSize.set (value)</a></td>
+	<td class="summary">Sets the font size of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.WordWrap.get">self.WordWrap.get ()</a></td>
+	<td class="summary">Returns the word wrap of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.WordWrap.set">self.WordWrap.set (value)</a></td>
+	<td class="summary">Sets the word wrap of the Chat Compoound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TabLocation.get">self.TabLocation.get ()</a></td>
+	<td class="summary">Returns the Chat Compound's <a href="../classes/TabLocation.html#">TabLocation</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.TabLocation.set">self.TabLocation.set (value)</a></td>
+	<td class="summary">Sets the Chat Compound's <a href="../classes/TabLocation.html#">TabLocation</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Components.get">self.Components.get ()</a></td>
+	<td class="summary">Returns the Components used to decorate the Chat Compound's tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.ActiveBackground.get">self.ActiveBackground.get ()</a></td>
+	<td class="summary">Returns the <a href="../classes/Background.html#">Background</a> used to style the active tab.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.ActiveBackground.set">self.ActiveBackground.set (value)</a></td>
+	<td class="summary">Sets the <a href="../classes/Background.html#">Background</a> used to style the active tab.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.InactiveBackgrounds.get">self.InactiveBackgrounds.get ()</a></td>
+	<td class="summary">Returns the <a href="../classes/Background.html#">Background</a> used to style inactive tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.InactiveBackground.set">self.InactiveBackground.set (value)</a></td>
+	<td class="summary">Sets the <a href="../classes/Background.html#">Background</a> used to style style inactive tabs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.PendingBackground.get">self.PendingBackground.get ()</a></td>
+	<td class="summary">Returns the <a href="../classes/Background.html#">Background</a> used to style a tab with new text.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.PendingBackground.set">self.PendingBackground.set (value)</a></td>
+	<td class="summary">Sets the <a href="../classes/Background.html#">Background</a> used to style a tab with new text.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.CurrentChannel.get">self.CurrentChannel.get ()</a></td>
+	<td class="summary">Returns the channel of the active <a href="../classes/MiniConsole.html#">MiniConsole</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.MiniConsoles.get">self.MiniConsoles.get ()</a></td>
+	<td class="summary">Returns the <a href="../classes/MiniConsole.html#">MiniConsole</a>s the Chat Compound manages.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Tabs.get">self.Tabs.get ()</a></td>
+	<td class="summary">Returns the tabs the Chat Compound manages.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "self:Echo"></a>
+    <strong>self:Echo (channel, text)</strong>
+    </dt>
+    <dd>
+    Echos any kind of text into a specific channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel into which to echo.
+        </li>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Append"></a>
+    <strong>self:Append (channel)</strong>
+    </dt>
+    <dd>
+    Appends text to a channel from the buffer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel into which the text should be appended.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Paste"></a>
+    <strong>self:Paste (channel)</strong>
+    </dt>
+    <dd>
+    Pastes copy()'d text into a channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel into which the text should be pasted.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Clear"></a>
+    <strong>self:Clear ([channel="All"])</strong>
+    </dt>
+    <dd>
+    Removes all text from a channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel to be cleared.
+         (<em>default</em> "All")
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Methods"></a>Methods</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Chat:_ChatSwitch"></a>
+    <strong>Chat:_ChatSwitch (channel)</strong>
+    </dt>
+    <dd>
+    A dirty global function used as a callback for tabs.
+ Vyzor creates one of these functions for each Chat Compound.
+<p> Replace the underscore with the Chat Compound's name.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel to be switched to.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Chat:_InitializeChat"></a>
+    <strong>Chat:_InitializeChat ()</strong>
+    </dt>
+    <dd>
+    A global function, registered as an event handler for the VyzorDrawnEvent.
+ Makes sure the proper consoles are visible.
+<p> Replace the underscore with the Chat Compound's name.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Chat:Chat"></a>
+    <strong>Chat:Chat (_name, initialBackground, initialChannels[, initialTabLocation=TabLocation.Top[, initialSize=0.05[, initialWordWrap="dynamic"[, initialFont=10[, initialComponents]]]]])</strong>
+    </dt>
+    <dd>
+    Chat constructor.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Name of the Chat Compound. Used to create unique event handler functions.
+        </li>
+        <li><span class="parameter">initialBackground</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+         The Background <a href="../classes/Frame.html#">Frame</a> for this Chat Compound.
+        </li>
+        <li><span class="parameter">initialChannels</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The names of the channels managed by this Compound. Passed as a table.
+        </li>
+        <li><span class="parameter">initialTabLocation</span>
+            <span class="types"><a class="type" href="../classes/TabLocation.html#">TabLocation</a></span>
+         A <a href="../classes/TabLocation.html#">TabLocation</a> <a href="../classes/Enum.html#">Enum</a> that determines on which side of the consoles the tabs sit.
+         (<em>default</em> TabLocation.Top)
+        </li>
+        <li><span class="parameter">initialSize</span>
+            <span class="types"><span class="type">number</span></span>
+         This is the size of the unmanaged portion of the tabs. Must be between 0.0 and 1.0.
+         (<em>default</em> 0.05)
+        </li>
+        <li><span class="parameter">initialWordWrap</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         This is the word wrap of the <a href="../classes/MiniConsole.html#">MiniConsole</a> text.
+         (<em>default</em> "dynamic")
+        </li>
+        <li><span class="parameter">initialFont</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         This is the font size of the <a href="../classes/MiniConsole.html#">MiniConsole</a> text.
+         (<em>default</em> 10)
+        </li>
+        <li><span class="parameter">initialComponents</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A table of Components. These are used to decorate the tabs.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Chat.html#">Chat</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Properties"></a>Properties </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.Name.get"></a>
+    <strong>self.Name.get ()</strong>
+    </dt>
+    <dd>
+    Returns the name of the Chat Compound.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Background.get"></a>
+    <strong>self.Background.get ()</strong>
+    </dt>
+    <dd>
+    Returns the background <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.get"></a>
+    <strong>self.Container.get ()</strong>
+    </dt>
+    <dd>
+    Returns the parent <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.set"></a>
+    <strong>self.Container.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the parent <a href="../classes/Frame.html#">Frame</a> of the Chat Compound.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Channels.get"></a>
+    <strong>self.Channels.get ()</strong>
+    </dt>
+    <dd>
+    Returns the channels this Chat Compound manages.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TabSize.get"></a>
+    <strong>self.TabSize.get ()</strong>
+    </dt>
+    <dd>
+    Returns the size of the Chat Compound's tabs.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TabSize.set"></a>
+    <strong>self.TabSize.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the size of the Chat Compound's tabs.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.FontSize.get"></a>
+    <strong>self.FontSize.get ()</strong>
+    </dt>
+    <dd>
+    Returns the font size of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.FontSize.set"></a>
+    <strong>self.FontSize.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the font size of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.WordWrap.get"></a>
+    <strong>self.WordWrap.get ()</strong>
+    </dt>
+    <dd>
+    Returns the word wrap of the Chat Compound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.WordWrap.set"></a>
+    <strong>self.WordWrap.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the word wrap of the Chat Compoound's <a href="../classes/MiniConsole.html#">MiniConsole</a>s.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TabLocation.get"></a>
+    <strong>self.TabLocation.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Chat Compound's <a href="../classes/TabLocation.html#">TabLocation</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/TabLocation.html#">TabLocation</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.TabLocation.set"></a>
+    <strong>self.TabLocation.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Chat Compound's <a href="../classes/TabLocation.html#">TabLocation</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/TabLocation.html#">TabLocation</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Components.get"></a>
+    <strong>self.Components.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Components used to decorate the Chat Compound's tabs.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.ActiveBackground.get"></a>
+    <strong>self.ActiveBackground.get ()</strong>
+    </dt>
+    <dd>
+    Returns the <a href="../classes/Background.html#">Background</a> used to style the active tab.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.ActiveBackground.set"></a>
+    <strong>self.ActiveBackground.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the <a href="../classes/Background.html#">Background</a> used to style the active tab.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.InactiveBackgrounds.get"></a>
+    <strong>self.InactiveBackgrounds.get ()</strong>
+    </dt>
+    <dd>
+    Returns the <a href="../classes/Background.html#">Background</a> used to style inactive tabs.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.InactiveBackground.set"></a>
+    <strong>self.InactiveBackground.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the <a href="../classes/Background.html#">Background</a> used to style style inactive tabs.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.PendingBackground.get"></a>
+    <strong>self.PendingBackground.get ()</strong>
+    </dt>
+    <dd>
+    Returns the <a href="../classes/Background.html#">Background</a> used to style a tab with new text.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.PendingBackground.set"></a>
+    <strong>self.PendingBackground.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the <a href="../classes/Background.html#">Background</a> used to style a tab with new text.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Background.html#">Background</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.CurrentChannel.get"></a>
+    <strong>self.CurrentChannel.get ()</strong>
+    </dt>
+    <dd>
+    Returns the channel of the active <a href="../classes/MiniConsole.html#">MiniConsole</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.MiniConsoles.get"></a>
+    <strong>self.MiniConsoles.get ()</strong>
+    </dt>
+    <dd>
+    Returns the <a href="../classes/MiniConsole.html#">MiniConsole</a>s the Chat Compound manages.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Tabs.get"></a>
+    <strong>self.Tabs.get ()</strong>
+    </dt>
+    <dd>
+    Returns the tabs the Chat Compound manages.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

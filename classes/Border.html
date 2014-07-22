@@ -1,0 +1,539 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Vyzor</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Properties">Properties </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../classes/Frame.html">Frame</a></li>
+  <li><a href="../classes/Base.html">Base</a></li>
+  <li><a href="../classes/Background.html">Background</a></li>
+  <li><strong>Border</strong></li>
+  <li><a href="../classes/BorderSide.html">BorderSide</a></li>
+  <li><a href="../classes/Brush.html">Brush</a></li>
+  <li><a href="../classes/Color.html">Color</a></li>
+  <li><a href="../classes/Font.html">Font</a></li>
+  <li><a href="../classes/Gradient.html">Gradient</a></li>
+  <li><a href="../classes/Hover.html">Hover</a></li>
+  <li><a href="../classes/Image.html">Image</a></li>
+  <li><a href="../classes/Map.html">Map</a></li>
+  <li><a href="../classes/Margin.html">Margin</a></li>
+  <li><a href="../classes/MiniConsole.html">MiniConsole</a></li>
+  <li><a href="../classes/Padding.html">Padding</a></li>
+  <li><a href="../classes/Position.html">Position</a></li>
+  <li><a href="../classes/Size.html">Size</a></li>
+  <li><a href="../classes/Box.html">Box</a></li>
+  <li><a href="../classes/Chat.html">Chat</a></li>
+  <li><a href="../classes/Gauge.html">Gauge</a></li>
+  <li><a href="../classes/Alignment.html">Alignment</a></li>
+  <li><a href="../classes/BorderStyle.html">BorderStyle</a></li>
+  <li><a href="../classes/BoundingMode.html">BoundingMode</a></li>
+  <li><a href="../classes/BoxMode.html">BoxMode</a></li>
+  <li><a href="../classes/ColorMode.html">ColorMode</a></li>
+  <li><a href="../classes/FontDecoration.html">FontDecoration</a></li>
+  <li><a href="../classes/FontStyle.html">FontStyle</a></li>
+  <li><a href="../classes/FontWeight.html">FontWeight</a></li>
+  <li><a href="../classes/GaugeFill.html">GaugeFill</a></li>
+  <li><a href="../classes/GradientMode.html">GradientMode</a></li>
+  <li><a href="../classes/Enum.html">Enum</a></li>
+  <li><a href="../classes/Repeat.html">Repeat</a></li>
+  <li><a href="../classes/TabLocation.html">TabLocation</a></li>
+  <li><a href="../classes/VyzorBorder.html">VyzorBorder</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/Options.html">Options</a></li>
+  <li><a href="../modules/Vyzor.html">Vyzor</a></li>
+  <li><a href="../modules/Lib.html">Lib</a></li>
+</ul>
+<h2>Scripts</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../scripts/HUD.html">HUD</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Border</code></h1>
+<p>A Component that defines a <a href="../classes/Frame.html#">Frame</a>'s Border.</p>
+<p></p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Border:Border">Border:Border (initialWidth[, initialStyle=BorderStyle.None], initialContent[, initialRadius=0], initialBorders)</a></td>
+	<td class="summary">Border constructor.</td>
+	</tr>
+</table>
+<h2><a href="#Properties">Properties </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.Style.get">self.Style.get ()</a></td>
+	<td class="summary">Returns the Border's <a href="../classes/BorderStyle.html#">BorderStyle</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Style.set">self.Style.set (value)</a></td>
+	<td class="summary">Sets the Border's <a href="../classes/BorderStyle.html#">BorderStyle</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Width.get">self.Width.get ()</a></td>
+	<td class="summary">Returns the Border's width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Width.set">self.Width.set (value)</a></td>
+	<td class="summary">Sets the Border's width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Content.get">self.Content.get ()</a></td>
+	<td class="summary">Returns the Border's content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Content.set">self.Content.set (Image)</a></td>
+	<td class="summary">Sets the Border's content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Top.get">self.Top.get ()</a></td>
+	<td class="summary">Returns the Border's top <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Top.set">self.Top.set (value)</a></td>
+	<td class="summary">Sets the Border's top <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Right.get">self.Right.get ()</a></td>
+	<td class="summary">Returns the Border's right <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Right.set">self.Right.set (value)</a></td>
+	<td class="summary">Sets the Border's right <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Bottom.get">self.Bottom.get ()</a></td>
+	<td class="summary">Returns the Border's bottom <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Bottom.set">self.Bottom.set (value)</a></td>
+	<td class="summary">Sets the Border's bottom <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Left.get">self.Left.get ()</a></td>
+	<td class="summary">Returns the Border's left <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Left.set">self.Left.set (value)</a></td>
+	<td class="summary">Sets the Border's left <a href="../classes/BorderSide.html#">BorderSide</a> Component.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Stylesheet.get">self.Stylesheet.get ()</a></td>
+	<td class="summary">Updates and returns the Border's stylesheet.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Methods"></a>Methods</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Border:Border"></a>
+    <strong>Border:Border (initialWidth[, initialStyle=BorderStyle.None], initialContent[, initialRadius=0], initialBorders)</strong>
+    </dt>
+    <dd>
+    Border constructor.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">initialWidth</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The Border Component's initial width. May be a number or a table of numbers.
+        </li>
+        <li><span class="parameter">initialStyle</span>
+            <span class="types"><a class="type" href="../classes/BorderStyle.html#">BorderStyle</a></span>
+         The Border Component's initial <a href="../classes/BorderStyle.html#">BorderStyle</a>.
+         (<em>default</em> BorderStyle.None)
+        </li>
+        <li><span class="parameter">initialContent</span>
+            <span class="types"><a class="type" href="../classes/Image.html#">Image</a>, <a class="type" href="../classes/Brush.html#">Brush</a> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The Border Component's initial content.
+        </li>
+        <li><span class="parameter">initialRadius</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The Border Component's initial radius, for rounded corners.
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">initialBorders</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The Border Component's initial <a href="../classes/BorderSide.html#">BorderSide</a> Subcomponents. Must be a table containing one to four <a href="../classes/BorderSide.html#">BorderSide</a>s.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Border.html#">Border</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Properties"></a>Properties </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.Style.get"></a>
+    <strong>self.Style.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's <a href="../classes/BorderStyle.html#">BorderStyle</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/BorderStyle.html#">BorderStyle</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Style.set"></a>
+    <strong>self.Style.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's <a href="../classes/BorderStyle.html#">BorderStyle</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/BorderStyle.html#">BorderStyle</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Width.get"></a>
+    <strong>self.Width.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's width.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Width.set"></a>
+    <strong>self.Width.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's width.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Content.get"></a>
+    <strong>self.Content.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's content.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Image.html#">Image</a>, <a class="type" href="../classes/Brush.html#">Brush</a> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Content.set"></a>
+    <strong>self.Content.set (Image)</strong>
+    </dt>
+    <dd>
+    Sets the Border's content.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">Image</span>
+        |Brush|table value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Top.get"></a>
+    <strong>self.Top.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's top <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Top.set"></a>
+    <strong>self.Top.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's top <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/BorderSide.html#">BorderSide</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Right.get"></a>
+    <strong>self.Right.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's right <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Right.set"></a>
+    <strong>self.Right.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's right <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/BorderSide.html#">BorderSide</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Bottom.get"></a>
+    <strong>self.Bottom.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's bottom <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Bottom.set"></a>
+    <strong>self.Bottom.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's bottom <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/BorderSide.html#">BorderSide</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Left.get"></a>
+    <strong>self.Left.get ()</strong>
+    </dt>
+    <dd>
+    Returns the Border's left <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Left.set"></a>
+    <strong>self.Left.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the Border's left <a href="../classes/BorderSide.html#">BorderSide</a> Component.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/BorderSide.html#">BorderSide</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Stylesheet.get"></a>
+    <strong>self.Stylesheet.get ()</strong>
+    </dt>
+    <dd>
+    Updates and returns the Border's stylesheet.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

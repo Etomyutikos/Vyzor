@@ -1,0 +1,1065 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Vyzor</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Methods">Methods</a></li>
+<li><a href="#Properties">Properties </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../classes/Frame.html">Frame</a></li>
+  <li><a href="../classes/Base.html">Base</a></li>
+  <li><a href="../classes/Background.html">Background</a></li>
+  <li><a href="../classes/Border.html">Border</a></li>
+  <li><a href="../classes/BorderSide.html">BorderSide</a></li>
+  <li><a href="../classes/Brush.html">Brush</a></li>
+  <li><a href="../classes/Color.html">Color</a></li>
+  <li><a href="../classes/Font.html">Font</a></li>
+  <li><a href="../classes/Gradient.html">Gradient</a></li>
+  <li><a href="../classes/Hover.html">Hover</a></li>
+  <li><a href="../classes/Image.html">Image</a></li>
+  <li><a href="../classes/Map.html">Map</a></li>
+  <li><a href="../classes/Margin.html">Margin</a></li>
+  <li><strong>MiniConsole</strong></li>
+  <li><a href="../classes/Padding.html">Padding</a></li>
+  <li><a href="../classes/Position.html">Position</a></li>
+  <li><a href="../classes/Size.html">Size</a></li>
+  <li><a href="../classes/Box.html">Box</a></li>
+  <li><a href="../classes/Chat.html">Chat</a></li>
+  <li><a href="../classes/Gauge.html">Gauge</a></li>
+  <li><a href="../classes/Alignment.html">Alignment</a></li>
+  <li><a href="../classes/BorderStyle.html">BorderStyle</a></li>
+  <li><a href="../classes/BoundingMode.html">BoundingMode</a></li>
+  <li><a href="../classes/BoxMode.html">BoxMode</a></li>
+  <li><a href="../classes/ColorMode.html">ColorMode</a></li>
+  <li><a href="../classes/FontDecoration.html">FontDecoration</a></li>
+  <li><a href="../classes/FontStyle.html">FontStyle</a></li>
+  <li><a href="../classes/FontWeight.html">FontWeight</a></li>
+  <li><a href="../classes/GaugeFill.html">GaugeFill</a></li>
+  <li><a href="../classes/GradientMode.html">GradientMode</a></li>
+  <li><a href="../classes/Enum.html">Enum</a></li>
+  <li><a href="../classes/Repeat.html">Repeat</a></li>
+  <li><a href="../classes/TabLocation.html">TabLocation</a></li>
+  <li><a href="../classes/VyzorBorder.html">VyzorBorder</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/Options.html">Options</a></li>
+  <li><a href="../modules/Vyzor.html">Vyzor</a></li>
+  <li><a href="../modules/Lib.html">Lib</a></li>
+</ul>
+<h2>Scripts</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../scripts/HUD.html">HUD</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>MiniConsole</code></h1>
+<p>A Mudlet text container that mimicks the main console.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self:Draw">self:Draw ()</a></td>
+	<td class="summary">Draws the MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Resize">self:Resize (width, height)</a></td>
+	<td class="summary">Changes the MiniConsole's size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Move">self:Move (x, y)</a></td>
+	<td class="summary">Moves the MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Hide">self:Hide ()</a></td>
+	<td class="summary">Hides the MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Show">self:Show ()</a></td>
+	<td class="summary">Shows the MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Echo">self:Echo (text)</a></td>
+	<td class="summary">Displays text on a MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:HEcho">self:HEcho (text)</a></td>
+	<td class="summary">Displays text on a MiniConsole with Hex color formatting.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:CEcho">self:CEcho (text)</a></td>
+	<td class="summary">Displays text on a MiniConsole with colour tags.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:DEcho">self:DEcho (text, foregroundColor, backgroundColor, useInsertText)</a></td>
+	<td class="summary">Displays text on a MiniConsole with some crazy-ass formatting.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:EchoLink">self:EchoLink (text, command, tooltipText, keepFormat, useInsertText)</a></td>
+	<td class="summary">Displays a clickable line of text in a MiniConsole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:EchoPopup">self:EchoPopup (text, commands, tooltipTexts, keepFormat, useInsertText)</a></td>
+	<td class="summary">Clickable text that expands out to a menu.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Paste">self:Paste ()</a></td>
+	<td class="summary">Copies text to the MiniConsole from the clipboard (via copy()).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Append">self:Append ()</a></td>
+	<td class="summary">Copies text to the MiniConsole from a buffer or the clipboard (via copy()).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self:Clear">self:Clear ()</a></td>
+	<td class="summary">Clears all text from the MiniConsole</td>
+	</tr>
+</table>
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#MiniConsole:MiniConsole">MiniConsole:MiniConsole (_name[, initialX=0[, initialY=0[, initialWidth=1.0[, initialHeight=1.0[, initialWordWrap[, initialFontSize]]]]]])</a></td>
+	<td class="summary">MiniConsole constructor.</td>
+	</tr>
+</table>
+<h2><a href="#Properties">Properties </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#self.Name.get">self.Name.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.get">self.Container.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's parent <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Container.set">self.Container.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's parent <a href="../classes/Frame.html#">Frame</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.X.get">self.X.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's user-defined X coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.X.set">self.X.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's user-defined X coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteX.get">self.AbsoluteX.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual X coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Y.get">self.Y.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's user-defined Y coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Y.set">self.Y.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's user-defined Y coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteY.get">self.AbsoluteY.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual Y coordinate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Width.get">self.Width.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's user-defined width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Width.set">self.Width.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's user-defined width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteWidth.get">self.AbsoluteWidth.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Height.get">self.Height.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's user-defined height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.Height.set">self.Height.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's user-defined height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteHeight.get">self.AbsoluteHeight.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.WordWrap.get">self.WordWrap.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's word wrap.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.WordWrap.set">self.WordWrap.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's word wrap.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteWrap.get">self.AbsoluteWrap.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual word wrap.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.FontSize.get">self.FontSize.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's font size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.FontSize.set">self.FontSize.set (value)</a></td>
+	<td class="summary">Sets the MiniConsole's font size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#self.AbsoluteSize.get">self.AbsoluteSize.get ()</a></td>
+	<td class="summary">Returns the MiniConsole's actual font size.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "self:Draw"></a>
+    <strong>self:Draw ()</strong>
+    </dt>
+    <dd>
+    Draws the MiniConsole.
+ Should only be called internally.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Resize"></a>
+    <strong>self:Resize (width, height)</strong>
+    </dt>
+    <dd>
+    Changes the MiniConsole's size.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         New width of the MiniConsole.
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">number</span></span>
+         New height of the MiniConsole.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Move"></a>
+    <strong>self:Move (x, y)</strong>
+    </dt>
+    <dd>
+    Moves the MiniConsole.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">number</span></span>
+         New relative X coordinate of the MiniConsole.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">number</span></span>
+         New relative Y coordinate of the MiniConsole.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Hide"></a>
+    <strong>self:Hide ()</strong>
+    </dt>
+    <dd>
+    Hides the MiniConsole.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Show"></a>
+    <strong>self:Show ()</strong>
+    </dt>
+    <dd>
+    Shows the MiniConsole.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Echo"></a>
+    <strong>self:Echo (text)</strong>
+    </dt>
+    <dd>
+    Displays text on a MiniConsole.
+ Starts where the last line left off.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:HEcho"></a>
+    <strong>self:HEcho (text)</strong>
+    </dt>
+    <dd>
+    Displays text on a MiniConsole with Hex color formatting.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:CEcho"></a>
+    <strong>self:CEcho (text)</strong>
+    </dt>
+    <dd>
+    Displays text on a MiniConsole with colour tags.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:DEcho"></a>
+    <strong>self:DEcho (text, foregroundColor, backgroundColor, useInsertText)</strong>
+    </dt>
+    <dd>
+    Displays text on a MiniConsole with some crazy-ass formatting.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">foregroundColor</span>
+         The foreground color of the text.
+        </li>
+        <li><span class="parameter">backgroundColor</span>
+         The background color of the text.
+        </li>
+        <li><span class="parameter">useInsertText</span>
+            <span class="types"><span class="type">bool</span></span>
+         If true, uses InsertText() instead of echo().
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:EchoLink"></a>
+    <strong>self:EchoLink (text, command, tooltipText, keepFormat, useInsertText)</strong>
+    </dt>
+    <dd>
+    Displays a clickable line of text in a MiniConsole.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">command</span>
+            <span class="types"><span class="type">function</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Script to be executed when clicked.
+        </li>
+        <li><span class="parameter">tooltipText</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">keepFormat</span>
+            <span class="types"><span class="type">bool</span></span>
+         If true, uses Frame text formatting.
+        </li>
+        <li><span class="parameter">useInsertText</span>
+            <span class="types"><span class="type">bool</span></span>
+         If true, uses InsertText() instead of Echo()
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:EchoPopup"></a>
+    <strong>self:EchoPopup (text, commands, tooltipTexts, keepFormat, useInsertText)</strong>
+    </dt>
+    <dd>
+    Clickable text that expands out to a menu.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">commands</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A table of scripts to be executed.
+        </li>
+        <li><span class="parameter">tooltipTexts</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A table of tooltips.
+        </li>
+        <li><span class="parameter">keepFormat</span>
+            <span class="types"><span class="type">bool</span></span>
+         If true, uses MiniConsole text formatting.
+        </li>
+        <li><span class="parameter">useInsertText</span>
+            <span class="types"><span class="type">bool</span></span>
+         If true, uses InsertText() instead of Echo()
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Paste"></a>
+    <strong>self:Paste ()</strong>
+    </dt>
+    <dd>
+    Copies text to the MiniConsole from the clipboard (via copy()).
+ Clears the window first.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Append"></a>
+    <strong>self:Append ()</strong>
+    </dt>
+    <dd>
+    Copies text to the MiniConsole from a buffer or the clipboard (via copy()).
+ Adds the text beginning at a new line.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self:Clear"></a>
+    <strong>self:Clear ()</strong>
+    </dt>
+    <dd>
+    Clears all text from the MiniConsole
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Methods"></a>Methods</h2>
+    <dl class="function">
+    <dt>
+    <a name = "MiniConsole:MiniConsole"></a>
+    <strong>MiniConsole:MiniConsole (_name[, initialX=0[, initialY=0[, initialWidth=1.0[, initialHeight=1.0[, initialWordWrap[, initialFontSize]]]]]])</strong>
+    </dt>
+    <dd>
+    MiniConsole constructor.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">_name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Used for echoing and other Mudlet referencing.
+        </li>
+        <li><span class="parameter">initialX</span>
+            <span class="types"><span class="type">number</span></span>
+         X coordinate position.
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">initialY</span>
+            <span class="types"><span class="type">number</span></span>
+         Y coordinate position.
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">initialWidth</span>
+            <span class="types"><span class="type">number</span></span>
+         Width of the MiniConsole.
+         (<em>default</em> 1.0)
+        </li>
+        <li><span class="parameter">initialHeight</span>
+            <span class="types"><span class="type">number</span></span>
+         Height of the MiniConsole.
+         (<em>default</em> 1.0)
+        </li>
+        <li><span class="parameter">initialWordWrap</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Sets the MiniConsole's word wrap in characters. Default is dynamic or 80
+ if initialFontSize is dynamic.
+        </li>
+        <li><span class="parameter">initialFontSize</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Sets the MiniConsole's font size. Default is dynamic or 8 if
+ initialWordWrap is dynamic.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/MiniConsole.html#">MiniConsole</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Properties"></a>Properties </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "self.Name.get"></a>
+    <strong>self.Name.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's name.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.get"></a>
+    <strong>self.Container.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's parent <a href="../classes/Frame.html#">Frame</a>.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Container.set"></a>
+    <strong>self.Container.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's parent <a href="../classes/Frame.html#">Frame</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="../classes/Frame.html#">Frame</a></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.X.get"></a>
+    <strong>self.X.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's user-defined X coordinate.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.X.set"></a>
+    <strong>self.X.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's user-defined X coordinate.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteX.get"></a>
+    <strong>self.AbsoluteX.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual X coordinate.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Y.get"></a>
+    <strong>self.Y.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's user-defined Y coordinate.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Y.set"></a>
+    <strong>self.Y.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's user-defined Y coordinate.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteY.get"></a>
+    <strong>self.AbsoluteY.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual Y coordinate.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Width.get"></a>
+    <strong>self.Width.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's user-defined width.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Width.set"></a>
+    <strong>self.Width.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's user-defined width.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteWidth.get"></a>
+    <strong>self.AbsoluteWidth.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual width.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Height.get"></a>
+    <strong>self.Height.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's user-defined height.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.Height.set"></a>
+    <strong>self.Height.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's user-defined height.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteHeight.get"></a>
+    <strong>self.AbsoluteHeight.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual height.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.WordWrap.get"></a>
+    <strong>self.WordWrap.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's word wrap.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.WordWrap.set"></a>
+    <strong>self.WordWrap.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's word wrap.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Only acceptable string is "dynamic".
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteWrap.get"></a>
+    <strong>self.AbsoluteWrap.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual word wrap.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.FontSize.get"></a>
+    <strong>self.FontSize.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's font size.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.FontSize.set"></a>
+    <strong>self.FontSize.set (value)</strong>
+    </dt>
+    <dd>
+    Sets the MiniConsole's font size.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Only acceptable string is "dynamic".
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "self.AbsoluteSize.get"></a>
+    <strong>self.AbsoluteSize.get ()</strong>
+    </dt>
+    <dd>
+    Returns the MiniConsole's actual font size.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
