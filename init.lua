@@ -51,9 +51,9 @@ if exists("Vyzor Help", "alias") == 0 then
     permAlias("Vyzor Help", "vyzor", [[^vy(?:zor)?\s?h(?:elp)?$]],
         [[
 if openWebPage then
-    openWebPage(getMudletHomeDir():gsub("\\", "/") .. "/vyzor/doc/index.html")
+    openWebPage("http://oneymus.github.io/Vyzor/")
 else
-    openUrl(getMudletHomeDir():gsub("\\", "/") .. "/vyzor/doc/index.html")
+    openUrl("http://oneymus.github.io/Vyzor/")
 end
         ]])
 end

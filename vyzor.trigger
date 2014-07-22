@@ -557,9 +557,9 @@ end</script>
         <Alias isActive="yes" isFolder="no">
             <name>Vyzor Help</name>
             <script>if openWebPage then
-	openWebPage( getMudletHomeDir():gsub(&quot;\\&quot;, &quot;/&quot;) .. &quot;/vyzor/doc/index.html&quot; )
+	openWebPage( &quot;http://oneymus.github.io/Vyzor/&quot; )
 else
-	openUrl( getMudletHomeDir():gsub(&quot;\\&quot;, &quot;/&quot;) .. &quot;/vyzor/doc/index.html&quot; )
+	openUrl( &quot;http://oneymus.github.io/Vyzor/&quot; )
 end
 		</script>
             <command></command>
