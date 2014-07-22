@@ -166,7 +166,6 @@ local function new (_, _name, _x, _y, _width, _height)
             --- @function self.MiniConsoles.get
             --- @treturn table
             get = function ()
-                echo("_miniConsoles:count() = " .. _miniConsoles:count() .. "\n")
                 if _miniConsoles:count() > 0 then
                     local copy = {}
 

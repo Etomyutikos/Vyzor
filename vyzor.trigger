@@ -165,6 +165,7 @@ enough:Add( image )
 so_deep:Add( enough )
 
 --Vyzor.HUD:Draw()
+second_tc = false
 expandAlias(&quot;tc&quot;)</script>
             <command></command>
             <packageName></packageName>
@@ -445,6 +446,8 @@ grad_green 	= Vyzor.Color( Vyzor.ColorMode.RGB, 0, &quot;100%&quot;, 0 )
 grad_white 	= Vyzor.Color( Vyzor.ColorMode.RGB, &quot;100%&quot;, &quot;100%&quot;, &quot;100%&quot; )
 
 grad_what 	= Vyzor.Color( Vyzor.ColorMode.RGB, math.random(255), math.random(255), math.random(255) )
+
+
 local lin_grad = Vyzor.Gradient( Vyzor.GradientMode.Linear,
 	0.0, 0.0, 1.0, 1.0,
 	{0.2, grad_red}, {0.4, grad_blue}, {0.6, grad_green}, {0.8, grad_white}, {1.0, grad_what}
@@ -602,19 +605,19 @@ if not Vyzor then
 	echo(&quot;Vyzor: Loading modules...\n&quot;)
 
 	local path = package.path
-	local home_dir = getMudletHomeDir():gsub( &quot;\\&quot;, &quot;/&quot;)
+	local homeDirectory = getMudletHomeDir():gsub(&quot;\\&quot;, &quot;/&quot;)
 	
-	local lua_dir = string.format( &quot;%s/%s&quot;, home_dir, [[?.lua]] )
-	local init_dir = string.format( &quot;%s/%s&quot;, home_dir, [[?/init.lua]] )
-	package.path = string.format( &quot;%s;%s;%s&quot;, lua_dir, init_dir, path )
+	local luaDirectory = string.format(&quot;%s/%s&quot;, homeDirectory, [[?.lua]])
+	local initDirectory = string.format(&quot;%s/%s&quot;, homeDirectory, [[?/init.lua]])
+	package.path = string.format(&quot;%s;%s;%s&quot;, luaDirectory, initDirectory, path)
 
-	local okay, content = pcall( require, &quot;vyzor&quot; )
+	local okay, content = pcall(require, &quot;vyzor&quot;)
 	package.path = path
+
 	if okay then
 		Vyzor = content
 	else
-		error(string.format(&quot;Vyzor: Error loading module: %s.\n&quot;,
-			content))
+		error(string.format(&quot;Vyzor: Error loading module: %s.\n&quot;, content))
 	end
 
 	if Vyzor then
