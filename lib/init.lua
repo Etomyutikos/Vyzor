@@ -42,6 +42,7 @@ function Lib.OrderedTable ()
             if i > #list then
                 return nil
             else
+                local k = list[i]
                 return i, dictionary[k]
             end
         end
