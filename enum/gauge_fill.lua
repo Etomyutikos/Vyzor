@@ -6,10 +6,10 @@ local Enum = require("vyzor.enum")
 --- GaugeFill options.
 -- @table GaugeFill
 local _enum = {
-    LeftRight = "left-to-right",
-    RightLeft = "right-to-left",
-    TopBottom = "top-to-bottom",
-    BottomTop = "bottom-to-top"
+  LeftRight = "left-to-right",
+  RightLeft = "right-to-left",
+  TopBottom = "top-to-bottom",
+  BottomTop = "bottom-to-top"
 }
 
 local GaugeFill = Enum("GaugeFill", _enum)

@@ -6,10 +6,10 @@ local Enum = require("vyzor.enum")
 --- VyzorBorder options.
 -- @table VyzorBorder
 local _enum = {
-    Top = "Top",
-    Bottom = "Bottom",
-    Right = "Right",
-    Left = "Left"
+  Top = "Top",
+  Bottom = "Bottom",
+  Right = "Right",
+  Left = "Left"
 }
 
 local VyzorBorder = Enum("VyzorBorder", _enum)

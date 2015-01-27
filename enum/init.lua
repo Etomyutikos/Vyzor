@@ -14,38 +14,38 @@ local function new (_, _subtype, _optionsTable)
 	--- @type Enum
 	local self = {}
 
-    --- Properties
-    --- @section
+  --- Properties
+  --- @section
 	local properties = {
 		Subtype = {
-            --- Returns the subtype of the Enum.
-            --- @function self.Subtype.get
-            --- @treturn string
+      --- Returns the subtype of the Enum.
+      -- @function self.Subtype.get
+      -- @treturn string
 			get = function ()
 				return _subtype
 			end
-        }
     }
-    --- @section end
+  }
+  --- @section end
 
-    --- Verifies the Enum.
-    ---
-    --- Searches for matching key or value within the options table to guarantee the passing of valid options
-    --- where necessary.
-    --- @string option
-    --- @treturn bool
+  --- Verifies the Enum.
+  --
+  -- Searches for matching key or value within the options table to guarantee the passing of valid options
+  -- where necessary.
+  -- @string option
+  -- @treturn bool
 	function self:IsValid (option)
 		local isValid = false
 
 		for index, value in pairs(_optionsTable) do
 			if ((option == value) or (option == index)) then
 				isValid = true
-            end
+      end
 
 			if isValid then
 				return isValid
 			end
-        end
+    end
 
 		return isValid
 	end

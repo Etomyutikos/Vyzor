@@ -6,8 +6,8 @@ local Enum = require("vyzor.enum")
 --- BoundingMode options.
 -- @table BoundingMode
 local _enum = {
-    Size = "size",
-    Position = "position"
+  Size = "size",
+  Position = "position"
 }
 
 local BoundingMode = Enum("BoundingMode", _enum)

@@ -1,5 +1,5 @@
 --- A Compound composed of @{MiniConsole}s and tabs that can be echoed to.
---- One @{MiniConsole} is displayed at a time. The tabs are used to switch the active @{MiniConsole}.
+-- One @{MiniConsole} is displayed at a time. The tabs are used to switch the active @{MiniConsole}.
 -- @classmod Chat
 
 local Background = require("vyzor.component.background")
@@ -66,7 +66,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 	local _pendingChannels = {}
 
 	local _switchFunction = _name .. "ChatSwitch"
-    local _initializeFunction = _name .. "InitializeChat"
+  local _initializeFunction = _name .. "InitializeChat"
 
 	-- Here we set up the parent->child hierarchy that makes the Chat Compound work.
 	do
@@ -79,28 +79,28 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if _tabLocation == TabLocation.Top then
 				_miniConsoles[channel] = MiniConsole(consoleName,
 					0, _tabSize, 1, (1.0 - _tabSize),
-                    _wordWrap, _fontSize)
+          _wordWrap, _fontSize)
 
 				_background:Add(_miniConsoles[channel])
 
 			elseif _tabLocation == TabLocation.Bottom then
 				_miniConsoles[channel] = MiniConsole(consoleName,
 					0, 0, 1, (1.0 - _tabSize),
-                    _wordWrap, _fontSize)
+          _wordWrap, _fontSize)
 
 				_background:Add(_miniConsoles[channel])
 
 			elseif _tabLocation == TabLocation.Left then
 				_miniConsoles[channel] = MiniConsole(consoleName,
-                    _tabSize, 0, (1.0 - _tabSize), 1,
-                    _wordWrap, _fontSize)
+          _tabSize, 0, (1.0 - _tabSize), 1,
+          _wordWrap, _fontSize)
 
 				_background:Add(_miniConsoles[channel])
 
 			else
 				_miniConsoles[channel] = MiniConsole(consoleName,
 					0, 0, (1.0 - _tabSize), 1,
-                    _wordWrap, _fontSize)
+          _wordWrap, _fontSize)
 
 				_background:Add(_miniConsoles[channel])
 			end
@@ -130,7 +130,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		for i, tab in _tabs:ipairs() do
 			indexedTabs[i] = tab
-        end
+    end
 
 		local tabContainerName = _name .. "TabsBackground"
 		local tabBoxName = _name .. "TabsBox"
@@ -164,13 +164,13 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		_background:Add(tabBox)
 	end
 
-    --- Properties
-    --- @section
+  --- Properties
+  --- @section
 	local properties = {
 		Name = {
 			--- Returns the name of the Chat Compound.
-			--- @function self.Name.get
-			--- @treturn string
+			-- @function self.Name.get
+			-- @treturn string
 			get = function ()
 				return _name
 			end,
@@ -178,8 +178,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		Background = {
 			--- Returns the background @{Frame} of the Chat Compound.
-			--- @function self.Background.get
-			--- @treturn Frame
+			-- @function self.Background.get
+			-- @treturn Frame
 			get = function ()
 				return _background
 			end,
@@ -187,15 +187,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		Container = {
 			--- Returns the parent @{Frame} of the Chat Compound.
-			--- @function self.Container.get
-			--- @treturn Frame
+			-- @function self.Container.get
+			-- @treturn Frame
 			get = function ()
 				return _background.Container
 			end,
 
 			--- Sets the parent @{Frame} of the Chat Compound.
-			--- @function self.Container.set
-			--- @tparam Frame value
+			-- @function self.Container.set
+			-- @tparam Frame value
 			set = function (value)
 				_background.Container = value
 			end
@@ -203,14 +203,14 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		Channels = {
 			--- Returns the channels this Chat Compound manages.
-			--- @function self.Channels.get
-			--- @treturn table
+			-- @function self.Channels.get
+			-- @treturn table
 			get = function ()
 				local copy = {}
 
 				for i, channel in ipairs(_channelList) do
 					copy[i] = channel
-                end
+        end
 
 				return copy
 			end,
@@ -218,15 +218,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		TabSize = {
 			--- Returns the size of the Chat Compound's tabs.
-			--- @function self.TabSize.get
-			--- @treturn number
+			-- @function self.TabSize.get
+			-- @treturn number
 			get = function ()
 				return _tabSize
 			end,
 
 			--- Sets the size of the Chat Compound's tabs.
-			--- @function self.TabSize.set
-			--- @tparam number value
+			-- @function self.TabSize.set
+			-- @tparam number value
 			set = function (value)
 				_tabSize = value
 
@@ -242,15 +242,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		FontSize = {
 			--- Returns the font size of the Chat Compound's @{MiniConsole}s.
-			--- @function self.FontSize.get
-			--- @treturn number
+			-- @function self.FontSize.get
+			-- @treturn number
 			get = function ()
 				return _fontSize
 			end,
 
 			--- Sets the font size of the Chat Compound's @{MiniConsole}s.
-			--- @function self.FontSize.set
-			--- @tparam number value
+			-- @function self.FontSize.set
+			-- @tparam number value
 			set = function (value)
 				_fontSize = value
 
@@ -262,15 +262,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		WordWrap = {
 			--- Returns the word wrap of the Chat Compound's @{MiniConsole}s.
-			--- @function self.WordWrap.get
-			--- @treturn number
+			-- @function self.WordWrap.get
+			-- @treturn number
 			get = function ()
 				return _wordWrap
 			end,
 
 			--- Sets the word wrap of the Chat Compoound's @{MiniConsole}s.
-			--- @function self.WordWrap.set
-			--- @tparam number value
+			-- @function self.WordWrap.set
+			-- @tparam number value
 			set = function (value)
 				_wordWrap = value
 
@@ -282,15 +282,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		TabLocation = {
 			--- Returns the Chat Compound's @{TabLocation}.
-			--- @function self.TabLocation.get
-			--- @treturn TabLocation
+			-- @function self.TabLocation.get
+			-- @treturn TabLocation
 			get = function ()
 				return _tabLocation
 			end,
 
 			--- Sets the Chat Compound's @{TabLocation}.
-			--- @function self.TabLocation.set
-			--- @tparam TabLocation value
+			-- @function self.TabLocation.set
+			-- @tparam TabLocation value
 			set = function (value)
 				_tabLocation = value
 			end
@@ -298,14 +298,14 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		Components = {
 			--- Returns the Components used to decorate the Chat Compound's tabs.
-			--- @function self.Components.get
-			--- @treturn table
+			-- @function self.Components.get
+			-- @treturn table
 			get = function ()
 				local copy = {}
 
 				for i, component in ipairs(_components) do
 					copy[i] = component
-                end
+        end
 
 				return copy
 			end
@@ -313,15 +313,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		ActiveBackground = {
 			--- Returns the @{Background} used to style the active tab.
-			--- @function self.ActiveBackground.get
-			--- @treturn Background
+			-- @function self.ActiveBackground.get
+			-- @treturn Background
 			get = function ()
 				return _activeBackground
 			end,
 
 			--- Sets the @{Background} used to style the active tab.
-			--- @function self.ActiveBackground.set
-			--- @tparam Background value
+			-- @function self.ActiveBackground.set
+			-- @tparam Background value
 			set = function (value)
 				_activeBackground = value
 			end
@@ -329,15 +329,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		InactiveBackground = {
 			--- Returns the @{Background} used to style inactive tabs.
-			--- @function self.InactiveBackgrounds.get
-			--- @treturn Background
+			-- @function self.InactiveBackgrounds.get
+			-- @treturn Background
 			get = function ()
 				return _inactiveBackground
 			end,
 
 			--- Sets the @{Background} used to style style inactive tabs.
-			--- @function self.InactiveBackground.set
-			--- @tparam Background value
+			-- @function self.InactiveBackground.set
+			-- @tparam Background value
 			set = function (value)
 				_inactiveBackground = value
 			end
@@ -345,15 +345,15 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		PendingBackground = {
 			--- Returns the @{Background} used to style a tab with new text.
-			--- @function self.PendingBackground.get
-			--- @treturn Background
+			-- @function self.PendingBackground.get
+			-- @treturn Background
 			get = function ()
 				return _pendingBackground
 			end,
 
 			--- Sets the @{Background} used to style a tab with new text.
-			--- @function self.PendingBackground.set
-			--- @tparam Background value
+			-- @function self.PendingBackground.set
+			-- @tparam Background value
 			set = function (value)
 				_pendingBackground = value
 			end
@@ -361,8 +361,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		CurrentChannel = {
 			--- Returns the channel of the active @{MiniConsole}.
-			--- @function self.CurrentChannel.get
-			--- @treturn string
+			-- @function self.CurrentChannel.get
+			-- @treturn string
 			get = function ()
 				return _currentChannel
 			end
@@ -370,8 +370,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		MiniConsoles = {
 			--- Returns the @{MiniConsole}s the Chat Compound manages.
-			--- @function self.MiniConsoles.get
-			--- @treturn table
+			-- @function self.MiniConsoles.get
+			-- @treturn table
 			get = function ()
 				local copy = {}
 				local index = 1
@@ -379,7 +379,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 				for _, miniConsole in pairs(_miniConsoles) do
 					copy[index] = miniConsole
 					index = index + 1
-                end
+        end
 
 				return copy
 			end
@@ -387,28 +387,28 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 
 		Tabs = {
 			--- Returns the tabs the Chat Compound manages.
-			--- @function self.Tabs.get
-			--- @treturn table
+			-- @function self.Tabs.get
+			-- @treturn table
 			get = function ()
 				local copy = {}
 
 				for i, tab in _tabs:ipairs() do
 					copy[i] = tab
-                end
+        end
 
 				return copy
 			end
 		},
-    }
-    --- @section end
+  }
+  --- @section end
 
-    --- Echos any kind of text into a specific channel.
-    --- @string channel The channel into which to echo.
-    --- @string text
+  --- Echos any kind of text into a specific channel.
+  -- @string channel The channel into which to echo.
+  -- @string text
 	function self:Echo (channel, text)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Echo(text)
-        end
+    end
 
 		if channel and channel ~= "All" then
 			_miniConsoles[channel]:Echo(text)
@@ -416,7 +416,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if channel ~= _currentChannel and _currentChannel ~= "All" then
 				if _tabs[channel].Components["Background"] then
 					_tabs[channel]:Remove("Background")
-                end
+        end
 
 				_tabs[channel]:Add(_pendingBackground)
 				_pendingChannels[channel] = true
@@ -424,12 +424,12 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-    --- Appends text to a channel from the buffer.
-    --- @string channel The channel into which the text should be appended.
+  --- Appends text to a channel from the buffer.
+  -- @string channel The channel into which the text should be appended.
 	function self:Append (channel)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Append()
-        end
+    end
 
 		if channel and channel ~= "All" then
 			_miniConsoles[channel]:Append()
@@ -437,7 +437,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if channel ~= _currentChannel and _currentChannel ~= "All" then
 				if _tabs[channel].Components["Background"] then
 					_tabs[channel]:Remove("Background")
-                end
+        end
 
 				_tabs[channel]:Add(_pendingBackground)
 				_pendingChannels[channel] = true
@@ -445,12 +445,12 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-    --- Pastes copy()'d text into a channel.
-    --- @string channel The channel into which the text should be pasted.
+  --- Pastes copy()'d text into a channel.
+  -- @string channel The channel into which the text should be pasted.
 	function self:Paste (channel)
 		if _miniConsoles["All"] then
 			_miniConsoles["All"]:Paste()
-        end
+    end
 
 		if channel and channel ~= "All" then
 			_miniConsoles[channel]:Paste()
@@ -458,7 +458,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if channel ~= _currentChannel and _currentChannel ~= "All" then
 				if _tabs[channel].Components["Background"] then
 					_tabs[channel]:Remove("Background")
-                end
+        end
 
 				_tabs[channel]:Add(_pendingBackground)
 				_pendingChannels[channel] = true
@@ -466,8 +466,8 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-    --- Removes all text from a channel.
-    --- @string[opt="All"] channel The channel to be cleared.
+  --- Removes all text from a channel.
+  -- @string[opt="All"] channel The channel to be cleared.
 	function self:Clear (channel)
 		if channel and channel ~= "All" then
 			_miniConsoles[channel]:Clear()
@@ -478,11 +478,11 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		end
 	end
 
-    -- Documented above.
+  -- Documented above.
 	_G[_switchFunction] = function (channel)
 		if channel == _currentChannel then
 			return
-        end
+    end
 
 		for name, console in pairs(_miniConsoles) do
 			if name == channel then
@@ -496,7 +496,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if name == channel then
 				if tab.Components["Background"] then
 					tab:Remove("Background")
-                end
+        end
 
 				tab:Add(_activeBackground)
 
@@ -507,7 +507,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 				if not _pendingChannels[name] or channel == "All" then
 					if tab.Components["Background"] then
 						tab:Remove("Background")
-                    end
+          end
 
 					tab:Add(_inactiveBackground)
 				end
@@ -517,7 +517,7 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 		_currentChannel = channel
 	end
 
-    -- Documented above.
+  -- Documented above.
 	_G[_initializeFunction] = function ()
 		for name, console in pairs(_miniConsoles) do
 			if name == _currentChannel then
@@ -533,13 +533,13 @@ local function new (_, _name, initialBackground, initialChannels, initialTabLoca
 			if name == _currentChannel then
 				if tab.Components["Background"] then
 					tab:Remove("Background")
-                end
+        end
 
 				tab:Add(_activeBackground)
 			else
 				if tab.Components["Background"] then
 					tab:Remove("Background")
-                end
+        end
 
 				tab:Add(_inactiveBackground)
 			end

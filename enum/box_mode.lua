@@ -6,9 +6,9 @@ local Enum = require("vyzor.enum")
 --- BoxMode options.
 -- @table BoxMode
 local _enum = {
-    Horizontal = "horizontal",
-    Vertical = "vertical",
-    Grid = "grid",
+  Horizontal = "horizontal",
+  Vertical = "vertical",
+  Grid = "grid",
 }
 
 local BoxMode = Enum("BoxMode", _enum)

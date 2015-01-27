@@ -6,10 +6,10 @@ local Enum = require("vyzor.enum")
 --- TabLocation options.
 -- @table TabLocation.
 local _enum = {
-    Top = "top",
-    Bottom = "bottom",
-    Right = "right",
-    Left = "left",
+  Top = "top",
+  Bottom = "bottom",
+  Right = "right",
+  Left = "left",
 }
 
 local TabLocation = Enum("TabLocation", _enum)

@@ -1,5 +1,5 @@
 --- Instantiates the HUD, the master @{Frame}.
---- This Frame is virtual, and is not drawn.
+-- This Frame is virtual, and is not drawn.
 -- @script HUD
 
 local Frame = require("vyzor.base.frame")
@@ -15,94 +15,94 @@ local _consoleWidth = getMainConsoleWidth()
 local _consoleHeight = Options.ConsoleHeight
 
 local _borders = {
-    Top = 0,
-    Right = 0,
-    Bottom = 0,
-    Left = 0
+  Top = 0,
+  Right = 0,
+  Bottom = 0,
+  Left = 0
 }
 
 local function updateBorders ()
-    local options = Options.Borders
-    local newBorders = {}
+  local options = Options.Borders
+  local newBorders = {}
 
-    -- A function local function that may have been called
-    -- multiple times once. Or I thought it should be.
-    -- Calculates values for Borders that are NOT set
-    -- dynamically.
-    local function calculate (border, space)
-        if not space then
-            if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
-                space = _windowHeight
-            else
-                space = _windowWidth
-            end
-        end
-
-        if options[border] > 0 and options[border] <= 1.0 then
-            newBorders[border] = space * options[border]
-        else
-            newBorders[border] = options[border]
-        end
+  -- A function local function that may have been called
+  -- multiple times once. Or I thought it should be.
+  -- Calculates values for Borders that are NOT set
+  -- dynamically.
+  local function calculate (border, space)
+    if not space then
+      if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
+        space = _windowHeight
+      else
+        space = _windowWidth
+      end
     end
 
-    -- Iterates through each Border, setting its value. If it's not set
-    -- dynamically, it's simple math to get its size. If it is set dynamically,
-    -- however, we must know how much space is remaining, which means we
-    -- must know the size of the opposite Border.
-    for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
-        if options[border] ~= "dynamic" then
-            calculate(border)
-        else
-            local box
-            local space
-            local opposite
-
-            if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
-                box = _windowHeight
-                space = _windowHeight - _consoleHeight
-                opposite = (border == VyzorBorder.Top and VyzorBorder.Bottom) or VyzorBorder.Top
-            else
-                box = _windowWidth
-                space = (_windowWidth - _consoleWidth) - 10
-                opposite = (border == VyzorBorder.Left and VyzorBorder.Right) or VyzorBorder.Left
-            end
-
-            -- Both Borders are dynamic. YaY! This makes it easy.
-            if options[opposite] == "dynamic" then
-                newBorders[border] = space / 2
-            -- Only one side is dynamic. Now we must maths. =(
-            else
-                -- The other side has already been calculated. Makes this easy.
-                if newBorders[opposite] then
-                    newBorders[border] = space - newBorders[opposite]
-                -- Other side has not been calculated. So we figure it out.
-                else
-                    if options[opposite] > 0 and options[opposite] <= 1.0 then
-                        newBorders[border] = space - (box * options[opposite])
-                    else
-                        newBorders[border] = space - options[opposite]
-                    end
-                end
-            end
-        end
+    if options[border] > 0 and options[border] <= 1.0 then
+      newBorders[border] = space * options[border]
+    else
+      newBorders[border] = options[border]
     end
+  end
 
-    -- Here we actually tell Mudlet what size our Borders should be.
-    for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
-        if newBorders[border] > 0 then
-            _G["setBorder" .. border](newBorders[border])
+  -- Iterates through each Border, setting its value. If it's not set
+  -- dynamically, it's simple math to get its size. If it is set dynamically,
+  -- however, we must know how much space is remaining, which means we
+  -- must know the size of the opposite Border.
+  for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
+    if options[border] ~= "dynamic" then
+      calculate(border)
+    else
+      local box
+      local space
+      local opposite
+
+      if border == VyzorBorder.Top or border == VyzorBorder.Bottom then
+        box = _windowHeight
+        space = _windowHeight - _consoleHeight
+        opposite = (border == VyzorBorder.Top and VyzorBorder.Bottom) or VyzorBorder.Top
+      else
+        box = _windowWidth
+        space = (_windowWidth - _consoleWidth) - 10
+        opposite = (border == VyzorBorder.Left and VyzorBorder.Right) or VyzorBorder.Left
+      end
+
+      -- Both Borders are dynamic. YaY! This makes it easy.
+      if options[opposite] == "dynamic" then
+        newBorders[border] = space / 2
+      -- Only one side is dynamic. Now we must maths. =(
+      else
+        -- The other side has already been calculated. Makes this easy.
+        if newBorders[opposite] then
+          newBorders[border] = space - newBorders[opposite]
+        -- Other side has not been calculated. So we figure it out.
         else
-            _G["setBorder" .. border](0)
+          if options[opposite] > 0 and options[opposite] <= 1.0 then
+            newBorders[border] = space - (box * options[opposite])
+          else
+            newBorders[border] = space - options[opposite]
+          end
         end
+      end
     end
+  end
 
-    -- And update it to use later.
-    _borders = newBorders
+  -- Here we actually tell Mudlet what size our Borders should be.
+  for _, border in ipairs({ VyzorBorder.Top, VyzorBorder.Bottom, VyzorBorder.Left, VyzorBorder.Right }) do
+    if newBorders[border] > 0 then
+      _G["setBorder" .. border](newBorders[border])
+    else
+      _G["setBorder" .. border](0)
+    end
+  end
+
+  -- And update it to use later.
+  _borders = newBorders
 end
 
 if Options.HandleBorders == true then
-    -- Initialize Border sizes.
-    updateBorders()
+  -- Initialize Border sizes.
+  updateBorders()
 end
 
 -- Here we define the Border Frames. For the most part, these use the values
@@ -117,43 +117,43 @@ local vyzorBottom = "Vyzor" .. VyzorBorder.Bottom
 local vyzorRight = "Vyzor" .. VyzorBorder.Right
 
 local top = Frame(vyzorTop,
-    0,
-    0,
-    1.0,
-    (Options.Borders[VyzorBorder.Top] == "dynamic" and _borders[VyzorBorder.Top]) or Options.Borders[VyzorBorder.Top])
+  0,
+  0,
+  1.0,
+  (Options.Borders[VyzorBorder.Top] == "dynamic" and _borders[VyzorBorder.Top]) or Options.Borders[VyzorBorder.Top])
 
 local left = Frame(vyzorLeft,
-    0,
-    0,
-    (Options.Borders[VyzorBorder.Left] == "dynamic" and _borders[VyzorBorder.Left]) or Options.Borders[VyzorBorder.Left],
-    1.0)
+  0,
+  0,
+  (Options.Borders[VyzorBorder.Left] == "dynamic" and _borders[VyzorBorder.Left]) or Options.Borders[VyzorBorder.Left],
+  1.0)
 
 local bottom
 local right
 do
-    local function calculateBorderPosition(windowDimension, borderOption, borderValue)
-        if borderOption == "dynamic" then
-            return windowDimension - borderValue
-        else
-            if borderOption > 0 and borderOption <= 1.0 then
-                return 1.0 - borderOption
-            else
-                return windowDimension - borderOption
-            end
-        end
+  local function calculateBorderPosition(windowDimension, borderOption, borderValue)
+    if borderOption == "dynamic" then
+      return windowDimension - borderValue
+    else
+      if borderOption > 0 and borderOption <= 1.0 then
+        return 1.0 - borderOption
+      else
+        return windowDimension - borderOption
+      end
     end
+  end
 
-    bottom = Frame(vyzorBottom,
-        0,
-        calculateBorderPosition(_windowHeight, Options.Borders[VyzorBorder.Bottom], _borders[VyzorBorder.Bottom]),
-        1.0,
-        (Options.Borders[VyzorBorder.Bottom] == "dynamic" and _borders[VyzorBorder.Bottom]) or Options.Borders[VyzorBorder.Bottom])
+  bottom = Frame(vyzorBottom,
+    0,
+    calculateBorderPosition(_windowHeight, Options.Borders[VyzorBorder.Bottom], _borders[VyzorBorder.Bottom]),
+    1.0,
+    (Options.Borders[VyzorBorder.Bottom] == "dynamic" and _borders[VyzorBorder.Bottom]) or Options.Borders[VyzorBorder.Bottom])
 
-    right = Frame(vyzorRight,
-        calculateBorderPosition(_windowWidth, Options.Borders[VyzorBorder.Right], _borders[VyzorBorder.Right]),
-        0,
-        (Options.Borders[VyzorBorder.Right] == "dynamic" and _borders[VyzorBorder.Right]) or Options.Borders[VyzorBorder.Right],
-        1.0)
+  right = Frame(vyzorRight,
+    calculateBorderPosition(_windowWidth, Options.Borders[VyzorBorder.Right], _borders[VyzorBorder.Right]),
+    0,
+    (Options.Borders[VyzorBorder.Right] == "dynamic" and _borders[VyzorBorder.Right]) or Options.Borders[VyzorBorder.Right],
+    1.0)
 end
 
 -- Add our Border Frames to Vyzor.
@@ -166,61 +166,61 @@ HUD:Add(left)
 local _Resizing
 
 --- Handler for Mudlet's sysWindowResizeEvent.
---- Also updates Vyzor's state after option have been changed.
+-- Also updates Vyzor's state after option have been changed.
 function VyzorResize ()
-    -- If this isn't here, it tries to resize while it's
-    -- resizing, which caused some kind of infinite loop.
-    -- Or something. Bottom line, this makes it work
-    -- efficiently. Or at all. =p
-    if not _Resizing then
-        _Resizing = true
+  -- If this isn't here, it tries to resize while it's
+  -- resizing, which caused some kind of infinite loop.
+  -- Or something. Bottom line, this makes it work
+  -- efficiently. Or at all. =p
+  if not _Resizing then
+    _Resizing = true
 
-        if Options.HandleBorders == true or Options.HandleBorders == "auto" then
-            _windowWidth, _windowHeight = getMainWindowSize()
-            _consoleWidth = getMainConsoleWidth()
-            updateBorders()
-        end
-
-        local hudSize = HUD.Size
-        hudSize.Dimensions = { _windowWidth, _windowHeight }
-
-        local hudFrames = HUD.Frames
-        if Options.Borders[VyzorBorder.Top] == "dynamic" then
-            hudFrames[vyzorTop].Size.Height = (_borders.Top <= 1 and 0) or _borders.Top
-        end
-
-        do
-            local bottomBorder = hudFrames[vyzorBottom]
-
-            if Options.Borders[VyzorBorder.Bottom] == "dynamic" then
-                bottomBorder.Size.Height = (_borders.Bottom <= 1 and 0) or _borders.Bottom
-                bottomBorder.Position.Y = _windowHeight - _borders.Bottom
-            else
-                bottomBorder.Position.Y = _windowHeight - bottomBorder.Size.AbsoluteHeight
-            end
-        end
-
-        do
-            local rightBorder = hudFrames[vyzorRight]
-
-            if Options.Borders[VyzorBorder.Right] == "dynamic" then
-                rightBorder.Size.Width = (_borders.Right <= 1 and 0) or _borders.Right
-                rightBorder.Position.X = _windowWidth - _borders.Right
-            else
-                rightBorder.Position.X = _windowWidth - rightBorder.Size.AbsoluteWidth
-            end
-        end
-
-        if Options.Borders[VyzorBorder.Left] == "dynamic" then
-            hudFrames[vyzorLeft].Size.Width = (_borders.Left <= 1 and 0) or _borders.Left
-        end
-
-        HUD:Resize(hudSize.ContentWidth, hudSize.ContentHeight)
-        HUD:Move(0, 0)
-        _Resizing = false
-
-        raiseEvent("VyzorResizedEvent")
+    if Options.HandleBorders == true or Options.HandleBorders == "auto" then
+      _windowWidth, _windowHeight = getMainWindowSize()
+      _consoleWidth = getMainConsoleWidth()
+      updateBorders()
     end
+
+    local hudSize = HUD.Size
+    hudSize.Dimensions = { _windowWidth, _windowHeight }
+
+    local hudFrames = HUD.Frames
+    if Options.Borders[VyzorBorder.Top] == "dynamic" then
+      hudFrames[vyzorTop].Size.Height = (_borders.Top <= 1 and 0) or _borders.Top
+    end
+
+    do
+      local bottomBorder = hudFrames[vyzorBottom]
+
+      if Options.Borders[VyzorBorder.Bottom] == "dynamic" then
+        bottomBorder.Size.Height = (_borders.Bottom <= 1 and 0) or _borders.Bottom
+        bottomBorder.Position.Y = _windowHeight - _borders.Bottom
+      else
+        bottomBorder.Position.Y = _windowHeight - bottomBorder.Size.AbsoluteHeight
+      end
+    end
+
+    do
+      local rightBorder = hudFrames[vyzorRight]
+
+      if Options.Borders[VyzorBorder.Right] == "dynamic" then
+        rightBorder.Size.Width = (_borders.Right <= 1 and 0) or _borders.Right
+        rightBorder.Position.X = _windowWidth - _borders.Right
+      else
+        rightBorder.Position.X = _windowWidth - rightBorder.Size.AbsoluteWidth
+      end
+    end
+
+    if Options.Borders[VyzorBorder.Left] == "dynamic" then
+      hudFrames[vyzorLeft].Size.Width = (_borders.Left <= 1 and 0) or _borders.Left
+    end
+
+    HUD:Resize(hudSize.ContentWidth, hudSize.ContentHeight)
+    HUD:Move(0, 0)
+    _Resizing = false
+
+    raiseEvent("VyzorResizedEvent")
+  end
 end
 
 return HUD
