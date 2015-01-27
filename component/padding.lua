@@ -1,17 +1,17 @@
 --- This Component defines the Padding of a @{Frame}.
---- The Padding is between the Content and the @{Border}.
----
---- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
---- @classmod Padding
+-- The Padding is between the Content and the @{Border}.
+--
+-- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
+-- @classmod Padding
 
 local Base = require("vyzor.base")
 
 local Padding = Base("Component", "Padding")
 
 --- Padding constructor.
---- @function Padding
---- @param ... A list of numbers defining the size of each side of the Padding Component.
---- @treturn Padding
+-- @function Padding
+-- @param ... A list of numbers defining the size of each side of the Padding Component.
+-- @treturn Padding
 local function new (_, ...)
     local arg = { ... }
     if not arg[1] then

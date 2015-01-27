@@ -1,5 +1,5 @@
 --- A container for Mudlet's built-in Map display.
---- @classmod Map
+-- @classmod Map
 
 local Base = require("vyzor.base")
 
@@ -22,12 +22,12 @@ local function calculateAbsoluteDimension(dimension, frameDimension)
 end
 
 --- Map constructor.
---- @function Map
---- @number[opt=0] initialX The Map's initial X coordinate.
---- @number[opt=0] initialY The Map's initial Y coordinate.
---- @number[opt=1.0] initialWidth The Map's initial Width.
---- @number[opt=1.0] initialHeight The Map's initial Height.
---- @treturn Map
+-- @function Map
+-- @number[opt=0] initialX The Map's initial X coordinate.
+-- @number[opt=0] initialY The Map's initial Y coordinate.
+-- @number[opt=1.0] initialWidth The Map's initial Width.
+-- @number[opt=1.0] initialHeight The Map's initial Height.
+-- @treturn Map
 local function new (_, initialX, initialY, initialWidth, initialHeight)
     --- @type Map
     local self = {}

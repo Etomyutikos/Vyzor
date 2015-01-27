@@ -1,10 +1,10 @@
 --- Determines which aspect a @{Frame} prefers to lose when subject to bounding.
---- @classmod BoundingMode
+-- @classmod BoundingMode
 
 local Enum = require("vyzor.enum")
 
 --- BoundingMode options.
---- @table BoundingMode
+-- @table BoundingMode
 local _enum = {
     Size = "size",
     Position = "position"

@@ -1,6 +1,6 @@
 --- Instantiates the HUD, the master @{Frame}.
 --- This Frame is virtual, and is not drawn.
---- @script HUD
+-- @script HUD
 
 local Frame = require("vyzor.base.frame")
 local Options = require("vyzor.base.options")

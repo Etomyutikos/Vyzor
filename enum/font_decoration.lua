@@ -1,10 +1,10 @@
 --- Specifies @{Font} markup options.
---- @classmod FontDecoration
+-- @classmod FontDecoration
 
 local Enum = require("vyzor.enum")
 
 --- FontDecoration options.
---- @table FontDecoration
+-- @table FontDecoration
 local _enum = {
     None = "none",
     Underline = "underline",

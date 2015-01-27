@@ -1,10 +1,10 @@
 --- Defines options for @{Box} Compounds.
---- @classmod BoxMode
+-- @classmod BoxMode
 
 local Enum = require("vyzor.enum")
 
 --- BoxMode options.
---- @table BoxMode
+-- @table BoxMode
 local _enum = {
     Horizontal = "horizontal",
     Vertical = "vertical",

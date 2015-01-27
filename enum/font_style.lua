@@ -1,10 +1,10 @@
 --- Specifies options for @{Font} styles.
---- @classmod FontStyle
+-- @classmod FontStyle
 
 local Enum = require("vyzor.enum")
 
 --- FontStyle options.
---- @table FontStyle
+-- @table FontStyle
 local _enum = {
     Normal = "normal",
     Italic = "italic",

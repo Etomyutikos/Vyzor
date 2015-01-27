@@ -1,6 +1,6 @@
 --- A Component that defines gradient data.
 --- Used primarily in a @{Brush} Component.
---- @classmod Gradient
+-- @classmod Gradient
 
 local Base = require("vyzor.base")
 local GradientMode = require("vyzor.enum.gradient_mode")
@@ -8,22 +8,22 @@ local GradientMode = require("vyzor.enum.gradient_mode")
 local Gradient = Base("Component", "Gradient")
 
 --- Gradient constructor.
---- Expected arguments differ depending on mode.
----
---- Linear mode expects a comma-separated list of numbers(x1, y1, x2, y2) followed by any number of stop,
---- color(number, Color Component) pairs.
----
---- Radial mode expects a comma-separated list of numbers(cx, cy, radius, fx, fy) following by any number
---- of stop, color(number, Color Component) pairs.
----
---- Conical mode expects a comma-separated list of numbers(cx, cy, radius, angle) following by any number
---- of stop, color(number, Color Component) pairs.
----
---- All numeric values are expected to between 0.0 and 1.0, to be understood as percentage of Frame size.
---- @function Gradient
---- @tparam GradientMode _mode Determines Gradient data handling.
---- @param ... Gradient data. See description.
---- @treturn Gradient
+-- Expected arguments differ depending on mode.
+--
+-- Linear mode expects a comma-separated list of numbers(x1, y1, x2, y2) followed by any number of stop,
+-- color(number, Color Component) pairs.
+--
+-- Radial mode expects a comma-separated list of numbers(cx, cy, radius, fx, fy) following by any number
+-- of stop, color(number, Color Component) pairs.
+--
+-- Conical mode expects a comma-separated list of numbers(cx, cy, radius, angle) following by any number
+-- of stop, color(number, Color Component) pairs.
+--
+-- All numeric values are expected to between 0.0 and 1.0, to be understood as percentage of Frame size.
+-- @function Gradient
+-- @tparam GradientMode _mode Determines Gradient data handling.
+-- @param ... Gradient data. See description.
+-- @treturn Gradient
 local function new (_, _mode, ...)
     local arg = { ... }
     assert(GradientMode:IsValid(_mode), "Vyzor: Invalid mode passed to Gradient.")

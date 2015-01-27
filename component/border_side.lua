@@ -1,5 +1,5 @@
 --- A subcomponent that defines individual sides of a @{Border} Component.
---- @classmod BorderSide
+-- @classmod BorderSide
 
 local Base = require("vyzor.base")
 local BorderStyle = require("vyzor.enum.border_style")
@@ -7,12 +7,12 @@ local BorderStyle = require("vyzor.enum.border_style")
 local BorderSide = Base("Subcomponent", "BorderSide")
 
 --- Border constructor.
---- @function Border
---- @number initialWidth The BorderSide's initial width.
---- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The BorderSide's initial @{BorderStyle}.
---- @tparam Brush|Image initialContent The BorderSide's initial @{Brush} or @{Image}.
---- @number initialRadius The radius of the BorderSide's corners. Only relevant for top and bottom BorderSides.
---- @treturn BorderSide
+-- @function Border
+-- @number initialWidth The BorderSide's initial width.
+-- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The BorderSide's initial @{BorderStyle}.
+-- @tparam Brush|Image initialContent The BorderSide's initial @{Brush} or @{Image}.
+-- @number initialRadius The radius of the BorderSide's corners. Only relevant for top and bottom BorderSides.
+-- @treturn BorderSide
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius)
     --- @type BorderSide
     local self = {}

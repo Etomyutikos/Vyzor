@@ -1,5 +1,5 @@
 --- A container that holds and maintains a dynamically arranged collection of @{Frame}s.
---- @classmod Box
+-- @classmod Box
 
 local Base = require("vyzor.base")
 local BoxMode = require("vyzor.enum.box_mode")
@@ -8,12 +8,12 @@ local Lib = require("vyzor.lib")
 local Box = Base("Compound", "Box")
 
 --- Box constructor.
---- @function Box
---- @string _name The name of the Box and the automatically generated container @{Frame}.
---- @tparam[opt=BoxMode.Horizontal] BoxMode initialMode Alignment of @{Frame}s.
---- @tparam Frame initialBackground The background @{Frame} for this Box.
---- @tparam table initialFrames A numerically indexed table holding the @{Frame}s this Box contains.
---- @treturn Box
+-- @function Box
+-- @string _name The name of the Box and the automatically generated container @{Frame}.
+-- @tparam[opt=BoxMode.Horizontal] BoxMode initialMode Alignment of @{Frame}s.
+-- @tparam Frame initialBackground The background @{Frame} for this Box.
+-- @tparam table initialFrames A numerically indexed table holding the @{Frame}s this Box contains.
+-- @treturn Box
 local function new (_, _name, initialMode, initialBackground, initialFrames)
     assert(_name, "Vyzor: New Box must be supplied with a name")
 

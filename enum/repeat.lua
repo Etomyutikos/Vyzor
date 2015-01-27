@@ -1,10 +1,10 @@
 --- Specifies options for Component with repeating elements.
---- @classmod Repeat
+-- @classmod Repeat
 
 local Enum = require("vyzor.enum")
 
 --- Repeat options.
---- @table Repeat
+-- @table Repeat
 local _enum = {
     RepeatX = "repeat-x",
     RepeatY = "repeat-y",

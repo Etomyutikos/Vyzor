@@ -1,10 +1,10 @@
 --- A utility module, holding miscellaneous functions and structures.
---- @module Lib
+-- @module Lib
 
 local Lib = {}
 
 --- Creates a table that preserves order of key->value pairs as they're entered.
---- @treturn table
+-- @treturn table
 function Lib.OrderedTable ()
     --- @type OrderedTable
     local list = {}

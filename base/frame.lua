@@ -1,5 +1,5 @@
 --- The primary container for Vyzor Components.
---- @classmod Frame
+-- @classmod Frame
 
 local Base = require("vyzor.base")
 local Lib = require("vyzor.lib")
@@ -15,13 +15,13 @@ local _ResizeRegistered = false
 local _MasterList = {}
 
 --- Frame constructor.
---- @function Frame
---- @string _name The name of the Frame, used for addressing.
---- @number _x Initial X position of the Frame. Defaults to 0.
---- @number _y Initial Y position of the Frame. Defaults to 0.
---- @number _width Initial width of the Frame. Defaults to 1.
---- @number _height Initial height of the Frame. Defaults to 1.
---- @treturn Frame
+-- @function Frame
+-- @string _name The name of the Frame, used for addressing.
+-- @number _x Initial X position of the Frame. Defaults to 0.
+-- @number _y Initial Y position of the Frame. Defaults to 0.
+-- @number _width Initial width of the Frame. Defaults to 1.
+-- @number _height Initial height of the Frame. Defaults to 1.
+-- @treturn Frame
 local function new (_, _name, _x, _y, _width, _height)
     --- @type Frame
     local self = {}

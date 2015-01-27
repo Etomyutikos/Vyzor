@@ -1,6 +1,6 @@
 --- A Component that defines color information.
 --- Used primarily in a @{Brush} Component.
---- @classmod Color
+-- @classmod Color
 
 local Base = require("vyzor.base")
 local ColorMode = require("vyzor.enum.color_mode")
@@ -8,17 +8,17 @@ local ColorMode = require("vyzor.enum.color_mode")
 local Color = Base("Component", "Color")
 
 --- Color constructor.
---- Expected arguments differ depending on mode.
----
---- RGB and HSV modes expect a comma-separated list of 3 - 4 numbers.
----
---- Name mode expects a single string.
----
---- Hex mode expects a single Hex string.
---- @function Color
---- @tparam ColorMode _mode Determines handling of color data.
---- @param ... Color data. See description.
---- @treturn Color
+-- Expected arguments differ depending on mode.
+--
+-- RGB and HSV modes expect a comma-separated list of 3 - 4 numbers.
+--
+-- Name mode expects a single string.
+--
+-- Hex mode expects a single Hex string.
+-- @function Color
+-- @tparam ColorMode _mode Determines handling of color data.
+-- @param ... Color data. See description.
+-- @treturn Color
 local function new (_, _mode, ...)
     local arg = { ... }
 

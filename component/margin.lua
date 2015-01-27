@@ -1,17 +1,17 @@
 --- This Component defines the Margin of a @{Frame}.
---- The Margin is the exterior part of the @{Frame}.
----
---- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
---- @classmod Margin
+-- The Margin is the exterior part of the @{Frame}.
+--
+-- See http://doc.qt.nokia.com/4.7-snapshot/stylesheet-customizing.html.
+-- @classmod Margin
 
 local Base = require("vyzor.base")
 
 local Margin = Base("Component", "Margin")
 
 --- Margin constructor.
---- @function Margin
---- @param ... A list of numbers defining the size of each side of the Margin.
---- @treturn Margin
+-- @function Margin
+-- @param ... A list of numbers defining the size of each side of the Margin.
+-- @treturn Margin
 local function new (_, ...)
     local arg = { ... }
     if not arg[1] then

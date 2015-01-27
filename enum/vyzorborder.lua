@@ -1,10 +1,10 @@
 --- Used to identify the Border @{Frame}s Vyzor creates and manages.
---- @classmod VyzorBorder
+-- @classmod VyzorBorder
 
 local Enum = require("vyzor.enum")
 
 --- VyzorBorder options.
---- @table VyzorBorder
+-- @table VyzorBorder
 local _enum = {
     Top = "Top",
     Bottom = "Bottom",

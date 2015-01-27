@@ -1,5 +1,5 @@
 --- This Component holds image data.
---- @classmod Image
+-- @classmod Image
 
 local Base = require("vyzor.base")
 local Alignment = require("vyzor.enum.alignment")
@@ -7,10 +7,10 @@ local Alignment = require("vyzor.enum.alignment")
 local Image = Base("Component", "Image")
 
 --- Image constructor.
---- @function Image
---- @string _url The filepath of the image used by the Image Component.
---- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment The @{Alignment} of the Image within the @{Frame}.
---- @treturn Image
+-- @function Image
+-- @string _url The filepath of the image used by the Image Component.
+-- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment The @{Alignment} of the Image within the @{Frame}.
+-- @treturn Image
 local function new (_, _url, initialAlignment)
     assert(type(_url) == "string", "Vyzor: Url's must be strings.")
 

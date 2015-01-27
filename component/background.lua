@@ -1,5 +1,5 @@
 --- Defines a @{Frame}'s Background.
---- @classmod Background
+-- @classmod Background
 
 local Base = require("vyzor.base")
 local Alignment = require("vyzor.enum.alignment")
@@ -8,11 +8,11 @@ local Repeat = require("vyzor.enum.repeat")
 local Background = Base("Component", "Background")
 
 --- Background Constructor
---- @function Background
---- @tparam Brush|Image initialContent What the Background displays.
---- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment Where the content sits in the Background.
---- @tparam[opt=Repeat.RepeatXY] Repeat initialRepeatMode Tiling rules for the content.
---- @treturn Background
+-- @function Background
+-- @tparam Brush|Image initialContent What the Background displays.
+-- @tparam[opt=Alignment.TopLeft] Alignment initialAlignment Where the content sits in the Background.
+-- @tparam[opt=Repeat.RepeatXY] Repeat initialRepeatMode Tiling rules for the content.
+-- @treturn Background
 local function new (_, initialContent, initialAlignment, initialRepeatMode)
     --- @type Background
     local self = {}

@@ -1,5 +1,5 @@
 --- Maintains option state for all of Vyzor.
---- @module Options
+-- @module Options
 
 local Lib = require("vyzor.lib")
 local VyzorBorder = require("vyzor.enum.vyzorborder")

@@ -1,10 +1,10 @@
 --- Specifics options for @{Gauge} fill direction.
---- @classmod GaugeFill
+-- @classmod GaugeFill
 
 local Enum = require("vyzor.enum")
 
 --- GaugeFill options.
---- @table GaugeFill
+-- @table GaugeFill
 local _enum = {
     LeftRight = "left-to-right",
     RightLeft = "right-to-left",

@@ -1,10 +1,10 @@
 --- Specifies modes for @{Color} Components.
---- @classmod ColorMode
+-- @classmod ColorMode
 
 local Enum = require("vyzor.enum")
 
 --- ColorMode options.
---- @table ColorMode
+-- @table ColorMode
 local _enum = {
     RGB = "rgb",
     RGBA = "rgba",

@@ -1,5 +1,5 @@
 --- A Component defining certain text manipulations.
---- @classmod Font
+-- @classmod Font
 
 local Base = require("vyzor.base")
 local FontDecoration = require("vyzor.enum.font_decoration")
@@ -9,12 +9,12 @@ local FontWeight = require("vyzor.enum.font_weight")
 local Font = Base("Component", "Font")
 
 --- Font constructor.
---- @function Font
---- @tparam number|string initialSize The Font Component's initial size. Valid sizes are defined by QT, but I can only seem to get numbers to work.
---- @string initialFamily The font family for this Font Component.
---- @tparam[opt=FontStyle.Normal] FontStyle|FontWeight initialStyle The Font Component's initial style.
---- @tparam[opt] FontDecoration initialDecoration The Font Component's initial @{FontDecoration}.
---- @treturn Font
+-- @function Font
+-- @tparam number|string initialSize The Font Component's initial size. Valid sizes are defined by QT, but I can only seem to get numbers to work.
+-- @string initialFamily The font family for this Font Component.
+-- @tparam[opt=FontStyle.Normal] FontStyle|FontWeight initialStyle The Font Component's initial style.
+-- @tparam[opt] FontDecoration initialDecoration The Font Component's initial @{FontDecoration}.
+-- @treturn Font
 local function new (_, initialSize, initialFamily, initialStyle, initialDecoration)
     --- @type Font
     local self = {}

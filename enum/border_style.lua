@@ -1,10 +1,10 @@
 --- Specifies option for @{Border} and @{BorderSide} Components.
---- @classmod BorderStyle
+-- @classmod BorderStyle
 
 local Enum = require("vyzor.enum")
 
 --- BorderStyle options.
---- @table BorderStyle
+-- @table BorderStyle
 local _enum = {
     Dashed = "dashed",
     DotDash = "dot-dash",

@@ -1,6 +1,6 @@
 --- A Compound composed of @{MiniConsole}s and tabs that can be echoed to.
 --- One @{MiniConsole} is displayed at a time. The tabs are used to switch the active @{MiniConsole}.
---- @classmod Chat
+-- @classmod Chat
 
 local Background = require("vyzor.component.background")
 local Base = require("vyzor.base")
@@ -17,29 +17,29 @@ local TabLocation = require("vyzor.enum.tab_location")
 local Chat = Base("Compound", "Chat")
 
 --- A dirty global function used as a callback for tabs.
---- Vyzor creates one of these functions for each Chat Compound.
----
---- Replace the underscore with the Chat Compound's name.
---- @function _ChatSwitch
---- @string channel The channel to be switched to.
+-- Vyzor creates one of these functions for each Chat Compound.
+--
+-- Replace the underscore with the Chat Compound's name.
+-- @function _ChatSwitch
+-- @string channel The channel to be switched to.
 
 --- A global function, registered as an event handler for the VyzorDrawnEvent.
---- Makes sure the proper consoles are visible.
----
---- Replace the underscore with the Chat Compound's name.
---- @function _InitializeChat
+-- Makes sure the proper consoles are visible.
+--
+-- Replace the underscore with the Chat Compound's name.
+-- @function _InitializeChat
 
 --- Chat constructor.
---- @function Chat
---- @string _name Name of the Chat Compound. Used to create unique event handler functions.
---- @tparam Frame initialBackground The Background @{Frame} for this Chat Compound.
---- @tparam table initialChannels The names of the channels managed by this Compound. Passed as a table.
---- @tparam[opt=TabLocation.Top] TabLocation initialTabLocation A @{TabLocation} @{Enum} that determines on which side of the consoles the tabs sit.
---- @number[opt=0.05] initialSize This is the size of the unmanaged portion of the tabs. Must be between 0.0 and 1.0.
---- @tparam[opt="dynamic"] number|string initialWordWrap This is the word wrap of the @{MiniConsole} text.
---- @tparam[opt=10] number|string initialFont This is the font size of the @{MiniConsole} text.
---- @tparam[opt] table initialComponents A table of Components. These are used to decorate the tabs.
---- @treturn Chat
+-- @function Chat
+-- @string _name Name of the Chat Compound. Used to create unique event handler functions.
+-- @tparam Frame initialBackground The Background @{Frame} for this Chat Compound.
+-- @tparam table initialChannels The names of the channels managed by this Compound. Passed as a table.
+-- @tparam[opt=TabLocation.Top] TabLocation initialTabLocation A @{TabLocation} @{Enum} that determines on which side of the consoles the tabs sit.
+-- @number[opt=0.05] initialSize This is the size of the unmanaged portion of the tabs. Must be between 0.0 and 1.0.
+-- @tparam[opt="dynamic"] number|string initialWordWrap This is the word wrap of the @{MiniConsole} text.
+-- @tparam[opt=10] number|string initialFont This is the font size of the @{MiniConsole} text.
+-- @tparam[opt] table initialComponents A table of Components. These are used to decorate the tabs.
+-- @treturn Chat
 local function new (_, _name, initialBackground, initialChannels, initialTabLocation, initialTabSize, initialWordWrap, initialFont, initialComponents)
 	--- @type Chat
 	local self = {}

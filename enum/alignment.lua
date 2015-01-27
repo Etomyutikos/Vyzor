@@ -1,10 +1,10 @@
 --- Defines options for aligning content within various Components.
---- @classmod Alignment
+-- @classmod Alignment
 
 local Enum = require("vyzor.enum")
 
 --- Alignment options.
---- @table Alignment
+-- @table Alignment
 local _enum = {
     Top = "top",
     TopLeft = "top left",

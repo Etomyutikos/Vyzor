@@ -1,6 +1,6 @@
 --- A Supercomponent, for use only with @{Frame}s.
 --- Responsible for managing the coordinate positioning of the @{Frame} within its parent.
---- @classmod Position
+-- @classmod Position
 
 local Base = require("vyzor.base")
 local BoundingMode = require("vyzor.enum.bounding_mode")
@@ -30,12 +30,12 @@ local function setBoundedCoordinate(absoluteAxis, minimum, maximum, dimension)
 end
 
 --- Position constructor.
---- @function Position
---- @tparam Frame _frame The @{Frame} to which this Supercomponent belongs.
---- @number[opt=0] initialX The initial x coordinate position.
---- @number[opt=0] initialY The initial y coordinate position.
---- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
---- @treturn Position
+-- @function Position
+-- @tparam Frame _frame The @{Frame} to which this Supercomponent belongs.
+-- @number[opt=0] initialX The initial x coordinate position.
+-- @number[opt=0] initialY The initial y coordinate position.
+-- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
+-- @treturn Position
 local function new (_, _frame, initialX, initialY, _isFirst)
     --- @type Position
     local self = {}

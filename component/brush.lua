@@ -1,14 +1,14 @@
 --- A Component container that holds either a @{Color} or @{Gradient} Component.
---- @classmod Brush
+-- @classmod Brush
 
 local Base = require("vyzor.base")
 
 local Brush = Base("Component", "Brush")
 
 --- Brush constructor.
---- @function Brush
---- @tparam Color|Gradient initialContent The initial content of this Brush Component.
---- @treturn Brush
+-- @function Brush
+-- @tparam Color|Gradient initialContent The initial content of this Brush Component.
+-- @treturn Brush
 local function new ( _, initialContent)
     --- @type Brush
     local self = {}

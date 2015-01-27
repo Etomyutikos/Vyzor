@@ -1,5 +1,5 @@
 --- A lightweight container for @{Frame}s that will function as a dynamically resized bar.
---- @classmod Gauge
+-- @classmod Gauge
 
 local Background = require("vyzor.component.background")
 local Base = require("vyzor.base")
@@ -41,15 +41,15 @@ local function getField(field)
 end
 
 --- Gauge constructor.
---- @function Gauge
---- @string name The name of the Gauge.
---- @string initialCurrentValueAddress The string address of the current stat to track.
---- @string initialMaximumValueAddress The string address of the current stat to track.
---- @tparam Frame initialBackground The Background @{Frame}.
---- @tparam Frame initialForeground The Foreground @{Frame}. @{Size} and @{Position} values will be overwritten.
---- @tparam[opt=GaugeFill.LeftRight] GaugeFill initialFillMode Determines direction Gauge fills.
---- @tparam[opt] table initialOverflowFrames Numerically indexed table of @{Frame}s to be used for overflow.
---- @treturn Gauge
+-- @function Gauge
+-- @string name The name of the Gauge.
+-- @string initialCurrentValueAddress The string address of the current stat to track.
+-- @string initialMaximumValueAddress The string address of the current stat to track.
+-- @tparam Frame initialBackground The Background @{Frame}.
+-- @tparam Frame initialForeground The Foreground @{Frame}. @{Size} and @{Position} values will be overwritten.
+-- @tparam[opt=GaugeFill.LeftRight] GaugeFill initialFillMode Determines direction Gauge fills.
+-- @tparam[opt] table initialOverflowFrames Numerically indexed table of @{Frame}s to be used for overflow.
+-- @treturn Gauge
 local function new (_, _name, initialCurrentValueAddress, initialMaximumValueAddress, initialBackground, initialForeground, initialFillMode, initialOverflowFrames)
     assert(initialCurrentValueAddress and initialMaximumValueAddress, "Vyzor: A new Gauge must have both current and maximum addresses to track.")
 

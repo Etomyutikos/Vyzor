@@ -1,10 +1,10 @@
 --- Specifies operating modes for @{Gradient} Components.
---- @classmod GradientMode
+-- @classmod GradientMode
 
 local Enum = require("vyzor.enum")
 
 --- GradientMode options.
---- @table GradientMode
+-- @table GradientMode
 local _enum = {
     Linear = "linear",
     Radial = "radial",

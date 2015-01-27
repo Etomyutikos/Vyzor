@@ -1,10 +1,10 @@
 --- Determines where the tabs will be placed within a @{Chat} Compound.
---- @classmod TabLocation
+-- @classmod TabLocation
 
 local Enum = require("vyzor.enum")
 
 --- TabLocation options.
---- @table TabLocation.
+-- @table TabLocation.
 local _enum = {
     Top = "top",
     Bottom = "bottom",

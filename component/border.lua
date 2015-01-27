@@ -1,5 +1,5 @@
 --- A Component that defines a @{Frame}'s Border.
---- @classmod Border
+-- @classmod Border
 
 local Base = require("vyzor.base")
 local BorderSide = require("vyzor.component.border_side")
@@ -23,13 +23,13 @@ local function getWidthString(width)
 end
 
 --- Border constructor.
---- @function Border
---- @tparam number|table initialWidth The Border Component's initial width. May be a number or a table of numbers.
---- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The Border Component's initial @{BorderStyle}.
---- @tparam Image|Brush|table initialContent The Border Component's initial content.
---- @tparam[opt=0] number|table initialRadius The Border Component's initial radius, for rounded corners.
---- @tparam table initialBorders The Border Component's initial @{BorderSide} Subcomponents. Must be a table containing one to four @{BorderSide}s.
---- @treturn Border
+-- @function Border
+-- @tparam number|table initialWidth The Border Component's initial width. May be a number or a table of numbers.
+-- @tparam[opt=BorderStyle.None] BorderStyle initialStyle The Border Component's initial @{BorderStyle}.
+-- @tparam Image|Brush|table initialContent The Border Component's initial content.
+-- @tparam[opt=0] number|table initialRadius The Border Component's initial radius, for rounded corners.
+-- @tparam table initialBorders The Border Component's initial @{BorderSide} Subcomponents. Must be a table containing one to four @{BorderSide}s.
+-- @treturn Border
 local function new (_, initialWidth, initialStyle, initialContent, initialRadius, initialBorders)
     --- @type Border
     local self = {}

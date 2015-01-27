@@ -1,15 +1,15 @@
 --- A base object for all Enum objects.
---- @classmod Enum
+-- @classmod Enum
 
 local Base = require("vyzor.base")
 
 local Enum = Base("Enum")
 
 --- Enum constructor.
---- @function Enum
---- @string _subtype A string identifying the Enum.
---- @tparam table _optionsTable A table of valid options for the Enum.
---- @treturn Enum
+-- @function Enum
+-- @string _subtype A string identifying the Enum.
+-- @tparam table _optionsTable A table of valid options for the Enum.
+-- @treturn Enum
 local function new (_, _subtype, _optionsTable)
 	--- @type Enum
 	local self = {}

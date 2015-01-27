@@ -1,10 +1,10 @@
 --- Specifies options for @{Font} weights.
---- @classmod FontWeight
+-- @classmod FontWeight
 
 local Enum = require("vyzor.enum")
 
 --- FontWeight options.
---- @table FontWeight
+-- @table FontWeight
 local _enum = {
     Normal = "normal",
     Bold = "bold",

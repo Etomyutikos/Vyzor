@@ -1,15 +1,15 @@
 --- The base object from which all other Vyzor objects are derived.
 --- Defines type handling.
 --- Internal.
---- @classmod Base
+-- @classmod Base
 
 local Base = {}
 
 --- Base constructor.
---- @function Base
---- @string _type The new object's type.
---- @string _subtype The new object's subtype.
---- @treturn Base
+-- @function Base
+-- @string _type The new object's type.
+-- @string _subtype The new object's subtype.
+-- @treturn Base
 local function new (_, _type, _subtype)
     --- @type Base
     local self = {}

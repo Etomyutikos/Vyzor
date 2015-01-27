@@ -1,8 +1,8 @@
 --- Vyzor, UI Manager for Mudlet
---- @module Vyzor
+-- @module Vyzor
 
 --- The primary interface, exposing the Vyzor API.
---- @table Vyzor
+-- @table Vyzor
 local Vyzor = {
     Frame = require("vyzor.base.frame"), --- See @{Frame}.
 

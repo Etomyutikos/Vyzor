@@ -1,5 +1,5 @@
 --- A Supercomponent used only within @{Frame}s to manage space.
---- @classmod Size
+-- @classmod Size
 
 local Base = require("vyzor.base")
 local BoundingMode = require("vyzor.enum.bounding_mode")
@@ -27,12 +27,12 @@ local function setBoundedDimension(absoluteDimension, maximum, edge, containerEd
 end
 
 --- Size constructor.
---- @function Size
---- @tparam Frame _frame The @{Frame} to which this Size Supercomponent belongs.
---- @number[opt=1.0] initialWidth Initial width of the @{Frame}.
---- @number[opt=1.0] initialHeight Initial height of the @{Frame}.
---- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
---- @treturn Size
+-- @function Size
+-- @tparam Frame _frame The @{Frame} to which this Size Supercomponent belongs.
+-- @number[opt=1.0] initialWidth Initial width of the @{Frame}.
+-- @number[opt=1.0] initialHeight Initial height of the @{Frame}.
+-- @bool _isFirst Determines whether or not the parent @{Frame} is the @{HUD}.
+-- @treturn Size
 local function new (_, _frame, initialWidth, initialHeight, _isFirst)
     --- @type Size
     local self = {}

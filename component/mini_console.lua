@@ -1,5 +1,5 @@
 --- A Mudlet text container that mimicks the main console.
---- @classmod MiniConsole
+-- @classmod MiniConsole
 
 local Base = require("vyzor.base")
 
@@ -24,17 +24,17 @@ local function calculateAbsoluteDimension(dimension, frameDimension)
 end
 
 --- MiniConsole constructor.
---- @function MiniConsole
---- @string _name Used for echoing and other Mudlet referencing.
---- @number[opt=0] initialX X coordinate position.
---- @number[opt=0] initialY Y coordinate position.
---- @number[opt=1.0] initialWidth Width of the MiniConsole.
---- @number[opt=1.0] initialHeight Height of the MiniConsole.
---- @tparam[opt] number|string initialWordWrap Sets the MiniConsole's word wrap in characters. Default is dynamic or 80
+-- @function MiniConsole
+-- @string _name Used for echoing and other Mudlet referencing.
+-- @number[opt=0] initialX X coordinate position.
+-- @number[opt=0] initialY Y coordinate position.
+-- @number[opt=1.0] initialWidth Width of the MiniConsole.
+-- @number[opt=1.0] initialHeight Height of the MiniConsole.
+-- @tparam[opt] number|string initialWordWrap Sets the MiniConsole's word wrap in characters. Default is dynamic or 80
 --- if initialFontSize is dynamic.
---- @tparam[opt] number|string initialFontSize Sets the MiniConsole's font size. Default is dynamic or 8 if
+-- @tparam[opt] number|string initialFontSize Sets the MiniConsole's font size. Default is dynamic or 8 if
 --- initialWordWrap is dynamic.
---- @treturn MiniConsole
+-- @treturn MiniConsole
 local function new (_, _name, initialX, initialY, initialWidth, initialHeight, initialWordWrap, initialFontSize)
     assert(_name, "Vyzor: New MiniConsole must have a name.")
 
