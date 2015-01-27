@@ -5,6 +5,7 @@ pushd %~dp0
  vyzor.trigger^
  license.txt
 
-ldoc ./ -p Vyzor -d f:/projects/dev/doc/github.com/oneymus/vyzor/doc
+mkdir f:\projects\dev\doc\github.com\oneymus\vyzor\doc
+ldoc ./ -p Vyzor -d f:\projects\dev\doc\github.com\oneymus\vyzor\doc
 
 popd
