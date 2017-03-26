@@ -365,8 +365,11 @@ local function new (_, _name, initialX, initialY, initialWidth, initialHeight, i
 
   --- Displays text on a MiniConsole with some crazy-ass formatting.
   -- @string text
-  function self:DEcho (text)
-    decho(_name, text)
+  -- @param foregroundColor The foreground color of the text.
+  -- @param backgroundColor The background color of the text.
+  -- @bool useInsertText If true, uses InsertText() instead of echo().
+  function self:DEcho (text, foregroundColor, backgroundColor, useInsertText)
+    decho(text, foregroundColor, backgroundColor, useInsertText, _name)
   end
 
   --- Displays a clickable line of text in a MiniConsole.
