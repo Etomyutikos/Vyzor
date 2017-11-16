@@ -22,7 +22,7 @@ local _MasterList = {}
 -- @number _width Initial width of the Frame. Defaults to 1.
 -- @number _height Initial height of the Frame. Defaults to 1.
 -- @treturn Frame
-local function new (_, _name, _x, _y, _width, _height)
+local function new(_, _name, _x, _y, _width, _height)
   --- @type Frame
   local self = {}
 
@@ -31,6 +31,7 @@ local function new (_, _name, _x, _y, _width, _height)
 
   local _isDrawn = false
   local _isBounding = false
+  local _isPlaceholder = false
   local _boundingType = BoundingMode.Size
   local _parent
   local _components = Lib.OrderedTable()
@@ -43,7 +44,7 @@ local function new (_, _name, _x, _y, _width, _height)
   local _size = Size(self, _width, _height, _isFirst)
   local _stylesheet
 
-  local function updateStylesheet ()
+  local function updateStylesheet()
     if _components:count() > 0 then
       local styleTable = {}
 
@@ -56,14 +57,14 @@ local function new (_, _name, _x, _y, _width, _height)
           styleTable[#styleTable + 1] = component.Stylesheet
         end
       end
-      styleTable[#styleTable +1] = _components["Hover"] and _components["Hover"].Stylesheet
+      styleTable[#styleTable + 1] = _components["Hover"] and _components["Hover"].Stylesheet
 
       _stylesheet = table.concat(styleTable, "; ")
       _stylesheet = string.format("%s;", _stylesheet)
     end
   end
 
-  local function updateStylesheetIfDrawn ()
+  local function updateStylesheetIfDrawn()
     if _isDrawn then
       updateStylesheet()
 
@@ -78,56 +79,50 @@ local function new (_, _name, _x, _y, _width, _height)
       --- Returns the Frame's name.
       -- @function self.Name.get
       -- @treturn string
-      get = function ()
+      get = function()
         return _name
-      end,
+      end
     },
-
     IsBounding = {
       --- Returns whether or not the Frame is bounding.
       -- @function self.IsBounding.get
       -- @treturn bool
-      get = function ()
+      get = function()
         return _isBounding
       end,
-
       --- Sets whether or not the Frame is bounding.
       -- @function self.IsBounding.set
       -- @bool value
-      set = function (value)
+      set = function(value)
         _isBounding = value
       end
     },
-
     BoundingMode = {
       --- Returns the @{BoundingMode} for the Frame.
       -- @function self.BoundingMode.get
       -- @treturn BoundingMode
-      get = function ()
+      get = function()
         return _boundingType
       end,
-
       --- Sets the @{BoundingMode} for this Frame.
       -- @function self.BoundingMode.set
       -- @tparam BoundingMode value
-      set = function (value)
+      set = function(value)
         _boundingType = value
       end
     },
-
     Container = {
       --- Returns the parent Frame.
       -- @function self.Container.get
       -- @treturn Frame
-      get = function ()
+      get = function()
         return _parent
       end,
-
       --- Sets the parent Frame.
       -- Raises the sysWindowResizeEvent upon completion.
       -- @function self.Container.set
       -- @tparam Frame value
-      set = function (value)
+      set = function(value)
         if type(value) == "string" then
           _parent = _MasterList[value]
         else
@@ -141,14 +136,13 @@ local function new (_, _name, _x, _y, _width, _height)
         if _isDrawn then
           raiseEvent("sysWindowResizeEvent")
         end
-      end,
+      end
     },
-
     Components = {
       --- Returns the Components in the Frame.
       -- @function self.Components.get
       -- @treturn table
-      get = function ()
+      get = function()
         if _components:count() > 0 then
           local copy = {}
 
@@ -158,14 +152,13 @@ local function new (_, _name, _x, _y, _width, _height)
 
           return copy
         end
-      end,
+      end
     },
-
     MiniConsoles = {
       --- Returns the MiniConsoles in the Frame.
       -- @function self.MiniConsoles.get
       -- @treturn table
-      get = function ()
+      get = function()
         if _miniConsoles:count() > 0 then
           local copy = {}
 
@@ -175,14 +168,13 @@ local function new (_, _name, _x, _y, _width, _height)
 
           return copy
         end
-      end,
+      end
     },
-
     Compounds = {
       --- Returns the Compounds in the Frame.
       -- @function self.Compounds.get
       -- @treturn table
-      get = function ()
+      get = function()
         if _compounds:count() > 0 then
           local copy = {}
 
@@ -193,12 +185,11 @@ local function new (_, _name, _x, _y, _width, _height)
         end
       end
     },
-
     Frames = {
       --- Returns the Frames in the Frame.
       -- @function self.Frames.get
       -- @treturn table
-      get = function ()
+      get = function()
         if _children:count() > 0 then
           local copy = {}
 
@@ -210,30 +201,27 @@ local function new (_, _name, _x, _y, _width, _height)
         end
       end
     },
-
     Position = {
       --- Returns the @{Position} supercomponent.
       -- @function self.Position.get
       -- @treturn Position
-      get = function ()
+      get = function()
         return _position
       end
     },
-
     Size = {
       --- Returns the @{Size} supercomponent.
       -- @function self.Size.get
       -- @treturn Size
-      get = function ()
+      get = function()
         return _size
       end
     },
-
     Stylesheet = {
       --- Updates and returns the stylesheet for the Frame.
       -- @function self.Stylesheet.get
       -- @treturn string
-      get = function ()
+      get = function()
         if not _stylesheet then
           updateStylesheet()
         end
@@ -241,19 +229,17 @@ local function new (_, _name, _x, _y, _width, _height)
         return _stylesheet
       end
     },
-
     Callback = {
       --- Returns the callback for the Frame.
       -- @function self.Callback.get
       -- @treturn string
-      get = function ()
+      get = function()
         return _callback
       end,
-
       --- Sets the callback for the Frame to be used when clicked.
       -- @function self.Callback.set
       -- @string value The function identifier, globally indexed.
-      set = function (value)
+      set = function(value)
         _callback = value
 
         if _callback and _callbackArguments then
@@ -265,21 +251,19 @@ local function new (_, _name, _x, _y, _width, _height)
         else
           setLabelClickCallback(_name, _callback)
         end
-      end,
+      end
     },
-
     CallbackArguments = {
       --- Returns the callback arguments passed to the callback.
       -- @function self.CallbackArguments.get
       -- @treturn table|string
-      get = function ()
+      get = function()
         return _callbackArguments
       end,
-
       --- Sets the callback arguments to be passed to the callback.
       -- @function self.CallbackArguments.set
       -- @tparam table|string value A table of arguments or a single argument.
-      set = function (value)
+      set = function(value)
         _callbackArguments = value
 
         if _callback and _callbackArguments then
@@ -289,20 +273,33 @@ local function new (_, _name, _x, _y, _width, _height)
             setLabelClickCallback(_name, _callback, _callbackArguments)
           end
         end
-      end,
+      end
     },
-
     IsDrawn = {
       --- Returns a flag signalling whether or not the Frame has been drawn.
       -- @function self.IsDrawn.get
       -- @treturn bool
-      get = function ()
+      get = function()
         return _isDrawn
-      end,
+      end
     },
+    IsPlaceholder = {
+      --- Returns a flag signaling whether or not a label will be drawn for this Frame.
+      -- @function self.IsPlaceholder.get
+      -- @treturn bool
+      get = function()
+        return _isPlaceholder
+      end,
+      --- Toggles whether or not to draw a label for this Frame.
+      -- @function self.IsPlaceholder.set
+      -- @tparam bool value
+      set = function(value)
+        _isPlaceholder = value
+      end
+    }
   }
 
-  local function addComponent (component)
+  local function addComponent(component)
     if component.Subtype == "MiniConsole" then
       _miniConsoles[component.Name] = component
     else
@@ -320,7 +317,7 @@ local function new (_, _name, _x, _y, _width, _height)
     updateStylesheetIfDrawn()
   end
 
-  local function addCompound (compound)
+  local function addCompound(compound)
     _compounds[compound.Name] = compound
     compound.Container = _MasterList[_name]
 
@@ -334,7 +331,7 @@ local function new (_, _name, _x, _y, _width, _height)
     _children[frame.Name] = _MasterList[frame.Name]
   end
 
-  local function addFrameByName (name)
+  local function addFrameByName(name)
     if _MasterList[name] then
       _MasterList[name].Container = _MasterList[_name]
       _children[name] = _MasterList[name]
@@ -345,10 +342,9 @@ local function new (_, _name, _x, _y, _width, _height)
 
   --- Adds a new object.
   -- @tparam string|Frame|Component|Compound object A valid Frame name or object, Component, or Compound.
-  function self:Add (object)
+  function self:Add(object)
     if type(object) == "string" then
       addFrameByName(object)
-
     elseif type(object) == "table" then
       if not object.Type then
         error(string.format("Vyzor: Non-Vyzor object passed to %s:Add.", _name), 2)
@@ -356,29 +352,23 @@ local function new (_, _name, _x, _y, _width, _height)
 
       if object.Type == "Frame" then
         addFrame(object)
-
       elseif object.Type == "Component" then
         addComponent(object)
-
       elseif object.Type == "Compound" then
         addCompound(object)
-
       else
         error(string.format("Vyzor: Invalid Type (%s) passed to %s:Add.", object.Type, _name), 2)
       end
-
     else
       error(string.format("Vyzor: Invalid object (%s) passed to %s:Add.", type(object), _name), 2)
     end
   end
 
-  local function removeComponent (component)
+  local function removeComponent(component)
     if _miniConsoles[component.Name] then
       _miniConsoles[component.Name] = nil
-
     elseif _components[component.Subtype] then
       _components[component.Subtype] = nil
-
     else
       error(string.format("Vyzor: %s (Frame) does not contain Component (%s).", _name, component.Subtype), 3)
     end
@@ -390,7 +380,7 @@ local function new (_, _name, _x, _y, _width, _height)
     updateStylesheetIfDrawn()
   end
 
-  local function removeCompoound (compound)
+  local function removeCompoound(compound)
     if not _compounds[compound.Name] then
       error(string.format("Vyzor: Compound (%s) is not a child of Frame (%s).", compound.Name, _name), 3)
     end
@@ -405,7 +395,7 @@ local function new (_, _name, _x, _y, _width, _height)
     updateStylesheetIfDrawn()
   end
 
-  local function removeFrame (frame)
+  local function removeFrame(frame)
     if not _children[frame.Name] then
       error(string.format("Vyzor: Frame (%s) is not a child of Frame (%s).", frame.Name, _name), 3)
     end
@@ -414,15 +404,13 @@ local function new (_, _name, _x, _y, _width, _height)
     _MasterList[frame.Name].Container = nil
   end
 
-  local function removeObjectByName (name)
+  local function removeObjectByName(name)
     if _MasterList[name] then
       _MasterList[name].Container = nil
       _children[name] = nil
-
     elseif _miniConsoles[name] then
       _miniConsoles[name].Container = nil
       _miniConsoles[name] = nil
-
     elseif _components[name] then
       _components[name] = nil
 
@@ -431,7 +419,6 @@ local function new (_, _name, _x, _y, _width, _height)
       end
 
       updateStylesheetIfDrawn()
-
     else
       error(string.format("Vyzor: Invalid string '%s' passed to %s:Remove.", name, _name), 3)
     end
@@ -439,10 +426,9 @@ local function new (_, _name, _x, _y, _width, _height)
 
   --- Removes an object.
   -- @tparam string|Frame|Component|Compound object A valid Frame name or object, Component Subtype or object, or Compound.
-  function self:Remove (object)
+  function self:Remove(object)
     if type(object) == "string" then
       removeObjectByName(object)
-
     elseif type(object) == "table" then
       if not object.Type then
         error(string.format("Vyzor: Non-Vyzor object passed to %s:Remove.", _name), 2)
@@ -450,13 +436,10 @@ local function new (_, _name, _x, _y, _width, _height)
 
       if object.Type == "Frame" then
         removeFrame(object)
-
       elseif object.Type == "Component" then
         removeComponent(object)
-
       elseif object.Type == "Compound" then
         removeCompound(object)
-
       else
         error(string.format("Vyzor: Invalid Type (%s) passed to %s:Remove.", object.Type, _name), 2)
       end
@@ -503,14 +486,26 @@ local function new (_, _name, _x, _y, _width, _height)
     raiseEvent("VyzorDrawnEvent")
   end
 
-  local function drawFrame ()
-    createLabel(_name,
-      _position.AbsoluteX, _position.AbsoluteY,
-      _size.AbsoluteWidth, _size.AbsoluteHeight, 1)
+  local function drawFrame()
+    if not _isPlaceholder then
+      createLabel(_name, _position.AbsoluteX, _position.AbsoluteY, _size.AbsoluteWidth, _size.AbsoluteHeight, 1)
 
-    updateStylesheet()
-    if _stylesheet then
-      setLabelStyleSheet(_name, _stylesheet)
+      updateStylesheet()
+      if _stylesheet then
+        setLabelStyleSheet(_name, _stylesheet)
+      end
+
+      if _callback then
+        if _callbackArguments then
+          if type(_callbackArguments) == "table" then
+            setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
+          else
+            setLabelClickCallback(_name, _callback, _callbackArguments)
+          end
+        else
+          setLabelClickCallback(_name, _callback)
+        end
+      end
     end
 
     if _miniConsoles:count() > 0 then
@@ -523,18 +518,6 @@ local function new (_, _name, _x, _y, _width, _height)
       _components["Map"]:Draw()
     end
 
-    if _callback then
-      if _callbackArguments then
-        if type(_callbackArguments) == "table" then
-          setLabelClickCallback(_name, _callback, unpack(_callbackArguments))
-        else
-          setLabelClickCallback(_name, _callback, _callbackArguments)
-        end
-      else
-        setLabelClickCallback(_name, _callback)
-      end
-    end
-
     if _children:count() > 0 then
       for frame in _children:each() do
         frame:Draw()
@@ -545,10 +528,9 @@ local function new (_, _name, _x, _y, _width, _height)
   --- Draws this Frame.
   -- Is only called Vyzor:Draw().
   -- Should not be used directly on a Frame.
-  function self:Draw ()
+  function self:Draw()
     if not _isFirst then
       drawFrame()
-
     elseif _isFirst then
       drawHUD()
     end
@@ -559,8 +541,8 @@ local function new (_, _name, _x, _y, _width, _height)
   --- Resizes the Frame and its children.
   -- @number width The Frame's new width.
   -- @number height The Frame's new height.
-  function self:Resize (width, height)
-    _size.Dimensions = { width or _size.Width, height or _size.Height }
+  function self:Resize(width, height)
+    _size.Dimensions = {width or _size.Width, height or _size.Height}
 
     if not _isFirst then
       resizeWindow(_name, _size.AbsoluteWidth, _size.AbsoluteHeight)
@@ -586,8 +568,8 @@ local function new (_, _name, _x, _y, _width, _height)
   --- Repositions the Frame and its children.
   -- @number x The Frame's new X position.
   -- @number y The Frame's new Y position.
-  function self:Move (x, y)
-    _position.Coordinates = { x or _position.X, y or _position.Y }
+  function self:Move(x, y)
+    _position.Coordinates = {x or _position.X, y or _position.Y}
 
     if not _isFirst then
       moveWindow(_name, _position.AbsoluteX, _position.AbsoluteY)
@@ -612,7 +594,7 @@ local function new (_, _name, _x, _y, _width, _height)
 
   --- Hides the Frame and, optionally, its children.
   -- @bool[opt=false] skipChildren If true, this will not hide any of the Frame's children.
-  function self:Hide (skipChildren)
+  function self:Hide(skipChildren)
     if not skipChildren then
       if _children:count() > 0 then
         for frame in _children:each() do
@@ -638,7 +620,7 @@ local function new (_, _name, _x, _y, _width, _height)
 
   --- Reveals the Frame and, optionally, its children.
   -- @bool[opt=false] skipChildren If true, this will not show any of the Frame's children.
-  function self:Show (skipChildren)
+  function self:Show(skipChildren)
     if not _isFirst then
       showWindow(_name)
     end
@@ -664,19 +646,19 @@ local function new (_, _name, _x, _y, _width, _height)
 
   --- Displays text on the Frame.
   -- @string text The text to be displayed.
-  function self:Echo (text)
+  function self:Echo(text)
     echo(_name, text)
   end
 
   --- Displays text on the Frame.
   -- @string text The text to be displayed.
-  function self:CEcho (text)
+  function self:CEcho(text)
     cecho(_name, text)
   end
 
   --- Clears all text from the Frame and, optionally, its children.
   -- @bool[opt=false] clearChildren Will call clear on child Frames if true.
-  function self:Clear (clearChildren)
+  function self:Clear(clearChildren)
     clearWindow(_name)
 
     if clearChildren then
@@ -686,26 +668,32 @@ local function new (_, _name, _x, _y, _width, _height)
     end
   end
 
-  setmetatable(self, {
-    __index = function (_, key)
-      return (properties[key] and properties[key].get()) or Frame[key]
-    end,
-    __newindex = function (_, key, value)
-      if properties[key] and properties[key].set then
-        properties[key].set(value)
+  setmetatable(
+    self,
+    {
+      __index = function(_, key)
+        return (properties[key] and properties[key].get()) or Frame[key]
+      end,
+      __newindex = function(_, key, value)
+        if properties[key] and properties[key].set then
+          properties[key].set(value)
+        end
+      end,
+      __tostring = function(_)
+        return _name
       end
-    end,
-    __tostring = function (_)
-      return _name
-    end
-  })
+    }
+  )
 
   _MasterList[_name] = self
   return self
 end
 
-setmetatable(Frame, {
-  __index = getmetatable(Frame).__index,
-  __call = new,
-  })
+setmetatable(
+  Frame,
+  {
+    __index = getmetatable(Frame).__index,
+    __call = new
+  }
+)
 return Frame
