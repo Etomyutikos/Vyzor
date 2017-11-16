@@ -380,7 +380,7 @@ local function new(_, _name, _x, _y, _width, _height)
     updateStylesheetIfDrawn()
   end
 
-  local function removeCompoound(compound)
+  local function removeCompound(compound)
     if not _compounds[compound.Name] then
       error(string.format("Vyzor: Compound (%s) is not a child of Frame (%s).", compound.Name, _name), 3)
     end
